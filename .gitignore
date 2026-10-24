@@ -1,0 +1,11 @@
+node_modules
+**/node_modules
+dist
+**/dist
+dist-electron
+**/dist-electron
+release
+**/release
+*.log
+*.tsbuildinfo
+.DS_Store

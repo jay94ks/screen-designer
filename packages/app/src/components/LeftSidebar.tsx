@@ -1,0 +1,481 @@
+import React, { useState } from 'react';
+import { VDomArtboard, VNode, NodeType } from '../types/vdom';
+import {
+  Layers,
+  FileText,
+  Plus,
+  ChevronDown,
+  ChevronRight,
+  Component,
+  Smartphone,
+  Tablet,
+  Monitor,
+  Type,
+  Square,
+  Circle,
+  CreditCard,
+  MousePointer,
+  Sliders,
+  Image as ImageIcon,
+  ScrollText,
+  MessageSquare,
+  Heading,
+  CheckSquare,
+  CircleDot,
+  Video,
+  Minus,
+  List,
+  ChevronsUpDown,
+  LayoutTemplate
+} from 'lucide-react';
+
+interface LeftSidebarProps {
+  artboards: VDomArtboard[];
+  selectedArtboardId: string | null;
+  selectedNodeId: string | null;
+  onSelectArtboard: (id: string) => void;
+  onSelectNode: (node: VNode) => void;
+  onInsertNode: (type: NodeType, name: string, content?: string, props?: Record<string, any>) => void;
+  onOpenSettings?: (tab?: 'canvas' | 'components') => void;
+  isOpen: boolean;
+  onClose: () => void;
+  width?: number;
+}
+
+export const LeftSidebar: React.FC<LeftSidebarProps> = ({
+  artboards,
+  selectedArtboardId,
+  selectedNodeId,
+  onSelectArtboard,
+  onSelectNode,
+  onInsertNode,
+  onOpenSettings,
+  isOpen,
+  onClose,
+  width = 270
+}) => {
+  const [activeTab, setActiveTab] = useState<'layers' | 'assets'>('layers');
+  const [assetCategory, setAssetCategory] = useState<'all' | 'layout' | 'typography' | 'forms' | 'media'>('all');
+  const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>({
+    'node-s1-root': true,
+    'node-s1-top': true,
+    'node-s2-root': true,
+    'node-s3-root': true
+  });
+
+  if (!isOpen) return null;
+
+  const toggleExpand = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setExpandedNodes((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const getNodeIcon = (type: NodeType) => {
+    switch (type) {
+      case 'image':
+        return <ImageIcon size={11} className="text-pink-500" />;
+      case 'dialog':
+        return <MessageSquare size={11} className="text-emerald-500" />;
+      case 'scroll-container':
+        return <ScrollText size={11} className="text-amber-500" />;
+      case 'heading':
+        return <Heading size={11} className="text-orange-500" />;
+      case 'text':
+      case 'span':
+        return <Type size={11} className="text-amber-500" />;
+      case 'button':
+        return <MousePointer size={11} className="text-indigo-500" />;
+      case 'card':
+        return <CreditCard size={11} className="text-purple-500" />;
+      case 'circle':
+        return <Circle size={11} className="text-emerald-500" />;
+      case 'checkbox':
+        return <CheckSquare size={11} className="text-blue-500" />;
+      case 'radio':
+        return <CircleDot size={11} className="text-violet-500" />;
+      case 'video':
+        return <Video size={11} className="text-rose-500" />;
+      case 'divider':
+        return <Minus size={11} className="text-slate-400" />;
+      case 'select':
+        return <ChevronsUpDown size={11} className="text-cyan-500" />;
+      default:
+        return <Square size={11} className="text-blue-500" />;
+    }
+  };
+
+  const renderNodeTree = (node: VNode, depth = 0) => {
+    const isSelected = selectedNodeId === node.id;
+    const hasChildren = node.children && node.children.length > 0;
+    const isExpanded = expandedNodes[node.id] !== false;
+
+    return (
+      <div key={node.id} className="select-none">
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelectNode(node);
+          }}
+          style={{ paddingLeft: `${depth * 12 + 6}px` }}
+          className={`flex items-center gap-1.5 py-1 px-2 rounded-md cursor-pointer transition text-xs ${
+            isSelected
+              ? 'bg-indigo-600 text-white font-bold'
+              : 'text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          {hasChildren ? (
+            <button
+              onClick={(e) => toggleExpand(node.id, e)}
+              className="p-0.5 hover:bg-black/10 rounded"
+            >
+              {isExpanded ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
+            </button>
+          ) : (
+            <span className="w-3" />
+          )}
+
+          {getNodeIcon(node.type)}
+          <span className="truncate flex-1">{node.name}</span>
+        </div>
+
+        {hasChildren && isExpanded && (
+          <div>{node.children!.map((child) => renderNodeTree(child, depth + 1))}</div>
+        )}
+      </div>
+    );
+  };
+
+  // Complete Catalog of HTML5 Elements and Rich VDOM Nodes
+  const UI_COMPONENTS: Array<{
+    type: NodeType;
+    name: string;
+    description: string;
+    category: 'layout' | 'typography' | 'forms' | 'media';
+    content?: string;
+    props?: Record<string, any>;
+  }> = [
+    // 1. Layout & Containers
+    {
+      type: 'scroll-container',
+      name: '스크롤 컨테이너',
+      description: '마우스 휠 스크롤 영역 (Auto Overflow Y)',
+      category: 'layout',
+      content: ''
+    },
+    {
+      type: 'dialog',
+      name: '모달 다이얼로그',
+      description: '팝업 모달 창 (Backdrop + Close)',
+      category: 'layout',
+      content: '다이얼로그 팝업 상세 내용입니다.',
+      props: { open: true, title: '확인 모달' }
+    },
+    {
+      type: 'card',
+      name: '카드 컨테이너',
+      description: '배경색 및 곡률이 적용된 박스',
+      category: 'layout',
+      content: ''
+    },
+    {
+      type: 'section',
+      name: '시맨틱 섹션 (<section>)',
+      description: '페이지 주요 블록 구획',
+      category: 'layout',
+      content: ''
+    },
+    {
+      type: 'header',
+      name: '헤더 영역 (<header>)',
+      description: '상단 네비게이션 및 타이틀 바',
+      category: 'layout',
+      content: ''
+    },
+    {
+      type: 'footer',
+      name: '푸터 영역 (<footer>)',
+      description: '하단 정보 및 라이선스 영역',
+      category: 'layout',
+      content: ''
+    },
+
+    // 2. Media
+    {
+      type: 'image',
+      name: '이미지 (<img>)',
+      description: '반응형 이미지 (Cover / Fit)',
+      category: 'media',
+      content: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80',
+      props: { alt: '샘플 이미지', loading: 'lazy' }
+    },
+    {
+      type: 'video',
+      name: '비디오 플레이어 (<video>)',
+      description: '미디어 영상 플레이어',
+      category: 'media',
+      content: '',
+      props: { controls: true }
+    },
+
+    // 3. Typography
+    {
+      type: 'heading',
+      name: '대제목 (Heading H2)',
+      description: '22px Bold 타이틀',
+      category: 'typography',
+      content: '새로운 서비스 시작하기',
+      props: { headingLevel: 2 }
+    },
+    {
+      type: 'text',
+      name: '본문 단락 (<p>)',
+      description: '일반 텍스트 문단',
+      category: 'typography',
+      content: '편리한 화면 디자인과 인터랙션을 시작해 보세요.'
+    },
+    {
+      type: 'blockquote',
+      name: '인용구 (<blockquote>)',
+      description: '강조 인용 블록',
+      category: 'typography',
+      content: '“디자인은 어떻게 보이고 느껴지는가가 아니라 어떻게 동작하는가이다.”'
+    },
+    {
+      type: 'code',
+      name: '코드 블록 (<code>)',
+      description: '고정폭 글꼴 인라인 코드',
+      category: 'typography',
+      content: 'npm install @screen-designer/core'
+    },
+
+    // 4. Interactive & Forms
+    {
+      type: 'button',
+      name: 'CTA 액션 버튼',
+      description: '클릭 인터랙션 주 버튼',
+      category: 'forms',
+      content: '확인 및 계속하기'
+    },
+    {
+      type: 'input',
+      name: '텍스트 인풋 필드',
+      description: '단일 라인 텍스트 입력',
+      category: 'forms',
+      content: '이메일 주소를 입력하세요...',
+      props: { type: 'text', placeholder: '이메일 주소를 입력하세요...' }
+    },
+    {
+      type: 'textarea',
+      name: '멀티라인 텍스트에어리어',
+      description: '여러 줄 텍스트 입력창',
+      category: 'forms',
+      content: '문의 내용을 상세히 작성해주세요...',
+      props: { rows: 3 }
+    },
+    {
+      type: 'select',
+      name: '셀렉트 드롭다운',
+      description: '옵션 목록 선택 드롭다운',
+      category: 'forms',
+      content: '',
+      props: {
+        options: [
+          { label: '옵션 A: 표준 요금제', value: 'standard' },
+          { label: '옵션 B: 프리미엄 플랜', value: 'premium' }
+        ]
+      }
+    },
+    {
+      type: 'checkbox',
+      name: '체크박스 필드',
+      description: '다중 선택 체크박스',
+      category: 'forms',
+      content: '이용약관에 동의합니다'
+    },
+    {
+      type: 'radio',
+      name: '라디오 버튼',
+      description: '단일 선택 라디오',
+      category: 'forms',
+      content: '신용카드 결제 선택'
+    },
+    {
+      type: 'divider',
+      name: '가로 구분선 (<hr>)',
+      description: '컨텐츠 구분 라인',
+      category: 'layout',
+      content: ''
+    },
+    {
+      type: 'details',
+      name: '아코디언 (<details>)',
+      description: '접기/펼치기 디스클로저',
+      category: 'forms',
+      content: '자주 묻는 질문 (FAQ)',
+      props: { open: true }
+    }
+  ];
+
+  const filteredComponents = UI_COMPONENTS.filter(
+    (c) => assetCategory === 'all' || c.category === assetCategory
+  );
+
+  return (
+    <aside
+      style={{ width: `${width}px` }}
+      className="border-r border-slate-200 bg-white flex flex-col shrink-0 h-full shadow-xs z-20 select-none text-xs"
+    >
+      {/* Header Tabs: Layers / Components */}
+      <div className="h-11 border-b border-slate-200 px-2.5 flex items-center justify-between shrink-0 bg-slate-50/70">
+        <div className="flex items-center gap-1 w-full">
+          <button
+            onClick={() => setActiveTab('layers')}
+            className={`flex-1 py-1.5 rounded-md font-medium transition flex items-center justify-center gap-1.5 whitespace-nowrap text-[11px] ${
+              activeTab === 'layers'
+                ? 'bg-white text-slate-900 shadow-2xs font-bold border border-slate-200/80'
+                : 'text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <Layers size={13} />
+            <span>레이어 트리</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('assets')}
+            className={`flex-1 py-1.5 rounded-md font-medium transition flex items-center justify-center gap-1.5 whitespace-nowrap text-[11px] ${
+              activeTab === 'assets'
+                ? 'bg-white text-slate-900 shadow-2xs font-bold border border-slate-200/80'
+                : 'text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <Component size={13} />
+            <span>HTML5 컴포넌트</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-2">
+        {/* TAB 1: Layers Tree */}
+        {activeTab === 'layers' && (
+          <div className="space-y-3">
+            {artboards.length === 0 ? (
+              <div className="p-6 text-center text-slate-400 text-xs">
+                <Layers className="w-8 h-8 mx-auto mb-2 opacity-30 text-slate-400" />
+                <p className="font-semibold text-slate-600">등록된 프레임이 없습니다</p>
+                <p className="text-[11px] text-slate-400 mt-1">상단 툴바의 + 버튼으로 새 프레임을 생성하세요.</p>
+              </div>
+            ) : (
+              artboards.map((artboard) => {
+                const isSelected = artboard.id === selectedArtboardId;
+                const Icon =
+                  artboard.viewport === 'mobile'
+                    ? Smartphone
+                    : artboard.viewport === 'tablet'
+                    ? Tablet
+                    : Monitor;
+
+                return (
+                  <div key={artboard.id} className="space-y-1">
+                    {/* Artboard Root Header */}
+                    <div
+                      onClick={() => onSelectArtboard(artboard.id)}
+                      className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition ${
+                        isSelected
+                          ? 'bg-indigo-50 border border-indigo-200 font-bold text-indigo-900 shadow-2xs'
+                          : 'hover:bg-slate-50 text-slate-800'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        <Icon size={13} className="text-indigo-600 shrink-0" />
+                        <span className="truncate">{artboard.title}</span>
+                      </div>
+                      <span className="text-[9px] font-mono text-slate-400">
+                        {artboard.width}×{artboard.height}
+                      </span>
+                    </div>
+
+                    {/* Recursive Virtual DOM Node Tree */}
+                    <div className="pl-1 space-y-0.5">
+                      {renderNodeTree(artboard.rootNode)}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        )}
+
+        {/* TAB 2: Full HTML5 Elements Palette */}
+        {activeTab === 'assets' && (
+          <div className="space-y-2 p-1">
+            {/* Category Filter Pills */}
+            <div className="flex gap-1 overflow-x-auto pb-1 mb-1">
+              {[
+                { id: 'all', label: '전체' },
+                { id: 'layout', label: '레이아웃' },
+                { id: 'media', label: '미디어' },
+                { id: 'typography', label: '텍스트' },
+                { id: 'forms', label: '폼·버튼' }
+              ].map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setAssetCategory(cat.id as any)}
+                  className={`px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap transition ${
+                    assetCategory === cat.id
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center justify-between mb-1 px-0.5">
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                클릭하여 캔버스에 추가 ({filteredComponents.length}개)
+              </span>
+              {onOpenSettings && (
+                <button
+                  onClick={() => onOpenSettings('components')}
+                  className="text-[10px] text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1 hover:underline cursor-pointer"
+                  title="컴포넌트 기본값 설정"
+                >
+                  <Sliders size={10} />
+                  <span>기본값</span>
+                </button>
+              )}
+            </div>
+
+            {/* Component Cards */}
+            <div className="space-y-1.5">
+              {filteredComponents.map((asset) => (
+                <div
+                  key={asset.name}
+                  onClick={() => onInsertNode(asset.type, asset.name, asset.content, asset.props)}
+                  className="p-2.5 bg-slate-50/80 hover:bg-indigo-50/90 border border-slate-200/90 hover:border-indigo-300 rounded-xl cursor-pointer transition group shadow-2xs flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-2.5 truncate">
+                    <div className="w-7 h-7 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition shadow-2xs">
+                      {getNodeIcon(asset.type)}
+                    </div>
+                    <div className="truncate">
+                      <div className="font-bold text-xs text-slate-800 group-hover:text-indigo-700 truncate">
+                        {asset.name}
+                      </div>
+                      <div className="text-[10px] text-slate-400 truncate">
+                        {asset.description}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-5 h-5 rounded-full bg-slate-200/80 flex items-center justify-center text-slate-600 group-hover:bg-indigo-600 group-hover:text-white transition font-bold text-xs shrink-0 ml-2">
+                    +
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </aside>
+  );
+};

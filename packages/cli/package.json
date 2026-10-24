@@ -1,0 +1,15 @@
+{
+  "name": "@screen-designer/cli",
+  "version": "0.1.0",
+  "description": "Zero-config setup CLI for Screen Designer & Storyboard Canvas",
+  "bin": {
+    "screen-designer": "./bin/index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "node bin/index.js --help"
+  },
+  "dependencies": {
+    "winreg": "^1.2.5"
+  }
+}

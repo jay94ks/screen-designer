@@ -1,0 +1,29 @@
+{
+  "name": "screen-designer-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Universal Cross-Agent UI Storyboard Canvas & MCP Tool for Gemini, Claude, and Codex",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:app": "npm run dev --workspace=@screen-designer/app",
+    "dev:mcp": "npm run dev --workspace=@screen-designer/mcp-server",
+    "build": "npm run build --workspaces --if-present",
+    "start": "npm run start --workspace=@screen-designer/app"
+  },
+  "keywords": [
+    "mcp",
+    "ui-design",
+    "storyboard",
+    "electron",
+    "claude",
+    "codex",
+    "gemini"
+  ],
+  "author": "jay94ks",
+  "license": "MIT",
+  "dependencies": {
+    "simple-git": "^4.0.2"
+  }
+}

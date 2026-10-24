@@ -1,0 +1,49 @@
+{
+  "name": "@screen-designer/app",
+  "version": "0.1.0",
+  "description": "Visual Storyboard Canvas Electron Desktop App for Screen Designer",
+  "main": "dist-electron/main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && tsc -p tsconfig.node.json",
+    "build:win": "npm run build && electron-builder --win portable",
+    "start": "electron ."
+  },
+  "build": {
+    "appId": "com.screendesigner.app",
+    "productName": "Screen Designer Canvas",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist",
+      "dist-electron"
+    ],
+    "win": {
+      "target": "portable",
+      "artifactName": "ScreenDesigner-Setup.${ext}"
+    }
+  },
+  "dependencies": {
+    "lucide-react": "^0.477.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "simple-git": "^4.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0",
+    "vite-plugin-electron": "^0.29.0",
+    "vite-plugin-electron-renderer": "^0.14.6",
+    "ws": "^8.18.0"
+  }
+}

@@ -1,8 +1,8 @@
 {
   "id": "page-1",
-  "name": "Page 1 (서비스 기획 보드)",
+  "name": "Page 1 (서비스 기획 보드 - v1.1 변경)",
   "version": "1.0.0",
-  "updatedAt": "2026-10-25T01:46:00.000Z",
+  "updatedAt": "2026-10-24T18:17:13.178Z",
   "artboards": [
     {
       "id": "screen-1-main",
@@ -41,8 +41,14 @@
                 "type": "heading",
                 "name": "App Heading (H2)",
                 "content": "스마트 AI 자산 관리",
-                "props": { "headingLevel": 2 },
-                "style": { "fontSize": 20, "fontWeight": "bold", "color": "#ffffff" }
+                "props": {
+                  "headingLevel": 2
+                },
+                "style": {
+                  "fontSize": 20,
+                  "fontWeight": "bold",
+                  "color": "#ffffff"
+                }
               },
               {
                 "id": "img-featured-banner",
@@ -82,16 +88,47 @@
                     "type": "text",
                     "name": "평가 자산 라벨",
                     "content": "총 평가 잔고",
-                    "style": { "fontSize": 11, "color": "#e0e7ff" }
+                    "style": {
+                      "fontSize": 11,
+                      "color": "#e0e7ff"
+                    }
                   },
                   {
                     "id": "text-hero-val",
                     "type": "text",
                     "name": "잔고 금액",
                     "content": "₩ 42,950,000",
-                    "style": { "fontSize": 24, "fontWeight": "900", "color": "#ffffff" }
+                    "style": {
+                      "fontSize": 24,
+                      "fontWeight": "900",
+                      "color": "#ffffff"
+                    }
                   }
-                ]
+                ],
+                "condition": {
+                  "enabled": true,
+                  "matchType": "and",
+                  "rules": [
+                    {
+                      "id": "rule-tier-multi",
+                      "tweakId": "userTier",
+                      "operator": "in",
+                      "values": [
+                        "pro",
+                        "vip"
+                      ]
+                    },
+                    {
+                      "id": "rule-theme-multi",
+                      "tweakId": "theme",
+                      "operator": "in",
+                      "values": [
+                        "dark",
+                        "cyber"
+                      ]
+                    }
+                  ]
+                }
               },
               {
                 "id": "scroll-asset-list",
@@ -115,28 +152,56 @@
                     "type": "card",
                     "name": "자산 아이템 1 (S&P 500)",
                     "content": "미국 대형 기술주 ETF • ₩ 22,400,000 (+14.2%)",
-                    "style": { "padding": 10, "borderRadius": 8, "backgroundColor": "#1e293b", "fontSize": 11, "fontWeight": "bold", "color": "#60a5fa" }
+                    "style": {
+                      "padding": 10,
+                      "borderRadius": 8,
+                      "backgroundColor": "#1e293b",
+                      "fontSize": 11,
+                      "fontWeight": "bold",
+                      "color": "#60a5fa"
+                    }
                   },
                   {
                     "id": "item-2",
                     "type": "card",
                     "name": "자산 아이템 2 (비트코인)",
                     "content": "비트코인 디지털 자산 • ₩ 12,850,000 (+28.4%)",
-                    "style": { "padding": 10, "borderRadius": 8, "backgroundColor": "#1e293b", "fontSize": 11, "fontWeight": "bold", "color": "#f59e0b" }
+                    "style": {
+                      "padding": 10,
+                      "borderRadius": 8,
+                      "backgroundColor": "#1e293b",
+                      "fontSize": 11,
+                      "fontWeight": "bold",
+                      "color": "#f59e0b"
+                    }
                   },
                   {
                     "id": "item-3",
                     "type": "card",
                     "name": "자산 아이템 3 (이더리움)",
                     "content": "이더리움 스테이킹 • ₩ 5,100,000 (+8.6%)",
-                    "style": { "padding": 10, "borderRadius": 8, "backgroundColor": "#1e293b", "fontSize": 11, "fontWeight": "bold", "color": "#a855f7" }
+                    "style": {
+                      "padding": 10,
+                      "borderRadius": 8,
+                      "backgroundColor": "#1e293b",
+                      "fontSize": 11,
+                      "fontWeight": "bold",
+                      "color": "#a855f7"
+                    }
                   },
                   {
                     "id": "item-4",
                     "type": "card",
                     "name": "자산 아이템 4 (현금 잔고)",
                     "content": "원화 예수금 • ₩ 2,600,000 (대기 자금)",
-                    "style": { "padding": 10, "borderRadius": 8, "backgroundColor": "#1e293b", "fontSize": 11, "fontWeight": "bold", "color": "#10b981" }
+                    "style": {
+                      "padding": 10,
+                      "borderRadius": 8,
+                      "backgroundColor": "#1e293b",
+                      "fontSize": 11,
+                      "fontWeight": "bold",
+                      "color": "#10b981"
+                    }
                   }
                 ]
               }
@@ -159,8 +224,41 @@
           }
         ]
       },
-      "tweaksSchema": [],
-      "tweakValues": {}
+      "tweaksSchema": [
+        {
+          "id": "theme",
+          "label": "컬러 모드 (Theme)",
+          "control": "buttons",
+          "options": [
+            "dark",
+            "light",
+            "cyber"
+          ],
+          "defaultValue": "dark"
+        },
+        {
+          "id": "userTier",
+          "label": "회원 등급 (User Tier)",
+          "control": "select",
+          "options": [
+            "free",
+            "pro",
+            "vip"
+          ],
+          "defaultValue": "pro"
+        },
+        {
+          "id": "showAiBadge",
+          "label": "AI 추천 배너 표시",
+          "control": "boolean",
+          "defaultValue": true
+        }
+      ],
+      "tweakValues": {
+        "theme": "dark",
+        "userTier": "pro",
+        "showAiBadge": true
+      }
     }
   ]
 }

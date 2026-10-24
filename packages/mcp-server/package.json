@@ -1,0 +1,28 @@
+{
+  "name": "@screen-designer/mcp-server",
+  "version": "0.1.0",
+  "description": "Cross-Agent MCP Server for Screen Designer Storyboard Canvas",
+  "main": "dist/index.js",
+  "bin": {
+    "screen-designer-mcp": "./dist/index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.1",
+    "simple-git": "^4.0.2",
+    "winreg": "^1.2.5",
+    "ws": "^8.18.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.24",
+    "@types/winreg": "^1.2.36",
+    "@types/ws": "^8.5.14",
+    "typescript": "^5.8.2"
+  }
+}
