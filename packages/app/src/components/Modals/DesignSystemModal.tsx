@@ -153,13 +153,13 @@ const COMPONENT_CATALOG: ComponentMeta[] = [
     icon: Table,
     defaultContent: '',
     sampleChildren: [
-      { id: 'th-row', type: 'tr', name: '헤더 행', style: { borderBottom: '1px solid #334155' }, children: [
+      { id: 'th-row', type: 'tr', name: '헤더 행', style: { borderColor: '#334155', borderWidth: 1, borderStyle: 'solid' }, children: [
         { id: 'th-1', type: 'th', name: '자산명', content: '자산명', style: { padding: 8, color: '#94a3b8', textAlign: 'left' } },
         { id: 'th-2', type: 'th', name: '평가액', content: '평가금액', style: { padding: 8, color: '#94a3b8', textAlign: 'right' } }
       ]},
-      { id: 'td-row-1', type: 'tr', name: '데이터 행 1', children: [
+      { id: 'td-row-1', type: 'tr', name: '데이터 행 1', style: {}, children: [
         { id: 'td-1', type: 'td', name: '비트코인', content: '비트코인 (BTC)', style: { padding: 8, color: '#f8fafc' } },
-        { id: 'td-2', type: 'td', name: '10,000,000', content: '₩10,000,000', style: { padding: 8, color: '#38bdf8', textAlign: 'right', fontWeight: 600 } }
+        { id: 'td-2', type: 'td', name: '10,000,000', content: '₩10,000,000', style: { padding: 8, color: '#38bdf8', textAlign: 'right', fontWeight: '600' } }
       ]}
     ]
   },
@@ -591,9 +591,9 @@ export const DesignSystemModal: React.FC<DesignSystemModalProps> = ({
                     {[300, 400, 500, 600, 700, 800].map((w) => (
                       <button
                         key={w}
-                        onClick={() => handleUpdateComponentDefault(selectedComp, { fontWeight: w })}
+                        onClick={() => handleUpdateComponentDefault(selectedComp, { fontWeight: String(w) })}
                         className={`py-1 rounded text-[11px] font-mono transition ${
-                          (selectedDef.fontWeight || 400) === w
+                          String(selectedDef.fontWeight || '400') === String(w)
                             ? 'bg-indigo-600 text-white font-bold'
                             : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                         }`}

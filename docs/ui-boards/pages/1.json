@@ -3,7 +3,7 @@
   "name": "Page 1 (핀테크 가상 DOM)",
   "number": 1,
   "version": "1.0.0",
-  "updatedAt": "2026-10-24T20:46:42.535Z",
+  "updatedAt": "2026-10-24T21:13:42.056Z",
   "artboards": [
     {
       "id": "artboard-1",
@@ -617,6 +617,17 @@
                 "type": "button",
                 "name": "Biometric Confirm Button",
                 "content": "지문 인식으로 즉시 체결",
+                "events": [
+                  {
+                    "id": "evt-s2-submit-nav",
+                    "trigger": "click",
+                    "action": {
+                      "type": "navigate",
+                      "targetArtboardId": "artboard-3"
+                    },
+                    "description": "클릭 시 체결 완료 & 영수증 화면으로 이동"
+                  }
+                ],
                 "style": {
                   "width": "100%",
                   "padding": 16,
@@ -814,6 +825,17 @@
             "type": "button",
             "name": "Back to Portfolio Button",
             "content": "포트폴리오로 돌아가기",
+            "events": [
+              {
+                "id": "evt-s3-back-nav",
+                "trigger": "click",
+                "action": {
+                  "type": "navigate",
+                  "targetArtboardId": "artboard-1"
+                },
+                "description": "클릭 시 포트폴리오 메인 화면으로 복귀"
+              }
+            ],
             "style": {
               "width": "100%",
               "padding": 16,

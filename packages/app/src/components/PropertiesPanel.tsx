@@ -37,6 +37,21 @@ import {
 } from '../utils/assetManager';
 import { GradientControls, GradientType } from './GradientControls';
 
+const COLOR_SWATCHES = [
+  { name: '투명', val: 'transparent', bg: 'bg-transparent border border-dashed border-slate-400' },
+  { name: '다크', val: '#0f172a', bg: 'bg-slate-950' },
+  { name: '슬레이트', val: '#1e293b', bg: 'bg-slate-800' },
+  { name: '그레이', val: '#64748b', bg: 'bg-slate-500' },
+  { name: '화이트', val: '#ffffff', bg: 'bg-white border border-slate-300' },
+  { name: '인디고', val: '#4f46e5', bg: 'bg-indigo-600' },
+  { name: '바이올렛', val: '#8b5cf6', bg: 'bg-purple-500' },
+  { name: '핑크', val: '#ec4899', bg: 'bg-pink-500' },
+  { name: '시안', val: '#06b6d4', bg: 'bg-cyan-500' },
+  { name: '에메랄드', val: '#10b981', bg: 'bg-emerald-500' },
+  { name: '앰버', val: '#f59e0b', bg: 'bg-amber-500' },
+  { name: '로즈', val: '#ef4444', bg: 'bg-rose-500' }
+];
+
 interface PropertiesPanelProps {
   artboard: VDomArtboard | null;
   selectedNode: VNode | null;
@@ -57,6 +72,8 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   const [activeTab, setActiveTab] = useState<'style' | 'layout' | 'effects'>('style');
   const [isChoosingAsset, setIsChoosingAsset] = useState(false);
   const [use4WayPadding, setUse4WayPadding] = useState(false);
+  const [use4WayRadius, setUse4WayRadius] = useState(false);
+  const [colorTarget, setColorTarget] = useState<'bg' | 'text'>('bg');
 
   if (!artboard) {
     return (
@@ -229,6 +246,62 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             onChange={(e) => onUpdateNode(selectedNode.id, { name: e.target.value })}
             className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
+        </div>
+
+        {/* Quick Alignment & Sizing Matrix */}
+        <div className="flex items-center justify-between bg-slate-50 p-1 rounded-lg border border-slate-200 mt-2">
+          <span className="text-[10px] text-slate-500 font-semibold pl-1">위치 정렬</span>
+          <div className="flex items-center gap-0.5">
+            <button
+              onClick={() => handleStyleChange('alignSelf', 'flex-start')}
+              title="좌측 정렬"
+              className="p-1 hover:bg-white rounded text-slate-600 hover:text-indigo-600 transition"
+            >
+              <AlignLeft size={11} />
+            </button>
+            <button
+              onClick={() => handleStyleChange('alignSelf', 'center')}
+              title="가로 중앙 정렬"
+              className="p-1 hover:bg-white rounded text-slate-600 hover:text-indigo-600 transition"
+            >
+              <AlignCenter size={11} />
+            </button>
+            <button
+              onClick={() => handleStyleChange('alignSelf', 'flex-end')}
+              title="우측 정렬"
+              className="p-1 hover:bg-white rounded text-slate-600 hover:text-indigo-600 transition"
+            >
+              <AlignRight size={11} />
+            </button>
+            <div className="w-px h-3 bg-slate-300 mx-0.5" />
+            <button
+              onClick={() => handleStyleChange('marginTop', 0)}
+              title="상단 정렬"
+              className="px-1.5 py-0.5 hover:bg-white rounded text-slate-600 hover:text-indigo-600 transition text-[9px] font-bold"
+            >
+              상
+            </button>
+            <button
+              onClick={() => {
+                handleStyleChange('marginTop', 'auto');
+                handleStyleChange('marginBottom', 'auto');
+              }}
+              title="세로 중앙 정렬"
+              className="px-1.5 py-0.5 hover:bg-white rounded text-slate-600 hover:text-indigo-600 transition text-[9px] font-bold"
+            >
+              중
+            </button>
+            <button
+              onClick={() => {
+                handleStyleChange('marginTop', 'auto');
+                handleStyleChange('marginBottom', 0);
+              }}
+              title="하단 정렬"
+              className="px-1.5 py-0.5 hover:bg-white rounded text-slate-600 hover:text-indigo-600 transition text-[9px] font-bold"
+            >
+              하
+            </button>
+          </div>
         </div>
       </div>
 
@@ -564,10 +637,59 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
       {/* 6. UNIVERSAL: Colors (Background & Text) */}
       <div className="space-y-2 pt-3">
-        <label className="text-[10px] text-slate-400 font-bold uppercase flex items-center gap-1">
-          <Palette size={11} />
-          <span>색상 (Colors)</span>
-        </label>
+        <div className="flex items-center justify-between">
+          <label className="text-[10px] text-slate-400 font-bold uppercase flex items-center gap-1">
+            <Palette size={11} />
+            <span>색상 & 팔레트 스와치 (Colors & Swatches)</span>
+          </label>
+          <div className="flex bg-slate-100 p-0.5 rounded text-[10px]">
+            <button
+              onClick={() => setColorTarget('bg')}
+              className={`px-2 py-0.5 rounded font-medium transition ${
+                colorTarget === 'bg' ? 'bg-white text-indigo-700 shadow-2xs font-bold' : 'text-slate-500'
+              }`}
+            >
+              배경색
+            </button>
+            <button
+              onClick={() => setColorTarget('text')}
+              className={`px-2 py-0.5 rounded font-medium transition ${
+                colorTarget === 'text' ? 'bg-white text-indigo-700 shadow-2xs font-bold' : 'text-slate-500'
+              }`}
+            >
+              글자색
+            </button>
+          </div>
+        </div>
+
+        {/* 1-Click Design System Swatches */}
+        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1.5">
+          <div className="flex items-center justify-between text-[9px] text-slate-400">
+            <span>디자인 시스템 스와치 ({colorTarget === 'bg' ? '배경색에 적용' : '글자색에 적용'})</span>
+          </div>
+          <div className="grid grid-cols-6 gap-1.5">
+            {COLOR_SWATCHES.map((swatch) => (
+              <button
+                key={swatch.val}
+                onClick={() => {
+                  if (colorTarget === 'bg') handleStyleChange('backgroundColor', swatch.val);
+                  else handleStyleChange('color', swatch.val);
+                }}
+                className="flex flex-col items-center gap-0.5 group/sw"
+                title={`${swatch.name} (${swatch.val})`}
+              >
+                <div
+                  style={{ backgroundColor: swatch.val === 'transparent' ? undefined : swatch.val }}
+                  className={`w-5 h-5 rounded-md shadow-2xs transition-transform group-hover/sw:scale-110 ${
+                    swatch.val === 'transparent' ? 'border border-dashed border-slate-400 bg-white' : 'border border-black/10'
+                  }`}
+                />
+                <span className="text-[8px] text-slate-500 truncate max-w-full font-mono">{swatch.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="grid grid-cols-2 gap-2">
           <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
             <span className="text-[10px] text-slate-500 block">배경색</span>
@@ -700,6 +822,58 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                   title={`대소문자: ${tf.val}`}
                 >
                   {tf.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Advanced Typography: Line Height & Letter Spacing */}
+          <div className="grid grid-cols-2 gap-2">
+            <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
+              <span className="text-[10px] text-slate-500 block">줄 간격 (Line Height)</span>
+              <input
+                type="number"
+                step={0.1}
+                min={0.8}
+                max={3.0}
+                value={Number(selectedNode.style.lineHeight) || 1.4}
+                onChange={(e) => handleStyleChange('lineHeight', Number(e.target.value))}
+                className="w-full bg-white border border-slate-200 rounded px-1.5 py-0.5 text-xs font-mono"
+              />
+            </div>
+            <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
+              <span className="text-[10px] text-slate-500 block">자간 (Letter Spacing)</span>
+              <input
+                type="number"
+                step={0.5}
+                min={-2}
+                max={6}
+                value={Number(String(selectedNode.style.letterSpacing || '0').replace('px', ''))}
+                onChange={(e) => handleStyleChange('letterSpacing', `${e.target.value}px`)}
+                className="w-full bg-white border border-slate-200 rounded px-1.5 py-0.5 text-xs font-mono"
+              />
+            </div>
+          </div>
+
+          {/* Text Decoration (Underline, Line-through) */}
+          <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border border-slate-200">
+            <span className="text-[10px] text-slate-500 font-semibold">텍스트 장식선</span>
+            <div className="flex gap-1">
+              {[
+                { val: 'none', label: '없음' },
+                { val: 'underline', label: '밑줄 (U)' },
+                { val: 'line-through', label: '취소선 (S)' }
+              ].map((dec) => (
+                <button
+                  key={dec.val}
+                  onClick={() => handleStyleChange('textDecoration', dec.val)}
+                  className={`px-2 py-0.5 rounded text-[10px] transition ${
+                    (selectedNode.style.textDecoration || 'none') === dec.val
+                      ? 'bg-white text-indigo-700 shadow-2xs font-bold border border-slate-200'
+                      : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  {dec.label}
                 </button>
               ))}
             </div>
@@ -908,11 +1082,42 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
       {/* 9. UNIVERSAL: Border, Corner Radius & Shadow */}
       <div className="space-y-2 pt-3">
-        <label className="text-[10px] text-slate-400 font-bold uppercase flex items-center gap-1">
-          <Shield size={11} />
-          <span>곡률 & 테두리선 (Borders & Radius)</span>
-        </label>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="flex items-center justify-between">
+          <label className="text-[10px] text-slate-400 font-bold uppercase flex items-center gap-1">
+            <Shield size={11} />
+            <span>곡률 & 테두리선 (Borders & Radius)</span>
+          </label>
+          <button
+            onClick={() => setUse4WayRadius(!use4WayRadius)}
+            className="text-[10px] text-indigo-600 hover:text-indigo-800 font-semibold"
+          >
+            {use4WayRadius ? '단일 곡률' : '4코너 분할'}
+          </button>
+        </div>
+
+        {use4WayRadius ? (
+          <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1.5">
+            <span className="text-[10px] text-slate-500 block font-semibold">4코너 개별 곡률 (TL / TR / BR / BL)</span>
+            <div className="grid grid-cols-4 gap-1.5">
+              {[
+                { k: 'borderTopLeftRadius', l: '상좌' },
+                { k: 'borderTopRightRadius', l: '상우' },
+                { k: 'borderBottomRightRadius', l: '하우' },
+                { k: 'borderBottomLeftRadius', l: '하좌' }
+              ].map((c) => (
+                <div key={c.k} className="text-center">
+                  <span className="text-[9px] text-slate-400 block mb-0.5">{c.l}</span>
+                  <input
+                    type="number"
+                    value={Number(selectedNode.style[c.k as keyof VNodeStyle] || 0)}
+                    onChange={(e) => handleStyleChange(c.k as keyof VNodeStyle, Number(e.target.value))}
+                    className="w-full bg-white border border-slate-200 rounded px-1 py-0.5 text-xs font-mono text-center"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
           <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
             <span className="text-[10px] text-slate-500 block">모서리 곡률 ({selectedNode.style.borderRadius || 0}px)</span>
             <input
@@ -924,6 +1129,10 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               className="w-full accent-indigo-600 h-1.5 cursor-pointer"
             />
           </div>
+        )}
+
+        <div className="grid grid-cols-2 gap-2">
+          {/* Border Width */}
           <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
             <span className="text-[10px] text-slate-500 block">선 두께</span>
             <div className="flex gap-1">
@@ -941,6 +1150,41 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Border Style */}
+          <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
+            <span className="text-[10px] text-slate-500 block">선 스타일</span>
+            <select
+              value={selectedNode.style.borderStyle || 'solid'}
+              onChange={(e) => handleStyleChange('borderStyle', e.target.value)}
+              className="w-full bg-white border border-slate-200 rounded text-[11px] py-1 px-1"
+            >
+              <option value="solid">실선 (Solid)</option>
+              <option value="dashed">점선 (Dashed)</option>
+              <option value="dotted">도트 (Dotted)</option>
+              <option value="none">없음 (None)</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Border Color */}
+        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-between">
+          <span className="text-[10px] text-slate-500">테두리 색상</span>
+          <div className="flex items-center gap-1.5">
+            <input
+              type="color"
+              value={selectedNode.style.borderColor?.startsWith('#') ? selectedNode.style.borderColor : '#475569'}
+              onChange={(e) => handleStyleChange('borderColor', e.target.value)}
+              className="w-5 h-5 rounded border border-slate-300 cursor-pointer p-0"
+            />
+            <input
+              type="text"
+              value={selectedNode.style.borderColor || ''}
+              placeholder="#475569"
+              onChange={(e) => handleStyleChange('borderColor', e.target.value)}
+              className="w-24 bg-white border border-slate-200 rounded px-1.5 py-0.5 font-mono text-[11px]"
+            />
           </div>
         </div>
 

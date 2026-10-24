@@ -473,6 +473,17 @@ const screen2Root: VNode = {
           type: 'button',
           name: 'Biometric Confirm Button',
           content: '지문 인식으로 즉시 체결',
+          events: [
+            {
+              id: 'evt-s2-submit-nav',
+              trigger: 'click',
+              action: {
+                type: 'navigate',
+                targetArtboardId: 'artboard-3'
+              },
+              description: '클릭 시 체결 완료 & 영수증 화면으로 이동'
+            }
+          ],
           style: {
             width: '100%',
             padding: 16,
@@ -597,6 +608,17 @@ const screen3Root: VNode = {
       type: 'button',
       name: 'Back to Portfolio Button',
       content: '포트폴리오로 돌아가기',
+      events: [
+        {
+          id: 'evt-s3-back-nav',
+          trigger: 'click',
+          action: {
+            type: 'navigate',
+            targetArtboardId: 'artboard-1'
+          },
+          description: '클릭 시 포트폴리오 메인 화면으로 복귀'
+        }
+      ],
       style: {
         width: '100%',
         padding: 16,

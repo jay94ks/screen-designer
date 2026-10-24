@@ -63,6 +63,7 @@ export interface VNodeStyle {
   flexShrink?: number;
   flexBasis?: string | number;
   alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline';
+  alignSelf?: 'auto' | 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
   alignContent?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'stretch';
   justifyContent?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly';
   gap?: number | string;

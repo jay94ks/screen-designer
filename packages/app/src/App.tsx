@@ -12,6 +12,7 @@ import { ShareModal } from './components/Modals/ShareModal';
 import { NewArtboardModal } from './components/Modals/NewArtboardModal';
 import { GitDesktopModal } from './components/Modals/GitDesktopModal';
 import { CanvasRulers, GuideLine } from './components/CanvasRulers';
+import { PrototypeWiresOverlay } from './components/PrototypeWiresOverlay';
 import { CommandPaletteModal } from './components/Modals/CommandPaletteModal';
 import { gitClient } from './utils/gitClient';
 import { projectClient } from './utils/projectClient';
@@ -200,6 +201,7 @@ export default function App() {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(() => {
     return typeof window !== 'undefined' && (window.location.search.includes('palette') || window.location.search.includes('cmd'));
   });
+  const [showPrototypeWires, setShowPrototypeWires] = useState(true);
   const clipboardNodeRef = useRef<VNode | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const [canvasRect, setCanvasRect] = useState<DOMRect | null>(null);
@@ -670,6 +672,48 @@ export default function App() {
     );
   };
 
+  const handleAlignSelected = (type: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom') => {
+    if (selectedNode && selectedNode.type !== 'frame') {
+      const updates: any = {};
+      if (type === 'left') {
+        updates.alignSelf = 'flex-start';
+        updates.textAlign = 'left';
+        updates.marginLeft = 0;
+      } else if (type === 'center') {
+        updates.alignSelf = 'center';
+        updates.textAlign = 'center';
+        updates.marginLeft = 'auto';
+        updates.marginRight = 'auto';
+      } else if (type === 'right') {
+        updates.alignSelf = 'flex-end';
+        updates.textAlign = 'right';
+        updates.marginLeft = 'auto';
+        updates.marginRight = 0;
+      } else if (type === 'top') {
+        updates.marginTop = 0;
+      } else if (type === 'middle') {
+        updates.marginTop = 'auto';
+        updates.marginBottom = 'auto';
+      } else if (type === 'bottom') {
+        updates.marginTop = 'auto';
+        updates.marginBottom = 0;
+      }
+      handleUpdateNode(selectedNode.id, {
+        style: {
+          ...selectedNode.style,
+          ...updates
+        }
+      });
+    } else if (selectedArtboard) {
+      if (type === 'top') {
+        pushHistory(artboards);
+        setArtboards((prev) =>
+          prev.map((a) => (a.id === selectedArtboard.id ? { ...a, y: 0 } : a))
+        );
+      }
+    }
+  };
+
   // Support initial query params for visual testing (e.g., ?node=node-s1-promo-img&bg=neon)
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -974,6 +1018,34 @@ export default function App() {
     setTimeout(() => setExportToast(null), 2500);
   };
 
+  const handleMoveNode = (nodeId: string, direction: 'up' | 'down') => {
+    if (!selectedArtboard) return;
+    pushHistory(artboards);
+    const reorderInTree = (curr: VNode): VNode => {
+      if (!curr.children) return curr;
+      const idx = curr.children.findIndex((c) => c.id === nodeId);
+      if (idx !== -1) {
+        const nextChildren = [...curr.children];
+        const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+        if (targetIdx >= 0 && targetIdx < nextChildren.length) {
+          const temp = nextChildren[idx];
+          nextChildren[idx] = nextChildren[targetIdx];
+          nextChildren[targetIdx] = temp;
+          return { ...curr, children: nextChildren };
+        }
+        return curr;
+      }
+      return {
+        ...curr,
+        children: curr.children.map(reorderInTree)
+      };
+    };
+
+    setArtboards((prev) =>
+      prev.map((a) => (a.id === selectedArtboard.id ? { ...a, rootNode: reorderInTree(a.rootNode) } : a))
+    );
+  };
+
   const handlePasteNode = () => {
     if (!clipboardNodeRef.current || !selectedArtboard) return;
     const cloned = cloneNodeWithNewIds(clipboardNodeRef.current);
@@ -1229,6 +1301,10 @@ export default function App() {
         showRulers={showRulers}
         onToggleRulers={() => setShowRulers(!showRulers)}
         onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+        showPrototypeWires={showPrototypeWires}
+        onTogglePrototypeWires={() => setShowPrototypeWires(!showPrototypeWires)}
+        onAlignSelected={handleAlignSelected}
+        hasSelectedElement={Boolean(selectedNode && selectedNode.type !== 'frame')}
       />
 
       <div className="flex flex-1 overflow-hidden relative">
@@ -1252,6 +1328,8 @@ export default function App() {
           onInsertNode={(type, name, content, props) => handleInsertNewNode(type, name, content, props)}
           onUpdateNode={handleUpdateNode}
           onDeleteNode={handleDeleteNode}
+          onDuplicateNode={handleDuplicateNode}
+          onMoveNode={handleMoveNode}
           onInsertTemplate={(templateNode) => {
             if (!selectedArtboard) return;
             pushHistory(artboards);
@@ -1361,11 +1439,29 @@ export default function App() {
           ) : (
             /* Canvas Transform Layer */
             <div
-              className="flex items-start gap-12 transition-transform duration-75 origin-top-left"
+              id="canvas-transform-layer"
+              className="flex items-start gap-12 transition-transform duration-75 origin-top-left relative"
               style={{
                 transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`
               }}
             >
+              {/* Figma-Style Visual Prototype Flow Overlay */}
+              <PrototypeWiresOverlay
+                artboards={artboards}
+                selectedArtboardId={selectedArtboardId}
+                selectedNodeId={selectedNodeId}
+                onSelectArtboard={(id) => {
+                  setSelectedArtboardId(id);
+                  const ab = artboards.find((a) => a.id === id);
+                  if (ab) setSelectedNodeId(ab.rootNode.id);
+                }}
+                onSelectNode={(node) => {
+                  const owner = artboards.find((a) => findNodeById(a.rootNode, node.id));
+                  if (owner) setSelectedArtboardId(owner.id);
+                  setSelectedNodeId(node.id);
+                }}
+                visible={showPrototypeWires}
+              />
               {artboards.map((artboard) => {
                 const isSelected = artboard.id === selectedArtboardId;
 

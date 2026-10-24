@@ -21,6 +21,12 @@ import {
   Layers,
   PanelRight,
   RotateCcw,
+  RotateCw,
+  Zap,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  ArrowUpDown,
   ZoomIn,
   ZoomOut,
   FolderOpen,
@@ -67,6 +73,10 @@ interface ClaudeHeaderProps {
   showRulers?: boolean;
   onToggleRulers?: () => void;
   onOpenCommandPalette?: () => void;
+  showPrototypeWires?: boolean;
+  onTogglePrototypeWires?: () => void;
+  onAlignSelected?: (type: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom') => void;
+  hasSelectedElement?: boolean;
 }
 
 export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
@@ -104,7 +114,11 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
   onToggleRightSidebar,
   showRulers = false,
   onToggleRulers,
-  onOpenCommandPalette
+  onOpenCommandPalette,
+  showPrototypeWires = true,
+  onTogglePrototypeWires,
+  onAlignSelected,
+  hasSelectedElement = false
 }) => {
   const [activeMenu, setActiveMenu] = useState<'file' | 'edit' | 'view' | 'help' | null>(null);
   const [showPageMenu, setShowPageMenu] = useState(false);
@@ -629,52 +643,131 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
           )}
         </div>
 
-        {/* 2-2. Center: Toolbox (Figma Style Canvas Tools) */}
-        <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200/80 shadow-2xs">
-          {[
-            { id: 'select' as CanvasTool, icon: MousePointer, label: '선택 도구 (V)' },
-            { id: 'hand' as CanvasTool, icon: Hand, label: '이동 도구 (H)' },
-            { id: 'frame' as CanvasTool, icon: Hash, label: '새 프레임/아트보드 (F)' },
-            { id: 'text' as CanvasTool, icon: Type, label: '텍스트 추가 (T)' },
-            { id: 'rect' as CanvasTool, icon: Square, label: '사각형 추가 (R)' },
-            { id: 'circle' as CanvasTool, icon: Circle, label: '원형 추가 (O)' }
-          ].map((item) => {
-            const Icon = item.icon;
-            const isActive = activeTool === item.id;
-            return (
+        {/* 2-2. Center: Toolbox & Designer Power Bar (Undo/Redo, Tools, Alignments) */}
+        <div className="flex items-center gap-1.5">
+          {/* History Actions (Undo / Redo) */}
+          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200/80 shadow-2xs">
+            <button
+              onClick={onUndo}
+              disabled={!canUndo}
+              title="실행 취소 (Ctrl+Z)"
+              className="p-1.5 rounded transition text-slate-600 hover:text-slate-900 hover:bg-white disabled:opacity-30 disabled:hover:bg-transparent"
+            >
+              <RotateCcw size={12} />
+            </button>
+            <button
+              onClick={onRedo}
+              disabled={!canRedo}
+              title="다시 실행 (Ctrl+Y)"
+              className="p-1.5 rounded transition text-slate-600 hover:text-slate-900 hover:bg-white disabled:opacity-30 disabled:hover:bg-transparent"
+            >
+              <RotateCw size={12} />
+            </button>
+          </div>
+
+          {/* Canvas Tools */}
+          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200/80 shadow-2xs">
+            {[
+              { id: 'select' as CanvasTool, icon: MousePointer, label: '선택 도구 (V)' },
+              { id: 'hand' as CanvasTool, icon: Hand, label: '이동 도구 (H)' },
+              { id: 'frame' as CanvasTool, icon: Hash, label: '새 프레임/아트보드 (F)' },
+              { id: 'text' as CanvasTool, icon: Type, label: '텍스트 추가 (T)' },
+              { id: 'rect' as CanvasTool, icon: Square, label: '사각형 추가 (R)' },
+              { id: 'circle' as CanvasTool, icon: Circle, label: '원형 추가 (O)' }
+            ].map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTool === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    if (item.id === 'frame') {
+                      onOpenNewFrame();
+                    } else if (item.id === 'text' && onInsertNode) {
+                      onInsertNode('text', '새 텍스트', '텍스트를 입력하세요');
+                      onSelectTool('select');
+                    } else if (item.id === 'rect' && onInsertNode) {
+                      onInsertNode('box', '새 사각형 박스');
+                      onSelectTool('select');
+                    } else if (item.id === 'circle' && onInsertNode) {
+                      onInsertNode('circle', '새 원형 배지');
+                      onSelectTool('select');
+                    } else {
+                      onSelectTool(item.id);
+                    }
+                  }}
+                  title={item.label}
+                  className={`p-1.5 rounded transition ${
+                    isActive
+                      ? 'bg-white text-indigo-600 shadow-xs font-bold'
+                      : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  <Icon size={13} />
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Figma-Style Alignment Power Bar */}
+          {onAlignSelected && (
+            <div
+              className={`flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200/80 shadow-2xs transition ${
+                hasSelectedElement ? 'opacity-100' : 'opacity-40 hover:opacity-100'
+              }`}
+            >
               <button
-                key={item.id}
-                onClick={() => {
-                  if (item.id === 'frame') {
-                    onOpenNewFrame();
-                  } else if (item.id === 'text' && onInsertNode) {
-                    onInsertNode('text', '새 텍스트', '텍스트를 입력하세요');
-                    onSelectTool('select');
-                  } else if (item.id === 'rect' && onInsertNode) {
-                    onInsertNode('box', '새 사각형 박스');
-                    onSelectTool('select');
-                  } else if (item.id === 'circle' && onInsertNode) {
-                    onInsertNode('circle', '새 원형 배지');
-                    onSelectTool('select');
-                  } else {
-                    onSelectTool(item.id);
-                  }
-                }}
-                title={item.label}
-                className={`p-1.5 rounded transition ${
-                  isActive
-                    ? 'bg-white text-indigo-600 shadow-xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
+                onClick={() => onAlignSelected('left')}
+                title="좌측 정렬 (Align Left)"
+                className="p-1.5 rounded hover:bg-white text-slate-600 hover:text-indigo-600 transition"
               >
-                <Icon size={13} />
+                <AlignLeft size={12} />
               </button>
-            );
-          })}
+              <button
+                onClick={() => onAlignSelected('center')}
+                title="수평 중앙 정렬 (Align Horizontal Center)"
+                className="p-1.5 rounded hover:bg-white text-slate-600 hover:text-indigo-600 transition"
+              >
+                <AlignCenter size={12} />
+              </button>
+              <button
+                onClick={() => onAlignSelected('right')}
+                title="우측 정렬 (Align Right)"
+                className="p-1.5 rounded hover:bg-white text-slate-600 hover:text-indigo-600 transition"
+              >
+                <AlignRight size={12} />
+              </button>
+              <div className="w-px h-3 bg-slate-300 mx-0.5" />
+              <button
+                onClick={() => onAlignSelected('middle')}
+                title="수직 중앙 정렬 (Align Vertical Center)"
+                className="p-1.5 rounded hover:bg-white text-slate-600 hover:text-indigo-600 transition"
+              >
+                <ArrowUpDown size={12} />
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* 2-3. Right: Interactive PLAY, Zoom, Navigator & Git Actions */}
+        {/* 2-3. Right: Interactive PLAY, Prototype Flow Toggle, Zoom, Navigator & Git Actions */}
         <div className="flex items-center gap-2">
+          {/* Prototype Flow Wiring Toggle Button */}
+          {onTogglePrototypeWires && (
+            <button
+              onClick={onTogglePrototypeWires}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition shadow-2xs border ${
+                showPrototypeWires
+                  ? 'bg-purple-50 border-purple-300 text-purple-700 shadow-purple-500/10'
+                  : 'bg-white border-slate-200 text-slate-500 hover:text-slate-800'
+              }`}
+              title="화면 간 인터랙티브 프로토타입 연결선 (Figma Prototype Wire) 표시 토글"
+            >
+              <Zap size={11} className={showPrototypeWires ? 'text-purple-600 fill-purple-600' : 'text-slate-400'} />
+              <span>플로우</span>
+              {showPrototypeWires && <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />}
+            </button>
+          )}
+
           {/* Fullscreen Interactive PLAY Button */}
           <button
             onClick={onPlay}

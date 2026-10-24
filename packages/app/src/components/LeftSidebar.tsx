@@ -6,6 +6,8 @@ import {
   Plus,
   ChevronDown,
   ChevronRight,
+  ChevronUp,
+  Copy,
   Component,
   Smartphone,
   Tablet,
@@ -47,6 +49,8 @@ interface LeftSidebarProps {
   onInsertNode: (type: NodeType, name: string, content?: string, props?: Record<string, any>) => void;
   onUpdateNode?: (nodeId: string, updates: Partial<VNode>) => void;
   onDeleteNode?: (nodeId: string) => void;
+  onDuplicateNode?: (node: VNode) => void;
+  onMoveNode?: (nodeId: string, direction: 'up' | 'down') => void;
   onInsertTemplate?: (templateNode: VNode) => void;
   onOpenSettings?: (tab?: 'canvas' | 'components') => void;
   isOpen: boolean;
@@ -63,6 +67,8 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   onInsertNode,
   onUpdateNode,
   onDeleteNode,
+  onDuplicateNode,
+  onMoveNode,
   onInsertTemplate,
   onOpenSettings,
   isOpen,
@@ -70,8 +76,13 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   width = 270
 }) => {
   const [activeTab, setActiveTab] = useState<'layers' | 'assets' | 'templates'>(() => {
-    if (typeof window !== 'undefined' && (window.location.search.includes('templates') || window.location.search.includes('tpl'))) {
-      return 'templates';
+    if (typeof window !== 'undefined') {
+      if (window.location.search.includes('templates') || window.location.search.includes('tpl')) {
+        return 'templates';
+      }
+      if (window.location.search.includes('components') || window.location.search.includes('assets') || window.location.search.includes('comps')) {
+        return 'assets';
+      }
     }
     return 'layers';
   });
@@ -228,8 +239,62 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             <Lock size={10} className={isSelected ? 'text-amber-200 shrink-0' : 'text-amber-500 shrink-0'} />
           )}
 
-          {/* Quick Hover Layer Actions: Visibility / Lock / Delete */}
+          {/* Quick Hover Layer Actions: Move / Duplicate / Visibility / Lock / Delete */}
           <div className="flex items-center gap-0.5 opacity-0 group-hover/layer:opacity-100 transition-opacity ml-1 shrink-0">
+            {/* Move Up */}
+            {node.type !== 'frame' && onMoveNode && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMoveNode(node.id, 'up');
+                }}
+                className={`p-0.5 rounded transition ${
+                  isSelected
+                    ? 'text-white/80 hover:text-white hover:bg-white/20'
+                    : 'text-slate-400 hover:text-slate-700 hover:bg-slate-200'
+                }`}
+                title="위로 이동 (순서 변경)"
+              >
+                <ChevronUp size={11} />
+              </button>
+            )}
+
+            {/* Move Down */}
+            {node.type !== 'frame' && onMoveNode && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMoveNode(node.id, 'down');
+                }}
+                className={`p-0.5 rounded transition ${
+                  isSelected
+                    ? 'text-white/80 hover:text-white hover:bg-white/20'
+                    : 'text-slate-400 hover:text-slate-700 hover:bg-slate-200'
+                }`}
+                title="아래로 이동 (순서 변경)"
+              >
+                <ChevronDown size={11} />
+              </button>
+            )}
+
+            {/* Duplicate */}
+            {node.type !== 'frame' && onDuplicateNode && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDuplicateNode(node);
+                }}
+                className={`p-0.5 rounded transition ${
+                  isSelected
+                    ? 'text-white/80 hover:text-white hover:bg-white/20'
+                    : 'text-slate-400 hover:text-slate-700 hover:bg-slate-200'
+                }`}
+                title="레이어 복제 (Ctrl+D)"
+              >
+                <Copy size={10} />
+              </button>
+            )}
+
             {/* Visibility Toggle */}
             <button
               onClick={(e) => {
