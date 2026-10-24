@@ -207,8 +207,9 @@ export default defineConfig({
       {
         entry: 'electron/main.ts',
         onstart(options) {
-          if (process.env.NO_ELECTRON || !process.env.DISPLAY) {
-            console.log('[Vite Electron] Headless/Windows host mode: skipping Linux Electron spawn');
+          const isHeadlessLinux = process.platform === 'linux' && !process.env.DISPLAY;
+          if (process.env.NO_ELECTRON || isHeadlessLinux) {
+            console.log('[Vite Electron] Headless/Linux host mode: skipping Electron spawn');
             return;
           }
           options.startup();

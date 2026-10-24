@@ -1,18 +1,30 @@
 {
   "name": "Screen Designer Storyboard",
   "version": "1.0.0",
-  "updatedAt": "2026-10-24T19:39:50.105Z",
+  "updatedAt": "2026-10-24T20:46:42.536Z",
   "activePageId": "page-1",
   "pageDocsPath": "docs/ui-boards",
   "pages": [
     {
       "id": "page-1",
-      "name": "Page 1 (서비스 기획 보드 - v1.1 변경)",
+      "name": "Page 1 (핀테크 가상 DOM)",
       "number": 1,
       "fileName": "pages/1.json",
-      "artboardsCount": 1
+      "artboardsCount": 3
+    },
+    {
+      "id": "page-2",
+      "name": "Page 2 (새로운 작업 공간)",
+      "number": 2,
+      "fileName": "pages/2.json",
+      "artboardsCount": 0
     }
   ],
   "assets": [],
-  "settings": {}
+  "settings": {
+    "theme": "light",
+    "gridVisible": true,
+    "gridSize": 24,
+    "canvasBackground": "#e5e7eb"
+  }
 }
