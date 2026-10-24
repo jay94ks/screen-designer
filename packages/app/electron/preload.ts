@@ -53,5 +53,14 @@ import { ipcRenderer } from 'electron';
       ipcRenderer.invoke('git:push', { workspacePath }),
     commitDesign: (message: string, pageDocsPath: string, workspacePath?: string) =>
       ipcRenderer.invoke('git:commit-design', { message, pageDocsPath, workspacePath })
+  },
+  // Assets Management
+  assets: {
+    materializePresets: (workspacePath?: string) =>
+      ipcRenderer.invoke('assets:materialize-presets', { workspacePath }),
+    chooseAndCopy: (workspacePath?: string) =>
+      ipcRenderer.invoke('assets:choose-and-copy', { workspacePath }),
+    list: (workspacePath?: string) =>
+      ipcRenderer.invoke('assets:list', { workspacePath })
   }
 };

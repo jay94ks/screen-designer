@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
@@ -12,6 +12,11 @@ import {
   commitFiles,
   pushCommits
 } from './gitService';
+import {
+  materializePresets,
+  copyAssetFile,
+  listAssets
+} from './assetService';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -251,7 +256,37 @@ ipcMain.handle('git:push', async (_, { workspacePath }) => {
 
 ipcMain.handle('git:commit-design', async (_, { message, pageDocsPath = 'docs/ui-boards', workspacePath }) => {
   const rootDir = workspacePath || process.env.SCREEN_DESIGNER_WORKSPACE || process.cwd();
-  return commitFiles([pageDocsPath, '.screen-designer'], message || 'feat(ui): update storyboard canvas design documents', undefined, rootDir);
+  return commitFiles([pageDocsPath, '.screen-designer', 'assets'], message || 'feat(ui): update storyboard canvas design documents and assets', undefined, rootDir);
+});
+
+// Assets Management IPC Handlers
+ipcMain.handle('assets:materialize-presets', async (_, { workspacePath } = {}) => {
+  return materializePresets(workspacePath);
+});
+
+ipcMain.handle('assets:choose-and-copy', async (_, { workspacePath } = {}) => {
+  const rootDir = workspacePath || process.env.SCREEN_DESIGNER_WORKSPACE || process.cwd();
+  const result = await dialog.showOpenDialog(win!, {
+    title: '이미지 파일 선택 (assets 폴더로 자동 복사)',
+    buttonLabel: '선택 및 복사',
+    properties: ['openFile'],
+    filters: [
+      { name: '이미지 파일 (Images)', extensions: ['png', 'jpg', 'jpeg', 'webp', 'svg', 'gif', 'bmp', 'avif'] },
+      { name: '모든 파일 (All Files)', extensions: ['*'] }
+    ]
+  });
+
+  if (result.canceled || !result.filePaths.length) {
+    return { canceled: true };
+  }
+
+  const sourcePath = result.filePaths[0];
+  const copyResult = await copyAssetFile(sourcePath, rootDir);
+  return { canceled: false, ...copyResult };
+});
+
+ipcMain.handle('assets:list', async (_, { workspacePath } = {}) => {
+  return listAssets(workspacePath);
 });
 
 app.on('window-all-closed', () => {
@@ -266,4 +301,11 @@ app.on('activate', () => {
   }
 });
 
-app.whenReady().then(createWindow);
+app.whenReady().then(async () => {
+  try {
+    await materializePresets();
+  } catch (err) {
+    console.error('[Electron Main] Error materializing image presets:', err);
+  }
+  createWindow();
+});

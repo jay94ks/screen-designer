@@ -23,10 +23,18 @@ import {
   ChevronsUpDown,
   Move,
   CornerDownRight,
-  Plus
+  Plus,
+  Upload,
+  Check,
+  FileImage
 } from 'lucide-react';
 import { VDomArtboard, VNode, VNodeStyle } from '../types/vdom';
 import { VisibilityConditionSection } from './VisibilityConditionSection';
+import {
+  chooseAndCopyImageFile,
+  applyPresetImage,
+  IMAGE_PRESETS
+} from '../utils/assetManager';
 
 interface PropertiesPanelProps {
   artboard: VDomArtboard | null;
@@ -46,6 +54,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   onSwitchToTweaksTab
 }) => {
   const [activeTab, setActiveTab] = useState<'style' | 'layout' | 'effects'>('style');
+  const [isChoosingAsset, setIsChoosingAsset] = useState(false);
 
   if (!artboard) {
     return (
@@ -77,19 +86,65 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     onUpdateNode(selectedNode.id, { props: nextProps });
   };
 
+  const handleChooseImageFile = async () => {
+    setIsChoosingAsset(true);
+    try {
+      const asset = await chooseAndCopyImageFile();
+      if (asset) {
+        onUpdateNode(selectedNode.id, {
+          content: asset.relativePath,
+          props: {
+            ...(selectedNode.props || {}),
+            src: asset.relativePath,
+            dataUrl: asset.dataUrl
+          }
+        });
+      }
+    } finally {
+      setIsChoosingAsset(false);
+    }
+  };
+
+  const handleApplyPreset = async (presetId: string) => {
+    const asset = await applyPresetImage(presetId);
+    if (asset) {
+      onUpdateNode(selectedNode.id, {
+        content: asset.relativePath,
+        props: {
+          ...(selectedNode.props || {}),
+          src: asset.relativePath,
+          dataUrl: asset.dataUrl
+        }
+      });
+    }
+  };
+
+  const handleChooseBackgroundImageFile = async () => {
+    setIsChoosingAsset(true);
+    try {
+      const asset = await chooseAndCopyImageFile();
+      if (asset) {
+        handleStyleChange('backgroundImage', asset.relativePath);
+        handleStyleChange('backgroundImageDataUrl' as any, asset.dataUrl);
+      }
+    } finally {
+      setIsChoosingAsset(false);
+    }
+  };
+
+  const handleApplyBackgroundPreset = async (presetId: string) => {
+    const asset = await applyPresetImage(presetId);
+    if (asset) {
+      handleStyleChange('backgroundImage', asset.relativePath);
+      handleStyleChange('backgroundImageDataUrl' as any, asset.dataUrl);
+    }
+  };
+
   const isImage = selectedNode.type === 'image';
   const isDialog = selectedNode.type === 'dialog';
   const isScroll = selectedNode.type === 'scroll-container';
   const isTextLike = ['text', 'heading', 'span', 'blockquote', 'code', 'label', 'button'].includes(selectedNode.type);
   const isInputLike = ['input', 'textarea', 'select'].includes(selectedNode.type);
-
-  // Sample Image Presets for quick application
-  const SAMPLE_IMAGES = [
-    { name: '추상 그라디언트', url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80' },
-    { name: '사이버펑크 네온', url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop&q=80' },
-    { name: '미니멀 데스크', url: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=600&auto=format&fit=crop&q=80' },
-    { name: '사용자 프로필', url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80' }
-  ];
 
   const SAMPLE_BACKGROUND_PATTERNS = [
     { name: '네온 그라데이션', url: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)' },
@@ -148,42 +203,86 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
       {/* 2. SPECIFIC: Image Component Properties */}
       {isImage && (
         <div className="space-y-3 pt-3">
-          <div className="flex items-center gap-1.5 text-[10px] font-bold text-pink-600 uppercase tracking-wider">
-            <ImageIcon size={12} />
-            <span>이미지 소스 및 피팅 (Image Settings)</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-[10px] font-bold text-pink-600 uppercase tracking-wider">
+              <ImageIcon size={12} />
+              <span>이미지 소스 및 피팅 (Image Settings)</span>
+            </div>
+            {selectedNode.props?.src && (
+              <span className="text-[9px] font-mono text-slate-400 truncate max-w-[140px]" title={selectedNode.props.src}>
+                {selectedNode.props.src}
+              </span>
+            )}
           </div>
 
-          {/* Image Source Input */}
-          <div className="space-y-1">
-            <label className="text-[10px] text-slate-400 font-bold uppercase">이미지 URL (Src)</label>
-            <input
-              type="text"
-              value={selectedNode.props?.src || selectedNode.content || ''}
-              placeholder="https://..."
-              onChange={(e) => {
-                handlePropsChange('src', e.target.value);
-                onUpdateNode(selectedNode.id, { content: e.target.value });
-              }}
-              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-mono text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-pink-500"
-            />
+          {/* Image Source Input + File Chooser Button */}
+          <div className="space-y-1.5">
+            <label className="text-[10px] text-slate-400 font-bold uppercase flex items-center justify-between">
+              <span>이미지 소스 지정 (URL / 에셋)</span>
+              {selectedNode.props?.src?.startsWith('assets/') && (
+                <span className="text-[9px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-mono font-normal">
+                  assets/ 내장
+                </span>
+              )}
+            </label>
+            <div className="flex gap-1.5">
+              <input
+                type="text"
+                value={selectedNode.props?.src || selectedNode.content || ''}
+                placeholder="https://... 또는 assets/파일명"
+                onChange={(e) => {
+                  handlePropsChange('src', e.target.value);
+                  onUpdateNode(selectedNode.id, { content: e.target.value });
+                }}
+                className="flex-1 min-w-0 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-mono text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-pink-500"
+              />
+              <button
+                onClick={handleChooseImageFile}
+                disabled={isChoosingAsset}
+                className="px-2.5 py-1.5 bg-pink-50 hover:bg-pink-100 text-pink-700 border border-pink-200 rounded-lg text-[11px] font-medium flex items-center gap-1.5 transition shrink-0 shadow-2xs disabled:opacity-50"
+                title="로컬 파일을 선택하여 assets/ 폴더로 복사하고 참조합니다"
+              >
+                <FolderOpen size={13} className="text-pink-600" />
+                <span>{isChoosingAsset ? '복사 중...' : '파일 선택'}</span>
+              </button>
+            </div>
           </div>
 
-          {/* Quick Presets */}
-          <div className="space-y-1">
-            <label className="text-[9px] text-slate-400 font-semibold block">샘플 이미지 프리셋</label>
+          {/* Built-in Electron Image Presets */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-[9px] text-slate-400 font-semibold block">내장 에셋 프리셋 (Electron Embedded)</label>
+              <span className="text-[9px] text-slate-400">assets/ 자동 저장</span>
+            </div>
             <div className="grid grid-cols-2 gap-1.5">
-              {SAMPLE_IMAGES.map((img) => (
-                <button
-                  key={img.name}
-                  onClick={() => {
-                    handlePropsChange('src', img.url);
-                    onUpdateNode(selectedNode.id, { content: img.url });
-                  }}
-                  className="px-2 py-1 bg-slate-100 hover:bg-pink-50 hover:text-pink-600 border border-slate-200 rounded text-[10px] text-left truncate transition"
-                >
-                  {img.name}
-                </button>
-              ))}
+              {IMAGE_PRESETS.map((preset) => {
+                const isCurrent =
+                  selectedNode.props?.src === `assets/${preset.fileName}` ||
+                  selectedNode.props?.src === preset.fileName;
+                return (
+                  <button
+                    key={preset.id}
+                    onClick={() => handleApplyPreset(preset.id)}
+                    className={`p-1.5 rounded-lg border text-left transition flex items-center gap-2 group ${
+                      isCurrent
+                        ? 'border-pink-500 bg-pink-50/70 shadow-2xs'
+                        : 'border-slate-200 bg-slate-50/80 hover:bg-white hover:border-pink-300'
+                    }`}
+                  >
+                    <div className="w-8 h-8 rounded border border-slate-200 overflow-hidden bg-slate-900 shrink-0 flex items-center justify-center">
+                      <img src={preset.dataUrl} alt={preset.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[10px] font-semibold text-slate-700 truncate group-hover:text-pink-600">
+                        {preset.name}
+                      </div>
+                      <div className="text-[9px] font-mono text-slate-400 truncate">
+                        {preset.fileName}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -314,7 +413,10 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           </label>
           {selectedNode.style.backgroundImage && (
             <button
-              onClick={() => handleStyleChange('backgroundImage', undefined)}
+              onClick={() => {
+                handleStyleChange('backgroundImage', undefined);
+                handleStyleChange('backgroundImageDataUrl' as any, undefined);
+              }}
               className="text-[10px] text-rose-500 hover:underline"
             >
               제거
@@ -322,26 +424,52 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           )}
         </div>
 
-        {/* Background Image Input */}
-        <input
-          type="text"
-          value={selectedNode.style.backgroundImage || ''}
-          placeholder="url(https://...) 또는 그라디언트"
-          onChange={(e) => handleStyleChange('backgroundImage', e.target.value)}
-          className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-mono text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-        />
-
-        {/* Quick Background Presets */}
-        <div className="grid grid-cols-3 gap-1">
-          {SAMPLE_BACKGROUND_PATTERNS.map((p) => (
+        {/* Background Image Input + File Chooser */}
+        <div className="space-y-1.5">
+          <div className="flex gap-1.5">
+            <input
+              type="text"
+              value={selectedNode.style.backgroundImage || ''}
+              placeholder="url(...) 또는 assets/파일명"
+              onChange={(e) => handleStyleChange('backgroundImage', e.target.value)}
+              className="flex-1 min-w-0 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-mono text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
             <button
-              key={p.name}
-              onClick={() => handleStyleChange('backgroundImage', p.url)}
-              className="py-1 px-1 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200 rounded text-[9px] text-center truncate transition"
+              onClick={handleChooseBackgroundImageFile}
+              disabled={isChoosingAsset}
+              className="px-2.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg text-[11px] font-medium flex items-center gap-1.5 transition shrink-0 shadow-2xs disabled:opacity-50"
+              title="로컬 이미지 파일을 선택하여 assets/ 폴더로 복사하고 배경으로 지정합니다"
             >
-              {p.name}
+              <FolderOpen size={13} className="text-indigo-600" />
+              <span>{isChoosingAsset ? '복사 중...' : '배경 파일'}</span>
             </button>
-          ))}
+          </div>
+        </div>
+
+        {/* Quick Background Presets (Built-in SVG presets + Gradients) */}
+        <div className="space-y-1">
+          <span className="text-[9px] text-slate-400 font-semibold block">내장 배경 프리셋 (Electron Presets)</span>
+          <div className="grid grid-cols-3 gap-1">
+            {IMAGE_PRESETS.slice(0, 3).map((p) => (
+              <button
+                key={p.id}
+                onClick={() => handleApplyBackgroundPreset(p.id)}
+                className="py-1 px-1 bg-slate-50 hover:bg-pink-50 hover:text-pink-600 border border-slate-200 rounded text-[9px] text-center truncate transition font-medium"
+                title={`${p.name} (${p.fileName})`}
+              >
+                {p.name.split(' ')[0]}
+              </button>
+            ))}
+            {SAMPLE_BACKGROUND_PATTERNS.map((p) => (
+              <button
+                key={p.name}
+                onClick={() => handleStyleChange('backgroundImage', p.url)}
+                className="py-1 px-1 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200 rounded text-[9px] text-center truncate transition"
+              >
+                {p.name}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Background Size & Repeat Settings */}

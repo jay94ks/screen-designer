@@ -1,5 +1,6 @@
 import React from 'react';
 import { VNode, VNodeStyle } from '../types/vdom';
+import { getPresetByFileName } from '../data/imagePresets';
 
 export function styleToCssProperties(style: VNodeStyle): React.CSSProperties {
   const css: React.CSSProperties = {};
@@ -46,7 +47,14 @@ export function styleToCssProperties(style: VNodeStyle): React.CSSProperties {
   if (style.backgroundColor) css.backgroundColor = style.backgroundColor;
   if (style.backgroundGradient) css.background = style.backgroundGradient;
   if (style.backgroundImage) {
-    const bg = style.backgroundImage.trim();
+    let bg = ((style as any).backgroundImageDataUrl || style.backgroundImage).trim();
+    if (bg.startsWith('assets/')) {
+      const fileName = bg.replace(/^assets\//, '');
+      const preset = getPresetByFileName(fileName);
+      if (preset) {
+        bg = preset.dataUrl;
+      }
+    }
     css.backgroundImage = bg.startsWith('url(') || bg.startsWith('linear-gradient(') || bg.startsWith('radial-gradient(')
       ? bg
       : `url("${bg}")`;

@@ -38,7 +38,10 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import electron from 'vite-plugin-electron';
 import renderer from 'vite-plugin-electron-renderer';
+import path from 'path';
+import fs from 'fs';
 import { getGitStatus, getFileDiff, getGitHistory, getCommitDetails, commitFiles, pushCommits } from './electron/gitService';
+import { materializePresets, listAssets, getMimeType } from './electron/assetService';
 function gitApiPlugin() {
     return {
         name: 'screen-designer-git-api',
@@ -123,10 +126,110 @@ function gitApiPlugin() {
         }
     };
 }
+function assetsApiPlugin() {
+    return {
+        name: 'screen-designer-assets-api',
+        configureServer: function (server) {
+            var _this = this;
+            // Ensure presets exist when Vite dev server starts
+            materializePresets().catch(function () { });
+            server.middlewares.use(function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+                var cleanUrl, projectRootDir, filePath, mime, endpoint, body, data, data, rootDir, assetsDir, fileName, targetPath, base64Data, relativePath, err_2;
+                var _a;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            // 1. Static asset serving from project root /assets/
+                            if (req.url && (req.url.startsWith('/assets/') || req.url.startsWith('/@fs/assets/'))) {
+                                cleanUrl = req.url.replace(/^\/@fs/, '').replace(/^\/assets\//, '').split('?')[0];
+                                projectRootDir = path.resolve(__dirname, '../../');
+                                filePath = path.join(projectRootDir, 'assets', cleanUrl);
+                                if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+                                    mime = getMimeType(filePath);
+                                    res.setHeader('Content-Type', mime);
+                                    res.setHeader('Cache-Control', 'public, max-age=3600');
+                                    return [2 /*return*/, fs.createReadStream(filePath).pipe(res)];
+                                }
+                            }
+                            // 2. Asset API routes
+                            if (!((_a = req.url) === null || _a === void 0 ? void 0 : _a.startsWith('/api/assets/')))
+                                return [2 /*return*/, next()];
+                            endpoint = req.url.replace('/api/assets/', '').split('?')[0];
+                            body = {};
+                            if (!(req.method === 'POST')) return [3 /*break*/, 2];
+                            return [4 /*yield*/, new Promise(function (resolve) {
+                                    var data = '';
+                                    req.on('data', function (chunk) { return (data += chunk); });
+                                    req.on('end', function () {
+                                        try {
+                                            resolve(data ? JSON.parse(data) : {});
+                                        }
+                                        catch (_a) {
+                                            resolve({});
+                                        }
+                                    });
+                                })];
+                        case 1:
+                            body = _b.sent();
+                            _b.label = 2;
+                        case 2:
+                            _b.trys.push([2, 13, , 14]);
+                            res.setHeader('Content-Type', 'application/json');
+                            if (!(endpoint === 'materialize-presets')) return [3 /*break*/, 4];
+                            return [4 /*yield*/, materializePresets(body.workspacePath)];
+                        case 3:
+                            data = _b.sent();
+                            return [2 /*return*/, res.end(JSON.stringify(data))];
+                        case 4:
+                            if (!(endpoint === 'list')) return [3 /*break*/, 6];
+                            return [4 /*yield*/, listAssets(body.workspacePath)];
+                        case 5:
+                            data = _b.sent();
+                            return [2 /*return*/, res.end(JSON.stringify(data))];
+                        case 6:
+                            if (!(endpoint === 'save-file')) return [3 /*break*/, 12];
+                            rootDir = body.workspacePath || path.resolve(__dirname, '../../');
+                            assetsDir = path.join(rootDir, 'assets');
+                            return [4 /*yield*/, fs.promises.mkdir(assetsDir, { recursive: true })];
+                        case 7:
+                            _b.sent();
+                            fileName = (body.fileName || "image_".concat(Date.now(), ".png")).replace(/[^a-zA-Z0-9_.\-\uac00-\ud7a3]/g, '_');
+                            targetPath = path.join(assetsDir, fileName);
+                            if (!body.dataUrl) return [3 /*break*/, 9];
+                            base64Data = body.dataUrl.replace(/^data:image\/\w+;base64,/, '');
+                            return [4 /*yield*/, fs.promises.writeFile(targetPath, Buffer.from(base64Data, 'base64'))];
+                        case 8:
+                            _b.sent();
+                            return [3 /*break*/, 11];
+                        case 9:
+                            if (!body.content) return [3 /*break*/, 11];
+                            return [4 /*yield*/, fs.promises.writeFile(targetPath, body.content, 'utf-8')];
+                        case 10:
+                            _b.sent();
+                            _b.label = 11;
+                        case 11:
+                            relativePath = "assets/".concat(fileName);
+                            return [2 /*return*/, res.end(JSON.stringify({ success: true, relativePath: relativePath, fileName: fileName, dataUrl: body.dataUrl }))];
+                        case 12:
+                            next();
+                            return [3 /*break*/, 14];
+                        case 13:
+                            err_2 = _b.sent();
+                            res.statusCode = 500;
+                            res.end(JSON.stringify({ error: err_2.message }));
+                            return [3 /*break*/, 14];
+                        case 14: return [2 /*return*/];
+                    }
+                });
+            }); });
+        }
+    };
+}
 export default defineConfig({
     plugins: [
         react(),
         gitApiPlugin(),
+        assetsApiPlugin(),
         electron([
             {
                 entry: 'electron/main.ts',

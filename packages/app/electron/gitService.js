@@ -129,7 +129,7 @@ export function getGitStatus() {
                             status: st
                         };
                     });
-                    designChanges = allChanges.filter(function (c) { return c.path.startsWith(normDocsPath_1) || c.path.startsWith('.screen-designer'); });
+                    designChanges = allChanges.filter(function (c) { return c.path.startsWith(normDocsPath_1) || c.path.startsWith('.screen-designer') || c.path.startsWith('assets'); });
                     return [2 /*return*/, {
                             isRepo: true,
                             branch: status_1.current || 'main',

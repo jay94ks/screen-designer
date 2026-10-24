@@ -11,6 +11,7 @@ import { ShareModal } from './components/Modals/ShareModal';
 import { NewArtboardModal } from './components/Modals/NewArtboardModal';
 import { GitDesktopModal } from './components/Modals/GitDesktopModal';
 import { gitClient } from './utils/gitClient';
+import { initProjectAssets } from './utils/assetManager';
 import { HistoryManager } from './utils/history';
 import { INITIAL_VDOM_ARTBOARDS } from './data/initialVdom';
 import { VDomArtboard, VNode, NodeType } from './types/vdom';
@@ -225,6 +226,7 @@ export default function App() {
   // Workspace & Storage Auto-Initialization
   useEffect(() => {
     const initWorkspace = async () => {
+      initProjectAssets();
       const docsPath = settings.pageDocsPath || 'docs/ui-boards';
       if ((window as any).electronAPI?.project?.loadPages) {
         const res = await (window as any).electronAPI.project.loadPages(docsPath, settings.workspacePath);

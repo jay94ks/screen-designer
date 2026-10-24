@@ -125,7 +125,7 @@ export async function getGitStatus(
     });
 
     const designChanges = allChanges.filter(
-      (c) => c.path.startsWith(normDocsPath) || c.path.startsWith('.screen-designer')
+      (c) => c.path.startsWith(normDocsPath) || c.path.startsWith('.screen-designer') || c.path.startsWith('assets')
     );
 
     return {

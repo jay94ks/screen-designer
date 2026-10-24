@@ -62,5 +62,17 @@ window.electronAPI = {
         commitDesign: function (message, pageDocsPath, workspacePath) {
             return ipcRenderer.invoke('git:commit-design', { message: message, pageDocsPath: pageDocsPath, workspacePath: workspacePath });
         }
+    },
+    // Assets Management
+    assets: {
+        materializePresets: function (workspacePath) {
+            return ipcRenderer.invoke('assets:materialize-presets', { workspacePath: workspacePath });
+        },
+        chooseAndCopy: function (workspacePath) {
+            return ipcRenderer.invoke('assets:choose-and-copy', { workspacePath: workspacePath });
+        },
+        list: function (workspacePath) {
+            return ipcRenderer.invoke('assets:list', { workspacePath: workspacePath });
+        }
     }
 };

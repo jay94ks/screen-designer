@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { VNode } from '../types/vdom';
 import { styleToCssProperties } from '../utils/serializer';
 import { evaluateNodeVisibility } from '../utils/conditionEvaluator';
+import { getPresetByFileName } from '../data/imagePresets';
 import {
   Layers,
   Trash2,
@@ -202,7 +203,18 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
   const renderElementContent = () => {
     // 3.1 Image Element
     if (node.type === 'image') {
-      const src = node.props?.src || node.content || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
+      let src = node.props?.dataUrl || node.props?.src || node.content;
+      if (!src) {
+        src = 'assets/preset-gradient.svg';
+      }
+      // Resolve built-in preset SVG dataUrl if referencing assets/preset-*.svg
+      if (!node.props?.dataUrl && typeof src === 'string' && src.includes('preset-')) {
+        const fileName = src.replace(/^assets\//, '').replace(/^\/assets\//, '');
+        const preset = getPresetByFileName(fileName);
+        if (preset) {
+          src = preset.dataUrl;
+        }
+      }
       const alt = node.props?.alt || node.name || 'image';
 
       if (imageError) {

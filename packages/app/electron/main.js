@@ -45,12 +45,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { app, BrowserWindow, ipcMain } from 'electron';
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import { WebSocket } from 'ws';
 import { getGitStatus, getFileDiff, getGitHistory, getCommitDetails, commitFiles, pushCommits } from './gitService';
+import { materializePresets, copyAssetFile, listAssets } from './assetService';
 var __filename = fileURLToPath(import.meta.url);
 var __dirname = path.dirname(__filename);
 process.env.DIST = path.join(__dirname, '../dist');
@@ -330,9 +340,69 @@ ipcMain.handle('git:commit-design', function (_1, _a) { return __awaiter(void 0,
     var message = _b.message, _c = _b.pageDocsPath, pageDocsPath = _c === void 0 ? 'docs/ui-boards' : _c, workspacePath = _b.workspacePath;
     return __generator(this, function (_d) {
         rootDir = workspacePath || process.env.SCREEN_DESIGNER_WORKSPACE || process.cwd();
-        return [2 /*return*/, commitFiles([pageDocsPath, '.screen-designer'], message || 'feat(ui): update storyboard canvas design documents', undefined, rootDir)];
+        return [2 /*return*/, commitFiles([pageDocsPath, '.screen-designer', 'assets'], message || 'feat(ui): update storyboard canvas design documents and assets', undefined, rootDir)];
     });
 }); });
+// Assets Management IPC Handlers
+ipcMain.handle('assets:materialize-presets', function (_1) {
+    var args_1 = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args_1[_i - 1] = arguments[_i];
+    }
+    return __awaiter(void 0, __spreadArray([_1], args_1, true), void 0, function (_, _a) {
+        var _b = _a === void 0 ? {} : _a, workspacePath = _b.workspacePath;
+        return __generator(this, function (_c) {
+            return [2 /*return*/, materializePresets(workspacePath)];
+        });
+    });
+});
+ipcMain.handle('assets:choose-and-copy', function (_1) {
+    var args_1 = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args_1[_i - 1] = arguments[_i];
+    }
+    return __awaiter(void 0, __spreadArray([_1], args_1, true), void 0, function (_, _a) {
+        var rootDir, result, sourcePath, copyResult;
+        var _b = _a === void 0 ? {} : _a, workspacePath = _b.workspacePath;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    rootDir = workspacePath || process.env.SCREEN_DESIGNER_WORKSPACE || process.cwd();
+                    return [4 /*yield*/, dialog.showOpenDialog(win, {
+                            title: '이미지 파일 선택 (assets 폴더로 자동 복사)',
+                            buttonLabel: '선택 및 복사',
+                            properties: ['openFile'],
+                            filters: [
+                                { name: '이미지 파일 (Images)', extensions: ['png', 'jpg', 'jpeg', 'webp', 'svg', 'gif', 'bmp', 'avif'] },
+                                { name: '모든 파일 (All Files)', extensions: ['*'] }
+                            ]
+                        })];
+                case 1:
+                    result = _c.sent();
+                    if (result.canceled || !result.filePaths.length) {
+                        return [2 /*return*/, { canceled: true }];
+                    }
+                    sourcePath = result.filePaths[0];
+                    return [4 /*yield*/, copyAssetFile(sourcePath, rootDir)];
+                case 2:
+                    copyResult = _c.sent();
+                    return [2 /*return*/, __assign({ canceled: false }, copyResult)];
+            }
+        });
+    });
+});
+ipcMain.handle('assets:list', function (_1) {
+    var args_1 = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args_1[_i - 1] = arguments[_i];
+    }
+    return __awaiter(void 0, __spreadArray([_1], args_1, true), void 0, function (_, _a) {
+        var _b = _a === void 0 ? {} : _a, workspacePath = _b.workspacePath;
+        return __generator(this, function (_c) {
+            return [2 /*return*/, listAssets(workspacePath)];
+        });
+    });
+});
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') {
         app.quit();
@@ -343,4 +413,23 @@ app.on('activate', function () {
         createWindow();
     }
 });
-app.whenReady().then(createWindow);
+app.whenReady().then(function () { return __awaiter(void 0, void 0, void 0, function () {
+    var err_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, materializePresets()];
+            case 1:
+                _a.sent();
+                return [3 /*break*/, 3];
+            case 2:
+                err_4 = _a.sent();
+                console.error('[Electron Main] Error materializing image presets:', err_4);
+                return [3 /*break*/, 3];
+            case 3:
+                createWindow();
+                return [2 /*return*/];
+        }
+    });
+}); });
