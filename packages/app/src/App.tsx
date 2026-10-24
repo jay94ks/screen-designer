@@ -6,6 +6,7 @@ import { VNodeRenderer } from './components/VNodeRenderer';
 import { PlayModal } from './components/PlayModal';
 import { ExportModal } from './components/Modals/ExportModal';
 import { SettingsModal } from './components/Modals/SettingsModal';
+import { DesignSystemModal } from './components/Modals/DesignSystemModal';
 import { ShortcutsModal } from './components/Modals/ShortcutsModal';
 import { ShareModal } from './components/Modals/ShareModal';
 import { NewArtboardModal } from './components/Modals/NewArtboardModal';
@@ -148,6 +149,9 @@ export default function App() {
     return typeof window !== 'undefined' && window.location.search.includes('play');
   });
   const [isExportOpen, setIsExportOpen] = useState(false);
+  const [isDesignSystemOpen, setIsDesignSystemOpen] = useState(() => {
+    return typeof window !== 'undefined' && (window.location.search.includes('designSystem') || window.location.search.includes('ds'));
+  });
   const [isSettingsOpen, setIsSettingsOpen] = useState(() => {
     return typeof window !== 'undefined' && (window.location.search.includes('openSettings') || window.location.search.includes('settings'));
   });
@@ -1009,6 +1013,7 @@ export default function App() {
         onOpenNewFrame={() => setIsNewFrameOpen(true)}
         onOpenExport={() => setIsExportOpen(true)}
         onOpenSettings={(tab) => handleOpenSettings(tab)}
+        onOpenDesignSystem={() => setIsDesignSystemOpen(true)}
         onOpenShortcuts={() => setIsShortcutsOpen(true)}
         onOpenShare={() => setIsShareOpen(true)}
         gitStatus={gitStatus}
@@ -1052,8 +1057,8 @@ export default function App() {
           <div
             onMouseDown={handleLeftResizeStart}
             onDoubleClick={() => setLeftSidebarWidth(270)}
-            className={`w-1.5 hover:w-2 hover:bg-indigo-500 active:bg-indigo-600 transition-all cursor-col-resize z-30 select-none relative shrink-0 group flex items-center justify-center ${
-              isResizingLeft ? 'bg-indigo-600 w-2' : 'bg-slate-200/80'
+            className={`w-1 hover:w-1.5 hover:bg-indigo-500 active:bg-indigo-600 transition-all cursor-col-resize z-30 select-none relative shrink-0 group flex items-center justify-center ${
+              isResizingLeft ? 'bg-indigo-600 w-1.5' : 'bg-slate-200'
             }`}
             title="드래그하여 좌측 패널 크기 조절 (더블 클릭 시 기본값 270px 복원)"
           >
@@ -1355,6 +1360,17 @@ export default function App() {
         settings={settings}
         onUpdateSettings={handleUpdateSettings}
         initialTab={settingsTab}
+        onOpenDesignSystem={() => {
+          setIsSettingsOpen(false);
+          setIsDesignSystemOpen(true);
+        }}
+      />
+
+      <DesignSystemModal
+        isOpen={isDesignSystemOpen}
+        onClose={() => setIsDesignSystemOpen(false)}
+        settings={settings}
+        onUpdateSettings={handleUpdateSettings}
       />
 
       {/* Floating Export Toast Notification */}

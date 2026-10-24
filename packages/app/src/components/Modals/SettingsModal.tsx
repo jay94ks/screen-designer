@@ -43,6 +43,7 @@ interface SettingsModalProps {
   settings: ProjectSettings;
   onUpdateSettings: (newSettings: Partial<ProjectSettings>) => void;
   initialTab?: 'canvas' | 'components';
+  onOpenDesignSystem?: () => void;
 }
 
 type ComponentCategory = 'all' | 'layout' | 'typography' | 'forms' | 'media' | 'data' | 'misc';
@@ -120,7 +121,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
   settings,
   onUpdateSettings,
-  initialTab = 'components'
+  initialTab = 'canvas',
+  onOpenDesignSystem
 }) => {
   const [activeTab, setActiveTab] = useState<'canvas' | 'components'>(initialTab);
   const [selectedComp, setSelectedComp] = useState<NodeType>('button');
@@ -289,6 +291,31 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           {activeTab === 'canvas' ? (
             /* 1. Canvas Settings Tab */
             <div className="flex-1 p-8 overflow-y-auto space-y-6 max-w-xl mx-auto text-xs">
+              {/* Studio Shortcut Banner */}
+              {onOpenDesignSystem && (
+                <div className="p-3.5 rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200/80 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                      <Palette size={16} />
+                    </div>
+                    <div>
+                      <div className="font-bold text-slate-800 text-xs">디자인 시스템 스튜디오</div>
+                      <p className="text-[11px] text-slate-500">45종 컴포넌트의 기본 스타일을 창 전체 화면 스튜디오에서 편리하게 편집하세요.</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      onClose();
+                      onOpenDesignSystem();
+                    }}
+                    className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-2xs shrink-0"
+                  >
+                    <Palette size={12} />
+                    <span>스튜디오 열기</span>
+                  </button>
+                </div>
+              )}
+
               {/* Project Documents Storage & Git Settings */}
               <div className="space-y-3">
                 <div className="flex items-center gap-2 font-bold text-slate-800 text-sm">

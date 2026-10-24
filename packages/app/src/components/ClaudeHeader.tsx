@@ -15,6 +15,7 @@ import {
   Minus,
   Copy,
   Settings,
+  Palette,
   Download,
   Keyboard,
   Layers,
@@ -51,6 +52,7 @@ interface ClaudeHeaderProps {
   onOpenNewFrame: () => void;
   onOpenExport?: () => void;
   onOpenSettings: (tab?: 'canvas' | 'components') => void;
+  onOpenDesignSystem?: () => void;
   onOpenShortcuts: () => void;
   onOpenShare: () => void;
   onUndo: () => void;
@@ -83,6 +85,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
   onOpenNewFrame,
   onOpenExport,
   onOpenSettings,
+  onOpenDesignSystem,
   onOpenShortcuts,
   onOpenShare,
   gitStatus,
@@ -256,12 +259,16 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                 <button
                   onClick={() => {
                     closeMenus();
-                    onOpenSettings('components');
+                    if (onOpenDesignSystem) onOpenDesignSystem();
+                    else onOpenSettings('components');
                   }}
                   className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700 flex items-center justify-between"
                 >
-                  <span>컴포넌트 기본 스타일 (Design Tokens)</span>
-                  <span className="text-[10px] text-indigo-500 font-medium">New</span>
+                  <span className="flex items-center gap-1.5 font-medium">
+                    <Palette size={12} className="text-indigo-600" />
+                    <span>디자인 시스템 스튜디오</span>
+                  </span>
+                  <span className="text-[10px] text-indigo-600 font-bold bg-indigo-50 px-1.5 py-0.2 rounded border border-indigo-200">전체 창</span>
                 </button>
                 <button
                   onClick={() => {
@@ -270,7 +277,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                   }}
                   className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700"
                 >
-                  캔버스 환경 설정 (Preferences)
+                  환경 설정 (Preferences)
                 </button>
               </div>
             )}
@@ -661,6 +668,18 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
           >
             <Share2 size={13} />
           </button>
+
+          {/* Independent Design System Studio Button */}
+          {onOpenDesignSystem && (
+            <button
+              onClick={onOpenDesignSystem}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200/80 font-bold text-xs shadow-2xs transition active:scale-95 whitespace-nowrap shrink-0"
+              title="디자인 시스템 스튜디오 열기 (창 전체 화면 활용)"
+            >
+              <Palette size={13} className="text-indigo-600 shrink-0" />
+              <span className="whitespace-nowrap">디자인 시스템</span>
+            </button>
+          )}
 
           {/* Settings Button */}
           <button

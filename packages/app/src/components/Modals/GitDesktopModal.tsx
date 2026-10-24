@@ -90,6 +90,18 @@ export const GitDesktopModal: React.FC<GitDesktopModalProps> = ({
       : gitStatus.designChanges;
   }, [gitStatus]);
 
+  // Check if a changed file is managed by screen-designer
+  const isManagedByApp = (filePath: string): boolean => {
+    const norm = filePath.replace(/\\/g, '/');
+    const cleanDocs = (pageDocsPath || 'docs/ui-boards').replace(/^\.?\/?/, '').replace(/\/$/, '');
+    return (
+      norm.startsWith(cleanDocs + '/') ||
+      norm === cleanDocs ||
+      norm.startsWith('.screen-designer/') ||
+      norm === '.screen-designer'
+    );
+  };
+
   // Sync unpushed count whenever gitStatus updates
   useEffect(() => {
     if (gitStatus.ahead !== undefined) {
@@ -101,13 +113,18 @@ export const GitDesktopModal: React.FC<GitDesktopModalProps> = ({
   useEffect(() => {
     if (!isOpen) return;
 
-    // By default, stage all changed files
-    const allPaths = new Set(allChangedFiles.map((f) => f.path));
-    setStagedFiles(allPaths);
+    // By default, ONLY stage files managed by screen-designer (e.g. docs/ui-boards, .screen-designer)
+    const managedFiles = allChangedFiles.filter((f) => isManagedByApp(f.path));
+    const managedPaths = new Set(managedFiles.map((f) => f.path));
+    setStagedFiles(managedPaths);
 
-    // Default select first changed file if none selected
-    if (allChangedFiles.length > 0) {
-      if (!selectedFilePath || !allPaths.has(selectedFilePath)) {
+    // Default select first managed file if available, otherwise first changed file
+    if (managedFiles.length > 0) {
+      if (!selectedFilePath || !managedPaths.has(selectedFilePath)) {
+        setSelectedFilePath(managedFiles[0].path);
+      }
+    } else if (allChangedFiles.length > 0) {
+      if (!selectedFilePath || !allChangedFiles.some((f) => f.path === selectedFilePath)) {
         setSelectedFilePath(allChangedFiles[0].path);
       }
     } else {
@@ -118,7 +135,7 @@ export const GitDesktopModal: React.FC<GitDesktopModalProps> = ({
     if (!commitSummary) {
       setCommitSummary('feat(ui): update storyboard canvas design documents');
     }
-  }, [isOpen, allChangedFiles]);
+  }, [isOpen, allChangedFiles, pageDocsPath]);
 
   // Load Diff when selectedFilePath changes (for 'changes' tab)
   useEffect(() => {
@@ -227,6 +244,12 @@ export const GitDesktopModal: React.FC<GitDesktopModalProps> = ({
     } else {
       setStagedFiles(new Set(allChangedFiles.map((f) => f.path)));
     }
+  };
+
+  // Select only files managed by screen-designer
+  const handleSelectManagedOnly = () => {
+    const managedFiles = allChangedFiles.filter((f) => isManagedByApp(f.path));
+    setStagedFiles(new Set(managedFiles.map((f) => f.path)));
   };
 
   // Handle Commit Submit
@@ -426,7 +449,7 @@ export const GitDesktopModal: React.FC<GitDesktopModalProps> = ({
                 </div>
 
                 {/* Master Select All Checkbox Header */}
-                <div className="px-3 py-2 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                <div className="px-3 py-2 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 text-xs">
                   <label className="flex items-center gap-2 cursor-pointer font-medium text-slate-700">
                     <input
                       type="checkbox"
@@ -434,11 +457,21 @@ export const GitDesktopModal: React.FC<GitDesktopModalProps> = ({
                       onChange={handleToggleSelectAll}
                       className="w-3.5 h-3.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300 cursor-pointer"
                     />
-                    <span>{allChangedFiles.length} changed files</span>
+                    <span>{allChangedFiles.length} files</span>
                   </label>
-                  <span className="text-[10px] text-slate-400">
-                    {stagedFiles.size} selected
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleSelectManagedOnly}
+                      className="text-[10px] text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-1.5 py-0.5 rounded border border-emerald-200 transition font-medium"
+                      title="screen-designer가 관리하는 폴더의 파일만 선택"
+                    >
+                      앱 관리만
+                    </button>
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      {stagedFiles.size} selected
+                    </span>
+                  </div>
                 </div>
 
                 {/* Changed Files List */}
@@ -455,6 +488,7 @@ export const GitDesktopModal: React.FC<GitDesktopModalProps> = ({
                     filteredChangedFiles.map((f) => {
                       const isSelected = selectedFilePath === f.path;
                       const isStaged = stagedFiles.has(f.path);
+                      const isManaged = isManagedByApp(f.path);
 
                       return (
                         <div
@@ -474,8 +508,19 @@ export const GitDesktopModal: React.FC<GitDesktopModalProps> = ({
                               onClick={(e) => handleToggleStageFile(f.path, e)}
                               className="w-3.5 h-3.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300 cursor-pointer shrink-0"
                             />
-                            <div className="truncate font-mono text-[11px]" title={f.path}>
-                              {f.path}
+                            <div className="flex items-center gap-1.5 truncate">
+                              {isManaged ? (
+                                <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200/80 shrink-0">
+                                  앱 관리
+                                </span>
+                              ) : (
+                                <span className="text-[9px] px-1 py-0.2 rounded bg-slate-100 text-slate-400 font-normal shrink-0">
+                                  외부
+                                </span>
+                              )}
+                              <span className="truncate font-mono text-[11px]" title={f.path}>
+                                {f.path}
+                              </span>
                             </div>
                           </div>
                           <div className="shrink-0">{getStatusBadge(f.status)}</div>
