@@ -565,6 +565,32 @@ export default function App() {
     );
   };
 
+  // Support initial query params for visual testing (e.g., ?node=node-s1-promo-img&bg=neon)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const bg = params.get('bg');
+      const targetNodeId = params.get('node');
+      if (bg && targetNodeId) {
+        const bgUrl =
+          bg === 'neon'
+            ? 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)'
+            : bg === 'mesh'
+            ? 'radial-gradient(at 0% 0%, #1e1b4b 0px, transparent 50%), radial-gradient(at 100% 100%, #311042 0px, transparent 50%)'
+            : undefined;
+        if (bgUrl) {
+          setTimeout(() => {
+            handleUpdateNode(targetNodeId, {
+              style: {
+                backgroundImage: bgUrl
+              }
+            });
+          }, 150);
+        }
+      }
+    }
+  }, []);
+
   const deleteNodeRecursive = (current: VNode, nodeId: string): VNode => {
     if (!current.children) return current;
     return {

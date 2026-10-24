@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SlidersHorizontal,
   Layout,
@@ -35,6 +35,7 @@ import {
   applyPresetImage,
   IMAGE_PRESETS
 } from '../utils/assetManager';
+import { GradientControls, GradientType } from './GradientControls';
 
 interface PropertiesPanelProps {
   artboard: VDomArtboard | null;
@@ -137,6 +138,36 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     if (asset) {
       handleStyleChange('backgroundImage', asset.relativePath);
       handleStyleChange('backgroundImageDataUrl' as any, asset.dataUrl);
+      setActiveGradientType(null);
+    }
+  };
+
+  // Active Gradient Editor State ('linear-neon' | 'dark-mesh' | null)
+  const [activeGradientType, setActiveGradientType] = useState<GradientType>(null);
+  const [isEditorDismissed, setIsEditorDismissed] = useState(false);
+
+  useEffect(() => {
+    setIsEditorDismissed(false);
+  }, [selectedNode?.id]);
+
+  const effectiveGradientType: GradientType = !isEditorDismissed
+    ? activeGradientType ||
+      (selectedNode?.style?.backgroundImage?.includes('radial-gradient')
+        ? 'dark-mesh'
+        : selectedNode?.style?.backgroundImage?.includes('linear-gradient')
+        ? 'linear-neon'
+        : null)
+    : activeGradientType;
+
+  const handlePatternClick = (pattern: { name: string; url: string }) => {
+    handleStyleChange('backgroundImage', pattern.url);
+    setIsEditorDismissed(false);
+    if (pattern.name === '네온 그라데이션') {
+      setActiveGradientType('linear-neon');
+    } else if (pattern.name === '다크 메쉬') {
+      setActiveGradientType('dark-mesh');
+    } else {
+      setActiveGradientType(null);
     }
   };
 
@@ -416,6 +447,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               onClick={() => {
                 handleStyleChange('backgroundImage', undefined);
                 handleStyleChange('backgroundImageDataUrl' as any, undefined);
+                setActiveGradientType(null);
               }}
               className="text-[10px] text-rose-500 hover:underline"
             >
@@ -460,17 +492,43 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 {p.name.split(' ')[0]}
               </button>
             ))}
-            {SAMPLE_BACKGROUND_PATTERNS.map((p) => (
-              <button
-                key={p.name}
-                onClick={() => handleStyleChange('backgroundImage', p.url)}
-                className="py-1 px-1 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200 rounded text-[9px] text-center truncate transition"
-              >
-                {p.name}
-              </button>
-            ))}
+            {SAMPLE_BACKGROUND_PATTERNS.map((p) => {
+              const isNeonActive = p.name === '네온 그라데이션' && effectiveGradientType === 'linear-neon';
+              const isMeshActive = p.name === '다크 메쉬' && effectiveGradientType === 'dark-mesh';
+              const isCurrentActive = isNeonActive || isMeshActive;
+
+              return (
+                <button
+                  key={p.name}
+                  onClick={() => handlePatternClick(p)}
+                  className={`py-1 px-1 border rounded text-[9px] text-center truncate transition font-medium ${
+                    isCurrentActive
+                      ? 'bg-indigo-600 text-white border-indigo-700 shadow-2xs font-bold'
+                      : 'bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 border-slate-200'
+                  }`}
+                  title={`${p.name} (클릭 시 실시간 세부 옵션 편집 패널 표시)`}
+                >
+                  {p.name}
+                </button>
+              );
+            })}
           </div>
         </div>
+
+        {/* Live Gradient & Mesh Option Controls */}
+        {effectiveGradientType && (
+          <GradientControls
+            currentValue={selectedNode.style.backgroundImage || ''}
+            gradientType={effectiveGradientType}
+            onChange={(newBg) => {
+              handleStyleChange('backgroundImage', newBg);
+            }}
+            onClose={() => {
+              setIsEditorDismissed(true);
+              setActiveGradientType(null);
+            }}
+          />
+        )}
 
         {/* Background Size & Repeat Settings */}
         {selectedNode.style.backgroundImage && (
