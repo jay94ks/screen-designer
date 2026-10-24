@@ -26,7 +26,8 @@ import {
   FolderOpen,
   GitBranch,
   GitCommit,
-  Upload
+  Upload,
+  Search
 } from 'lucide-react';
 import { CanvasTool, Page, GitStatusInfo } from '../types';
 
@@ -63,6 +64,9 @@ interface ClaudeHeaderProps {
   onToggleLeftSidebar: () => void;
   isRightSidebarOpen: boolean;
   onToggleRightSidebar: () => void;
+  showRulers?: boolean;
+  onToggleRulers?: () => void;
+  onOpenCommandPalette?: () => void;
 }
 
 export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
@@ -97,7 +101,10 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
   isLeftSidebarOpen,
   onToggleLeftSidebar,
   isRightSidebarOpen,
-  onToggleRightSidebar
+  onToggleRightSidebar,
+  showRulers = false,
+  onToggleRulers,
+  onOpenCommandPalette
 }) => {
   const [activeMenu, setActiveMenu] = useState<'file' | 'edit' | 'view' | 'help' | null>(null);
   const [showPageMenu, setShowPageMenu] = useState(false);
@@ -524,6 +531,31 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                   <span className="text-[10px] text-slate-400 font-mono">Ctrl+0</span>
                 </button>
                 <div className="h-px bg-slate-100 my-1" />
+                {onToggleRulers && (
+                  <button
+                    onClick={() => {
+                      closeMenus();
+                      onToggleRulers();
+                    }}
+                    className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700 flex justify-between items-center"
+                  >
+                    <span>눈금자 및 가이드 ({showRulers ? '숨김' : '표시'})</span>
+                    <span className="text-[10px] text-slate-400 font-mono">Shift+R</span>
+                  </button>
+                )}
+                {onOpenCommandPalette && (
+                  <button
+                    onClick={() => {
+                      closeMenus();
+                      onOpenCommandPalette();
+                    }}
+                    className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700 flex justify-between items-center"
+                  >
+                    <span>명령 팔레트 (Command Palette)</span>
+                    <span className="text-[10px] text-slate-400 font-mono">Ctrl+K</span>
+                  </button>
+                )}
+                <div className="h-px bg-slate-100 my-1" />
                 <button
                   onClick={() => {
                     closeMenus();
@@ -580,6 +612,21 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
               </div>
             )}
           </div>
+
+          {/* Quick Command Palette Button */}
+          {onOpenCommandPalette && (
+            <button
+              onClick={onOpenCommandPalette}
+              className="ml-3 flex items-center gap-1.5 px-2 py-0.5 text-[11px] text-slate-400 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-md transition hover:text-slate-700 shadow-2xs"
+              title="빠른 명령 실행 및 컴포넌트 추가 (Ctrl+K)"
+            >
+              <Search size={11} className="text-slate-400" />
+              <span>명령 검색...</span>
+              <kbd className="text-[9px] bg-white border border-slate-200 px-1 rounded font-mono text-slate-500">
+                Ctrl+K
+              </kbd>
+            </button>
+          )}
         </div>
 
         {/* 2-2. Center: Toolbox (Figma Style Canvas Tools) */}

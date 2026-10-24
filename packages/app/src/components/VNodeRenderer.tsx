@@ -29,6 +29,7 @@ interface VNodeRendererProps {
   tweakValues?: Record<string, any>;
   interactive?: boolean;
   isPlayMode?: boolean;
+  showHotspots?: boolean;
 }
 
 export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
@@ -42,7 +43,8 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
   onDuplicateNode,
   tweakValues = {},
   interactive = true,
-  isPlayMode = false
+  isPlayMode = false,
+  showHotspots = false
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(node.content || '');
@@ -132,10 +134,30 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
     }
   }
 
+  // Play Mode: Interactive hotspot detection and pulse highlight
+  const isInteractiveInPlay = isPlayMode && (
+    (node.events && node.events.length > 0) ||
+    node.type === 'button' ||
+    node.id?.includes('btn') ||
+    node.name?.toLowerCase().includes('버튼') ||
+    node.name?.toLowerCase().includes('button')
+  );
+
+  if (isPlayMode && isInteractiveInPlay) {
+    dynamicStyle.cursor = 'pointer';
+    if (showHotspots) {
+      dynamicStyle.outline = '2px solid #38bdf8';
+      dynamicStyle.boxShadow = '0 0 12px rgba(56, 189, 248, 0.7)';
+    }
+  }
+
   const cssStyle = styleToCssProperties(dynamicStyle);
 
   const handleClick = (e: React.MouseEvent) => {
     if (!interactive) return;
+    if (!isPlayMode && node.locked) {
+      return;
+    }
     e.stopPropagation();
     if (isPlayMode) {
       if (onNodeEvent) {
@@ -285,6 +307,7 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
                 tweakValues={tweakValues}
                 interactive={interactive}
                 isPlayMode={isPlayMode}
+                showHotspots={showHotspots}
               />
             ))}
           </div>
@@ -330,6 +353,7 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
                 tweakValues={tweakValues}
                 interactive={interactive}
                 isPlayMode={isPlayMode}
+                showHotspots={showHotspots}
               />
             ))}
           </div>
@@ -453,6 +477,8 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
                 onUpdateContent={onUpdateContent}
                 tweakValues={tweakValues}
                 interactive={interactive}
+                isPlayMode={isPlayMode}
+                showHotspots={showHotspots}
               />
             ))}
           </div>
@@ -479,6 +505,7 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
               tweakValues={tweakValues}
               interactive={interactive}
               isPlayMode={isPlayMode}
+              showHotspots={showHotspots}
             />
           ))}
       </>

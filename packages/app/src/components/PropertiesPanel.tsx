@@ -56,6 +56,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'style' | 'layout' | 'effects'>('style');
   const [isChoosingAsset, setIsChoosingAsset] = useState(false);
+  const [use4WayPadding, setUse4WayPadding] = useState(false);
 
   if (!artboard) {
     return (
@@ -615,6 +616,22 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <Type size={11} />
             <span>서체 & 정렬 (Typography)</span>
           </label>
+
+          {/* Font Family Selector */}
+          <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
+            <span className="text-[10px] text-slate-500 block">글꼴 서체 (Font Family)</span>
+            <select
+              value={selectedNode.style.fontFamily || 'Pretendard, -apple-system, sans-serif'}
+              onChange={(e) => handleStyleChange('fontFamily', e.target.value)}
+              className="w-full bg-white border border-slate-200 rounded text-[11px] py-1 px-1.5 focus:outline-none"
+            >
+              <option value="Pretendard, -apple-system, sans-serif">Pretendard (모던 산세리프)</option>
+              <option value="Inter, system-ui, sans-serif">Inter (글로벌 UI)</option>
+              <option value="ui-monospace, SFMono-Regular, monospace">Monospace (코드/숫자)</option>
+              <option value="Georgia, serif">Georgia (클래식 세리프)</option>
+            </select>
+          </div>
+
           <div className="grid grid-cols-2 gap-2">
             <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
               <span className="text-[10px] text-slate-500 block">크기 ({selectedNode.style.fontSize || 14}px)</span>
@@ -644,34 +661,177 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             </div>
           </div>
 
-          {/* Text Alignment */}
-          <div className="flex gap-1 bg-slate-50 p-1 rounded-lg border border-slate-200">
-            {(['left', 'center', 'right', 'justify'] as const).map((align) => {
-              const Icon = align === 'left' ? AlignLeft : align === 'center' ? AlignCenter : align === 'right' ? AlignRight : AlignJustify;
-              return (
+          {/* Text Alignment & Text Transform */}
+          <div className="flex gap-2">
+            <div className="flex-1 flex gap-1 bg-slate-50 p-1 rounded-lg border border-slate-200">
+              {(['left', 'center', 'right', 'justify'] as const).map((align) => {
+                const Icon = align === 'left' ? AlignLeft : align === 'center' ? AlignCenter : align === 'right' ? AlignRight : AlignJustify;
+                return (
+                  <button
+                    key={align}
+                    onClick={() => handleStyleChange('textAlign', align)}
+                    className={`flex-1 py-1 flex items-center justify-center rounded text-xs transition ${
+                      selectedNode.style.textAlign === align
+                        ? 'bg-white text-indigo-700 shadow-2xs font-bold'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                    title={`텍스트 ${align} 정렬`}
+                  >
+                    <Icon size={12} />
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex gap-1 bg-slate-50 p-1 rounded-lg border border-slate-200">
+              {[
+                { val: 'none', label: 'Aa' },
+                { val: 'uppercase', label: 'AA' },
+                { val: 'lowercase', label: 'aa' }
+              ].map((tf) => (
                 <button
-                  key={align}
-                  onClick={() => handleStyleChange('textAlign', align)}
-                  className={`flex-1 py-1 flex items-center justify-center rounded text-xs transition ${
-                    selectedNode.style.textAlign === align
+                  key={tf.val}
+                  onClick={() => handleStyleChange('textTransform', tf.val)}
+                  className={`px-2 py-1 rounded text-[10px] font-mono transition ${
+                    (selectedNode.style.textTransform || 'none') === tf.val
                       ? 'bg-white text-indigo-700 shadow-2xs font-bold'
                       : 'text-slate-500 hover:text-slate-800'
                   }`}
+                  title={`대소문자: ${tf.val}`}
                 >
-                  <Icon size={12} />
+                  {tf.label}
                 </button>
-              );
-            })}
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 7.5. Container Flexbox Direction & Visual Alignment Matrix (Containers & Layouts) */}
+      {['frame', 'card', 'box', 'section', 'header', 'footer', 'nav', 'aside', 'main', 'scroll-container', 'dialog'].includes(
+        selectedNode.type
+      ) && (
+        <div className="space-y-2 pt-3">
+          <label className="text-[10px] text-slate-400 font-bold uppercase flex items-center justify-between">
+            <span className="flex items-center gap-1">
+              <Layout size={11} />
+              <span>컨테이너 정렬 행렬 (Flex Layout)</span>
+            </span>
+            <span className="text-[9px] font-mono text-indigo-600 font-bold">3×3 Grid</span>
+          </label>
+
+          {/* Direction: Row vs Column */}
+          <div className="flex gap-1 bg-slate-50 p-1 rounded-lg border border-slate-200">
+            <button
+              onClick={() => handleStyleChange('flexDirection', 'row')}
+              className={`flex-1 py-1 text-center rounded text-[10px] font-semibold transition ${
+                (selectedNode.style.flexDirection || 'row') === 'row'
+                  ? 'bg-white text-indigo-700 shadow-2xs font-bold'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              가로 방향 (Row ↔)
+            </button>
+            <button
+              onClick={() => handleStyleChange('flexDirection', 'column')}
+              className={`flex-1 py-1 text-center rounded text-[10px] font-semibold transition ${
+                selectedNode.style.flexDirection === 'column'
+                  ? 'bg-white text-indigo-700 shadow-2xs font-bold'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              세로 방향 (Column ↕)
+            </button>
+          </div>
+
+          {/* 3x3 Visual Alignment Matrix */}
+          <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-between">
+            <div className="space-y-1">
+              <span className="text-[10px] text-slate-500 block">내부 요소 정렬</span>
+              <div className="text-[9px] text-slate-400">
+                {selectedNode.style.justifyContent || 'start'} / {selectedNode.style.alignItems || 'start'}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-1 bg-slate-200/80 p-1.5 rounded-lg">
+              {[
+                { j: 'flex-start', a: 'flex-start', title: 'Top Left' },
+                { j: 'center', a: 'flex-start', title: 'Top Center' },
+                { j: 'flex-end', a: 'flex-start', title: 'Top Right' },
+                { j: 'flex-start', a: 'center', title: 'Center Left' },
+                { j: 'center', a: 'center', title: 'Center' },
+                { j: 'flex-end', a: 'center', title: 'Center Right' },
+                { j: 'flex-start', a: 'flex-end', title: 'Bottom Left' },
+                { j: 'center', a: 'flex-end', title: 'Bottom Center' },
+                { j: 'flex-end', a: 'flex-end', title: 'Bottom Right' }
+              ].map((m, idx) => {
+                const isSelected =
+                  (selectedNode.style.justifyContent || 'flex-start') === m.j &&
+                  (selectedNode.style.alignItems || 'flex-start') === m.a;
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      onUpdateNode(selectedNode.id, {
+                        style: {
+                          ...selectedNode.style,
+                          display: selectedNode.style.display || 'flex',
+                          justifyContent: m.j as any,
+                          alignItems: m.a as any
+                        }
+                      });
+                    }}
+                    className={`w-5 h-5 rounded flex items-center justify-center transition ${
+                      isSelected
+                        ? 'bg-indigo-600 shadow-xs'
+                        : 'bg-white hover:bg-slate-100'
+                    }`}
+                    title={m.title}
+                  >
+                    <div
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        isSelected ? 'bg-white' : 'bg-slate-400'
+                      }`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Gap Slider */}
+          <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
+            <div className="flex justify-between text-[10px] text-slate-500">
+              <span>요소 간격 (Gap)</span>
+              <span className="font-mono">{selectedNode.style.gap || 0}px</span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={48}
+              value={Number(selectedNode.style.gap) || 0}
+              onChange={(e) => handleStyleChange('gap', Number(e.target.value))}
+              className="w-full accent-indigo-600 h-1.5 cursor-pointer"
+            />
           </div>
         </div>
       )}
 
       {/* 8. UNIVERSAL: Dimensions & Spacing (Width, Height, Padding, Margin) */}
       <div className="space-y-2 pt-3">
-        <label className="text-[10px] text-slate-400 font-bold uppercase flex items-center gap-1">
-          <Maximize2 size={11} />
-          <span>크기 & 여백 (Dimensions & Spacing)</span>
-        </label>
+        <div className="flex items-center justify-between">
+          <label className="text-[10px] text-slate-400 font-bold uppercase flex items-center gap-1">
+            <Maximize2 size={11} />
+            <span>크기 & 여백 (Dimensions & Spacing)</span>
+          </label>
+          <button
+            onClick={() => setUse4WayPadding(!use4WayPadding)}
+            className="text-[10px] text-indigo-600 hover:text-indigo-800 font-semibold"
+          >
+            {use4WayPadding ? '단일 여백' : '4방향 분할'}
+          </button>
+        </div>
+
         <div className="grid grid-cols-2 gap-2">
           <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
             <span className="text-[10px] text-slate-500 block">너비 (Width)</span>
@@ -695,30 +855,55 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
-          <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
-            <span className="text-[10px] text-slate-500 block">내부 여백 ({selectedNode.style.padding || 0}px)</span>
-            <input
-              type="range"
-              min={0}
-              max={64}
-              value={Number(selectedNode.style.padding) || 0}
-              onChange={(e) => handleStyleChange('padding', Number(e.target.value))}
-              className="w-full accent-indigo-600 h-1.5 cursor-pointer"
-            />
+        {/* 4-Way Independent Padding Controls */}
+        {use4WayPadding ? (
+          <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1.5">
+            <span className="text-[10px] text-slate-500 block font-semibold">4방향 개별 내부 여백 (Top / Right / Bottom / Left)</span>
+            <div className="grid grid-cols-4 gap-1.5">
+              {[
+                { k: 'paddingTop', l: '상 (T)' },
+                { k: 'paddingRight', l: '우 (R)' },
+                { k: 'paddingBottom', l: '하 (B)' },
+                { k: 'paddingLeft', l: '좌 (L)' }
+              ].map((p) => (
+                <div key={p.k} className="text-center">
+                  <span className="text-[9px] text-slate-400 block mb-0.5">{p.l}</span>
+                  <input
+                    type="number"
+                    value={Number(selectedNode.style[p.k as keyof VNodeStyle] || 0)}
+                    onChange={(e) => handleStyleChange(p.k as keyof VNodeStyle, Number(e.target.value))}
+                    className="w-full bg-white border border-slate-200 rounded px-1 py-0.5 text-xs font-mono text-center"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
-            <span className="text-[10px] text-slate-500 block">외부 여백 ({selectedNode.style.margin || 0}px)</span>
-            <input
-              type="range"
-              min={0}
-              max={64}
-              value={Number(selectedNode.style.margin) || 0}
-              onChange={(e) => handleStyleChange('margin', Number(e.target.value))}
-              className="w-full accent-indigo-600 h-1.5 cursor-pointer"
-            />
+        ) : (
+          <div className="grid grid-cols-2 gap-2">
+            <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
+              <span className="text-[10px] text-slate-500 block">내부 여백 ({selectedNode.style.padding || 0}px)</span>
+              <input
+                type="range"
+                min={0}
+                max={64}
+                value={Number(selectedNode.style.padding) || 0}
+                onChange={(e) => handleStyleChange('padding', Number(e.target.value))}
+                className="w-full accent-indigo-600 h-1.5 cursor-pointer"
+              />
+            </div>
+            <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
+              <span className="text-[10px] text-slate-500 block">외부 여백 ({selectedNode.style.margin || 0}px)</span>
+              <input
+                type="range"
+                min={0}
+                max={64}
+                value={Number(selectedNode.style.margin) || 0}
+                onChange={(e) => handleStyleChange('margin', Number(e.target.value))}
+                className="w-full accent-indigo-600 h-1.5 cursor-pointer"
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* 9. UNIVERSAL: Border, Corner Radius & Shadow */}
@@ -756,6 +941,33 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 </button>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Box Shadow Presets */}
+        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1.5">
+          <span className="text-[10px] text-slate-500 block font-semibold">그림자 프리셋 (Box Shadow)</span>
+          <div className="grid grid-cols-3 gap-1">
+            {[
+              { label: '없음', val: undefined },
+              { label: '소프트', val: '0 1px 3px rgba(0,0,0,0.1)' },
+              { label: '미디엄', val: '0 4px 6px -1px rgba(0,0,0,0.1)' },
+              { label: '플로팅', val: '0 10px 15px -3px rgba(0,0,0,0.15)' },
+              { label: '볼드', val: '0 20px 25px -5px rgba(0,0,0,0.25)' },
+              { label: '글로우', val: '0 0 20px rgba(99,102,241,0.5)' }
+            ].map((sh) => (
+              <button
+                key={sh.label}
+                onClick={() => handleStyleChange('boxShadow', sh.val)}
+                className={`py-1 rounded text-[10px] transition ${
+                  selectedNode.style.boxShadow === sh.val
+                    ? 'bg-indigo-600 text-white font-bold shadow-2xs'
+                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                {sh.label}
+              </button>
+            ))}
           </div>
         </div>
       </div>

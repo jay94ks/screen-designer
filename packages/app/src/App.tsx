@@ -11,6 +11,8 @@ import { ShortcutsModal } from './components/Modals/ShortcutsModal';
 import { ShareModal } from './components/Modals/ShareModal';
 import { NewArtboardModal } from './components/Modals/NewArtboardModal';
 import { GitDesktopModal } from './components/Modals/GitDesktopModal';
+import { CanvasRulers, GuideLine } from './components/CanvasRulers';
+import { CommandPaletteModal } from './components/Modals/CommandPaletteModal';
 import { gitClient } from './utils/gitClient';
 import { projectClient } from './utils/projectClient';
 import { exportArtboardImage, exportArtboardJson, exportArtboardCode } from './utils/artboardExporter';
@@ -168,6 +170,53 @@ export default function App() {
   const [isGitModalOpen, setIsGitModalOpen] = useState(() => {
     return typeof window !== 'undefined' && window.location.search.includes('openGit');
   });
+
+  // Precision Canvas Rulers & Guides State
+  const [showRulers, setShowRulers] = useState<boolean>(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('rulers')) return true;
+    try {
+      const saved = localStorage.getItem('sd_show_rulers');
+      return saved !== null ? saved === 'true' : false;
+    } catch {
+      return false;
+    }
+  });
+
+  const [guides, setGuides] = useState<GuideLine[]>(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('rulers')) {
+      return [
+        { id: 'g-h1', type: 'horizontal', pos: 180 },
+        { id: 'g-v1', type: 'vertical', pos: 420 }
+      ];
+    }
+    try {
+      const saved = localStorage.getItem('sd_guides');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(() => {
+    return typeof window !== 'undefined' && (window.location.search.includes('palette') || window.location.search.includes('cmd'));
+  });
+  const clipboardNodeRef = useRef<VNode | null>(null);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
+  const [canvasRect, setCanvasRect] = useState<DOMRect | null>(null);
+  const [canvasDimensions, setCanvasDimensions] = useState({ width: 1400, height: 900 });
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('sd_show_rulers', String(showRulers));
+    } catch {}
+  }, [showRulers]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('sd_guides', JSON.stringify(guides));
+    } catch {}
+  }, [guides]);
 
   // Git Status State (node.js simple-git integration)
   const [gitStatus, setGitStatus] = useState<GitStatusInfo>({
@@ -415,6 +464,19 @@ export default function App() {
     } catch {}
   }, [rightSidebarWidth]);
 
+  useEffect(() => {
+    const updateRect = () => {
+      if (canvasContainerRef.current) {
+        const rect = canvasContainerRef.current.getBoundingClientRect();
+        setCanvasRect(rect);
+        setCanvasDimensions({ width: rect.width, height: rect.height });
+      }
+    };
+    updateRect();
+    window.addEventListener('resize', updateRect);
+    return () => window.removeEventListener('resize', updateRect);
+  }, [isLeftSidebarOpen, isRightSidebarOpen, leftSidebarWidth, rightSidebarWidth]);
+
   const handleLeftResizeStart = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsResizingLeft(true);
@@ -507,67 +569,6 @@ export default function App() {
       setCanRedo(historyRef.current.canRedo());
     }
   };
-
-  // Keyboard Shortcuts Listener
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return;
-
-      if (e.code === 'Space' && !e.repeat) setIsSpacePressed(true);
-
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
-        e.preventDefault();
-        if (e.shiftKey) handleRedo();
-        else handleUndo();
-      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
-        e.preventDefault();
-        handleRedo();
-      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') {
-        e.preventDefault();
-        if (selectedArtboard) handleDuplicateArtboard(selectedArtboard.id);
-      } else if (e.key === 'Delete' || e.key === 'Backspace') {
-        if (selectedNodeId && selectedNode && selectedNode.type !== 'frame') {
-          handleDeleteNode(selectedNodeId);
-        } else if (selectedArtboard) {
-          handleDeleteArtboard(selectedArtboard.id);
-        }
-      } else if ((e.ctrlKey || e.metaKey) && e.key === '0') {
-        e.preventDefault();
-        setZoom(1.0);
-      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') {
-        e.preventDefault();
-        setIsPlayOpen(true);
-      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'e') {
-        e.preventDefault();
-        setIsExportOpen(true);
-      } else if (e.key === '?' || (e.ctrlKey && e.key === '/')) {
-        e.preventDefault();
-        setIsShortcutsOpen(true);
-      } else if (e.key.toLowerCase() === 'v') {
-        setActiveTool('select');
-      } else if (e.key.toLowerCase() === 'h') {
-        setActiveTool('hand');
-      } else if (e.key.toLowerCase() === 'f') {
-        setIsNewFrameOpen(true);
-      } else if (e.key.toLowerCase() === 't') {
-        handleInsertNewNode('text', '새 텍스트', '텍스트를 입력하세요');
-      } else if (e.key.toLowerCase() === 'r') {
-        handleInsertNewNode('box', '새 사각형 박스');
-      }
-    };
-
-    const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.code === 'Space') setIsSpacePressed(false);
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, [selectedArtboard, selectedNodeId, artboards]);
 
   // Canvas Pan Handlers
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -928,6 +929,72 @@ export default function App() {
     setSelectedArtboardId(copy.id);
   };
 
+  // Node Copy, Duplicate & Paste Power Operations
+  const cloneNodeWithNewIds = (source: VNode): VNode => {
+    const ts = Date.now();
+    const rand = Math.random().toString(36).substring(2, 6);
+    const newId = `node-${ts}-${rand}`;
+    return {
+      ...source,
+      id: newId,
+      name: source.name ? `${source.name} (사본)` : '사본',
+      children: source.children ? source.children.map(cloneNodeWithNewIds) : undefined
+    };
+  };
+
+  const handleCopyNode = (node: VNode) => {
+    clipboardNodeRef.current = JSON.parse(JSON.stringify(node));
+    setExportToast(`'${node.name}' 요소가 클립보드에 복사되었습니다.`);
+    setTimeout(() => setExportToast(null), 2500);
+  };
+
+  const handleDuplicateNode = (node: VNode) => {
+    if (!selectedArtboard) return;
+    const cloned = cloneNodeWithNewIds(node);
+    pushHistory(artboards);
+    const insertSibling = (curr: VNode): VNode => {
+      if (!curr.children) return curr;
+      const idx = curr.children.findIndex((c) => c.id === node.id);
+      if (idx !== -1) {
+        const nextChildren = [...curr.children];
+        nextChildren.splice(idx + 1, 0, cloned);
+        return { ...curr, children: nextChildren };
+      }
+      return {
+        ...curr,
+        children: curr.children.map(insertSibling)
+      };
+    };
+
+    setArtboards((prev) =>
+      prev.map((a) => (a.id === selectedArtboard.id ? { ...a, rootNode: insertSibling(a.rootNode) } : a))
+    );
+    setSelectedNodeId(cloned.id);
+    setExportToast(`'${cloned.name}' 요소가 복제되었습니다.`);
+    setTimeout(() => setExportToast(null), 2500);
+  };
+
+  const handlePasteNode = () => {
+    if (!clipboardNodeRef.current || !selectedArtboard) return;
+    const cloned = cloneNodeWithNewIds(clipboardNodeRef.current);
+    pushHistory(artboards);
+
+    const containerTypes = ['card', 'box', 'frame', 'scroll-container', 'dialog', 'section', 'header', 'footer', 'nav', 'aside', 'main', 'article'];
+    const isContainer = selectedNode && containerTypes.includes(selectedNode.type);
+    const targetParentId = isContainer && selectedNode ? selectedNode.id : selectedArtboard.rootNode.id;
+
+    setArtboards((prev) =>
+      prev.map((a) =>
+        a.id === selectedArtboard.id
+          ? { ...a, rootNode: insertNodeIntoTree(a.rootNode, targetParentId, cloned) }
+          : a
+      )
+    );
+    setSelectedNodeId(cloned.id);
+    setExportToast(`'${cloned.name}' 요소가 붙여넣기 되었습니다.`);
+    setTimeout(() => setExportToast(null), 2500);
+  };
+
   const handleDeleteArtboard = (id: string) => {
     pushHistory(artboards);
     const rem = artboards.filter((a) => a.id !== id);
@@ -940,6 +1007,139 @@ export default function App() {
       setSelectedNodeId(null);
     }
   };
+
+  // Enhanced Universal Keyboard Shortcuts Listener (Power Designer Tools)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return;
+
+      if (e.code === 'Space' && !e.repeat) setIsSpacePressed(true);
+
+      // 1. Command Palette (Ctrl+K)
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen((prev) => !prev);
+        return;
+      }
+
+      // 2. Rulers & Guides toggle (Shift+R)
+      if (e.shiftKey && e.key.toLowerCase() === 'r') {
+        e.preventDefault();
+        setShowRulers((prev) => !prev);
+        return;
+      }
+
+      // 3. Node Copy (Ctrl+C)
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
+        if (selectedNode && selectedNode.type !== 'frame') {
+          e.preventDefault();
+          handleCopyNode(selectedNode);
+          return;
+        }
+      }
+
+      // 4. Node Paste (Ctrl+V)
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'v') {
+        if (clipboardNodeRef.current) {
+          e.preventDefault();
+          handlePasteNode();
+          return;
+        }
+      }
+
+      // 5. Duplicate (Ctrl+D)
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') {
+        e.preventDefault();
+        if (selectedNode && selectedNode.type !== 'frame') {
+          handleDuplicateNode(selectedNode);
+        } else if (selectedArtboard) {
+          handleDuplicateArtboard(selectedArtboard.id);
+        }
+        return;
+      }
+
+      // 6. Delete Node / Artboard (Delete / Backspace)
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        if (selectedNodeId && selectedNode && selectedNode.type !== 'frame') {
+          handleDeleteNode(selectedNodeId);
+        } else if (selectedArtboard) {
+          handleDeleteArtboard(selectedArtboard.id);
+        }
+        return;
+      }
+
+      // 7. Arrow Key Nudge (1px normal, 10px with Shift)
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+        const step = e.shiftKey ? 10 : 1;
+        const dx = e.key === 'ArrowLeft' ? -step : e.key === 'ArrowRight' ? step : 0;
+        const dy = e.key === 'ArrowUp' ? -step : e.key === 'ArrowDown' ? step : 0;
+
+        if (selectedNode && selectedNode.type !== 'frame') {
+          const currentMarginLeft = typeof selectedNode.style.marginLeft === 'number' ? selectedNode.style.marginLeft : 0;
+          const currentMarginTop = typeof selectedNode.style.marginTop === 'number' ? selectedNode.style.marginTop : 0;
+          handleUpdateNode(selectedNode.id, {
+            style: {
+              ...selectedNode.style,
+              marginLeft: currentMarginLeft + dx,
+              marginTop: currentMarginTop + dy
+            }
+          });
+        } else if (selectedArtboard) {
+          setArtboards((prev) =>
+            prev.map((a) =>
+              a.id === selectedArtboard.id ? { ...a, x: a.x + dx, y: a.y + dy } : a
+            )
+          );
+        }
+        return;
+      }
+
+      // 8. History (Undo / Redo)
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        if (e.shiftKey) handleRedo();
+        else handleUndo();
+      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+        e.preventDefault();
+        handleRedo();
+      } else if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+        e.preventDefault();
+        setZoom(1.0);
+      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') {
+        e.preventDefault();
+        setIsPlayOpen(true);
+      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'e') {
+        e.preventDefault();
+        setIsExportOpen(true);
+      } else if (e.key === '?' || (e.ctrlKey && e.key === '/')) {
+        e.preventDefault();
+        setIsShortcutsOpen(true);
+      } else if (e.key.toLowerCase() === 'v') {
+        setActiveTool('select');
+      } else if (e.key.toLowerCase() === 'h') {
+        setActiveTool('hand');
+      } else if (e.key.toLowerCase() === 'f') {
+        setIsNewFrameOpen(true);
+      } else if (e.key.toLowerCase() === 't') {
+        handleInsertNewNode('text', '새 텍스트', '텍스트를 입력하세요');
+      } else if (e.key.toLowerCase() === 'r') {
+        handleInsertNewNode('box', '새 사각형 박스');
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'Space') setIsSpacePressed(false);
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [selectedArtboard, selectedNodeId, selectedNode, artboards]);
 
   // Serialized React JSX code
   const activeCode = selectedArtboard
@@ -1026,6 +1226,9 @@ export default function App() {
         onToggleLeftSidebar={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)}
         isRightSidebarOpen={isRightSidebarOpen}
         onToggleRightSidebar={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
+        showRulers={showRulers}
+        onToggleRulers={() => setShowRulers(!showRulers)}
+        onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
       />
 
       <div className="flex flex-1 overflow-hidden relative">
@@ -1047,6 +1250,25 @@ export default function App() {
             setSelectedNodeId(node.id);
           }}
           onInsertNode={(type, name, content, props) => handleInsertNewNode(type, name, content, props)}
+          onUpdateNode={handleUpdateNode}
+          onDeleteNode={handleDeleteNode}
+          onInsertTemplate={(templateNode) => {
+            if (!selectedArtboard) return;
+            pushHistory(artboards);
+            setArtboards((prev) =>
+              prev.map((a) =>
+                a.id === selectedArtboard.id
+                  ? {
+                      ...a,
+                      rootNode: insertNodeIntoTree(a.rootNode, a.rootNode.id, templateNode)
+                    }
+                  : a
+              )
+            );
+            setSelectedNodeId(templateNode.id);
+            setExportToast(`'${templateNode.name}' 템플릿이 캔버스에 추가되었습니다.`);
+            setTimeout(() => setExportToast(null), 2500);
+          }}
           onOpenSettings={(tab) => handleOpenSettings(tab)}
           isOpen={isLeftSidebarOpen}
           onClose={() => setIsLeftSidebarOpen(false)}
@@ -1072,23 +1294,50 @@ export default function App() {
           </div>
         )}
 
-        {/* 3. Main Infinite Canvas Area */}
-        <main
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onWheel={handleWheel}
-          style={{
-            backgroundColor: settings.canvasBackground,
-            cursor: activeTool === 'hand' || isSpacePressed ? (isPanning ? 'grabbing' : 'grab') : 'default'
+        {/* 3. Main Infinite Canvas Area with Precision Rulers & Guides */}
+        <div
+          ref={canvasContainerRef}
+          className="flex-1 relative flex overflow-hidden"
+          onMouseMove={(e) => {
+            setMousePos({ x: e.clientX, y: e.clientY });
           }}
-          className={`flex-1 overflow-auto p-12 pl-16 flex items-start justify-start relative select-none ${
-            settings.gridVisible
-              ? 'bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:24px_24px]'
-              : ''
-          }`}
-          onClick={() => setSelectedNodeId(null)}
         >
+          {showRulers && (
+            <CanvasRulers
+              zoom={zoom}
+              pan={pan}
+              containerWidth={canvasDimensions.width}
+              containerHeight={canvasDimensions.height}
+              guides={guides}
+              onAddGuide={(guide) => setGuides((prev) => [...prev, guide])}
+              onUpdateGuide={(id, newPos) =>
+                setGuides((prev) => prev.map((g) => (g.id === id ? { ...g, pos: newPos } : g)))
+              }
+              onRemoveGuide={(id) => setGuides((prev) => prev.filter((g) => g.id !== id))}
+              showRulers={showRulers}
+              mousePos={mousePos}
+              canvasRect={canvasRect}
+            />
+          )}
+
+          <main
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onWheel={handleWheel}
+            style={{
+              backgroundColor: settings.canvasBackground,
+              cursor: activeTool === 'hand' || isSpacePressed ? (isPanning ? 'grabbing' : 'grab') : 'default'
+            }}
+            className={`flex-1 overflow-auto p-12 pl-16 flex items-start justify-start relative select-none ${
+              showRulers ? 'pt-10 pl-14' : ''
+            } ${
+              settings.gridVisible
+                ? 'bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:24px_24px]'
+                : ''
+            }`}
+            onClick={() => setSelectedNodeId(null)}
+          >
           {artboards.length === 0 ? (
             <div className="w-full h-full min-h-[450px] flex flex-col items-center justify-center text-center p-8 m-auto">
               <div className="w-16 h-16 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 mb-4 shadow-xs">
@@ -1273,6 +1522,7 @@ export default function App() {
             </div>
           )}
         </main>
+        </div>
 
         {/* Right Sidebar Resize Handle */}
         {isRightSidebarOpen && (
@@ -1384,6 +1634,33 @@ export default function App() {
       <ShortcutsModal
         isOpen={isShortcutsOpen}
         onClose={() => setIsShortcutsOpen(false)}
+      />
+
+      <CommandPaletteModal
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        pages={compatibleProject.pages}
+        artboards={artboards}
+        onSelectPage={handleSelectPage}
+        onSelectArtboard={(id) => {
+          setSelectedArtboardId(id);
+          setSelectedNodeId(null);
+        }}
+        onInsertNode={(type, name, content) => handleInsertNewNode(type, name, content)}
+        onOpenNewFrame={() => setIsNewFrameOpen(true)}
+        onOpenPlay={() => setIsPlayOpen(true)}
+        onOpenDesignSystem={() => setIsDesignSystemOpen(true)}
+        onOpenGit={() => setIsGitModalOpen(true)}
+        onOpenSettings={() => handleOpenSettings('canvas')}
+        onToggleGrid={() =>
+          setSettings((prev) => ({ ...prev, gridVisible: !prev.gridVisible }))
+        }
+        onToggleRulers={() => setShowRulers((prev) => !prev)}
+        onZoomReset={() => setZoom(1.0)}
+        onZoomIn={() => setZoom((z) => Math.min(2.0, z + 0.1))}
+        onZoomOut={() => setZoom((z) => Math.max(0.3, z - 0.1))}
+        onUndo={handleUndo}
+        onRedo={handleRedo}
       />
 
       <ShareModal
