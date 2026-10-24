@@ -61,6 +61,7 @@ import fs from 'fs';
 import { WebSocket } from 'ws';
 import { getGitStatus, getFileDiff, getGitHistory, getCommitDetails, commitFiles, pushCommits } from './gitService';
 import { materializePresets, copyAssetFile, listAssets } from './assetService';
+import { saveProjectStructure, loadProjectStructure, migrateProjectFolder } from './projectService';
 var __filename = fileURLToPath(import.meta.url);
 var __dirname = path.dirname(__filename);
 process.env.DIST = path.join(__dirname, '../dist');
@@ -161,125 +162,55 @@ ipcMain.on('window:drag-by', function (_, _a) {
         win.setPosition(Math.round(x + dx), Math.round(y + dy));
     }
 });
-// Project Storage IPC Handlers (.screen-designer/ & per-page JSON document)
+// Project Storage IPC Handlers (project.json, design-system.json, pages/{number}.json, assets/)
+ipcMain.handle('project:save-project', function (_1, _a) { return __awaiter(void 0, [_1, _a], void 0, function (_, _b) {
+    var project = _b.project, pages = _b.pages, designSystem = _b.designSystem, _c = _b.pageDocsPath, pageDocsPath = _c === void 0 ? 'docs/ui-boards' : _c, workspacePath = _b.workspacePath;
+    return __generator(this, function (_d) {
+        return [2 /*return*/, saveProjectStructure({ project: project, pages: pages, designSystem: designSystem, pageDocsPath: pageDocsPath, workspacePath: workspacePath })];
+    });
+}); });
+ipcMain.handle('project:load-project', function (_1, _a) { return __awaiter(void 0, [_1, _a], void 0, function (_, _b) {
+    var _c = _b.pageDocsPath, pageDocsPath = _c === void 0 ? 'docs/ui-boards' : _c, workspacePath = _b.workspacePath;
+    return __generator(this, function (_d) {
+        return [2 /*return*/, loadProjectStructure({ pageDocsPath: pageDocsPath, workspacePath: workspacePath })];
+    });
+}); });
+ipcMain.handle('project:migrate-folder', function (_1, _a) { return __awaiter(void 0, [_1, _a], void 0, function (_, _b) {
+    var oldPath = _b.oldPath, newPath = _b.newPath, workspacePath = _b.workspacePath;
+    return __generator(this, function (_c) {
+        return [2 /*return*/, migrateProjectFolder({ oldPath: oldPath, newPath: newPath, workspacePath: workspacePath })];
+    });
+}); });
+// Legacy backwards compatibility aliases
 ipcMain.handle('project:save-page', function (_1, _a) { return __awaiter(void 0, [_1, _a], void 0, function (_, _b) {
-    var rootDir, dotDir, cacheDir, docsDir, pageFileName, pageFilePath, pageDoc, configPath, existingConfig, raw, _c, updatedConfig, cacheManifest, err_1;
-    var page = _b.page, _d = _b.pageDocsPath, pageDocsPath = _d === void 0 ? 'docs/ui-boards' : _d, workspacePath = _b.workspacePath;
-    return __generator(this, function (_e) {
-        switch (_e.label) {
-            case 0:
-                _e.trys.push([0, 11, , 12]);
-                rootDir = workspacePath || process.env.SCREEN_DESIGNER_WORKSPACE || process.cwd();
-                dotDir = path.join(rootDir, '.screen-designer');
-                cacheDir = path.join(dotDir, 'cache');
-                docsDir = path.join(rootDir, pageDocsPath);
-                return [4 /*yield*/, fs.promises.mkdir(dotDir, { recursive: true })];
-            case 1:
-                _e.sent();
-                return [4 /*yield*/, fs.promises.mkdir(cacheDir, { recursive: true })];
-            case 2:
-                _e.sent();
-                return [4 /*yield*/, fs.promises.mkdir(docsDir, { recursive: true })];
-            case 3:
-                _e.sent();
-                pageFileName = "".concat(page.id, ".json");
-                pageFilePath = path.join(docsDir, pageFileName);
-                pageDoc = {
-                    id: page.id,
-                    name: page.name,
-                    version: '1.0.0',
-                    updatedAt: new Date().toISOString(),
-                    artboards: page.artboards || []
-                };
-                return [4 /*yield*/, fs.promises.writeFile(pageFilePath, JSON.stringify(pageDoc, null, 2), 'utf-8')];
-            case 4:
-                _e.sent();
-                configPath = path.join(dotDir, 'config.json');
-                existingConfig = {};
-                _e.label = 5;
-            case 5:
-                _e.trys.push([5, 7, , 8]);
-                return [4 /*yield*/, fs.promises.readFile(configPath, 'utf-8')];
-            case 6:
-                raw = _e.sent();
-                existingConfig = JSON.parse(raw);
-                return [3 /*break*/, 8];
-            case 7:
-                _c = _e.sent();
-                return [3 /*break*/, 8];
-            case 8:
-                updatedConfig = __assign(__assign({}, existingConfig), { version: '1.0.0', pageDocsPath: pageDocsPath, lastActivePage: page.id, updatedAt: new Date().toISOString() });
-                return [4 /*yield*/, fs.promises.writeFile(configPath, JSON.stringify(updatedConfig, null, 2), 'utf-8')];
-            case 9:
-                _e.sent();
-                cacheManifest = path.join(cacheDir, 'manifest.json');
-                return [4 /*yield*/, fs.promises.writeFile(cacheManifest, JSON.stringify({
-                        lastSavedPage: page.id,
-                        lastSavedFile: pageFilePath,
-                        savedAt: new Date().toISOString()
-                    }, null, 2), 'utf-8')];
-            case 10:
-                _e.sent();
-                return [2 /*return*/, { success: true, savedPath: pageFilePath }];
-            case 11:
-                err_1 = _e.sent();
-                console.error('[Electron Main] Save page error:', err_1);
-                return [2 /*return*/, { success: false, error: err_1.message }];
-            case 12: return [2 /*return*/];
-        }
+    var page = _b.page, _c = _b.pageDocsPath, pageDocsPath = _c === void 0 ? 'docs/ui-boards' : _c, workspacePath = _b.workspacePath;
+    return __generator(this, function (_d) {
+        return [2 /*return*/, saveProjectStructure({
+                pages: [page],
+                pageDocsPath: pageDocsPath,
+                workspacePath: workspacePath
+            })];
     });
 }); });
 ipcMain.handle('project:load-pages', function (_1, _a) { return __awaiter(void 0, [_1, _a], void 0, function (_, _b) {
-    var rootDir, docsDir, files, jsonFiles, pages, _i, jsonFiles_1, f, raw, parsed, e_1, err_2;
+    var result;
     var _c = _b.pageDocsPath, pageDocsPath = _c === void 0 ? 'docs/ui-boards' : _c, workspacePath = _b.workspacePath;
     return __generator(this, function (_d) {
         switch (_d.label) {
-            case 0:
-                _d.trys.push([0, 9, , 10]);
-                rootDir = workspacePath || process.env.SCREEN_DESIGNER_WORKSPACE || process.cwd();
-                docsDir = path.join(rootDir, pageDocsPath);
-                return [4 /*yield*/, fs.promises.mkdir(docsDir, { recursive: true })];
+            case 0: return [4 /*yield*/, loadProjectStructure({ pageDocsPath: pageDocsPath, workspacePath: workspacePath })];
             case 1:
-                _d.sent();
-                return [4 /*yield*/, fs.promises.readdir(docsDir)];
-            case 2:
-                files = _d.sent();
-                jsonFiles = files.filter(function (f) { return f.endsWith('.json'); });
-                pages = [];
-                _i = 0, jsonFiles_1 = jsonFiles;
-                _d.label = 3;
-            case 3:
-                if (!(_i < jsonFiles_1.length)) return [3 /*break*/, 8];
-                f = jsonFiles_1[_i];
-                _d.label = 4;
-            case 4:
-                _d.trys.push([4, 6, , 7]);
-                return [4 /*yield*/, fs.promises.readFile(path.join(docsDir, f), 'utf-8')];
-            case 5:
-                raw = _d.sent();
-                parsed = JSON.parse(raw);
-                if (parsed && parsed.id && parsed.name) {
-                    pages.push(parsed);
-                }
-                return [3 /*break*/, 7];
-            case 6:
-                e_1 = _d.sent();
-                console.error("Failed to parse page file: ".concat(f), e_1);
-                return [3 /*break*/, 7];
-            case 7:
-                _i++;
-                return [3 /*break*/, 3];
-            case 8: return [2 /*return*/, { success: true, pages: pages, docsDir: docsDir }];
-            case 9:
-                err_2 = _d.sent();
-                console.error('[Electron Main] Load pages error:', err_2);
-                return [2 /*return*/, { success: false, pages: [], error: err_2.message }];
-            case 10: return [2 /*return*/];
+                result = _d.sent();
+                return [2 /*return*/, {
+                        success: result.success,
+                        pages: result.pages,
+                        docsDir: result.docsDir,
+                        error: result.error
+                    }];
         }
     });
 }); });
 ipcMain.handle('project:get-config', function (_1, _a) { return __awaiter(void 0, [_1, _a], void 0, function (_, _b) {
-    var rootDir, configPath, raw, err_3;
+    var rootDir, configPath, raw, err_1;
     var workspacePath = _b.workspacePath;
     return __generator(this, function (_c) {
         switch (_c.label) {
@@ -292,8 +223,8 @@ ipcMain.handle('project:get-config', function (_1, _a) { return __awaiter(void 0
                 raw = _c.sent();
                 return [2 /*return*/, { success: true, config: JSON.parse(raw) }];
             case 2:
-                err_3 = _c.sent();
-                return [2 /*return*/, { success: false, error: err_3.message }];
+                err_1 = _c.sent();
+                return [2 /*return*/, { success: false, error: err_1.message }];
             case 3: return [2 /*return*/];
         }
     });
@@ -414,7 +345,7 @@ app.on('activate', function () {
     }
 });
 app.whenReady().then(function () { return __awaiter(void 0, void 0, void 0, function () {
-    var err_4;
+    var err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -424,8 +355,8 @@ app.whenReady().then(function () { return __awaiter(void 0, void 0, void 0, func
                 _a.sent();
                 return [3 /*break*/, 3];
             case 2:
-                err_4 = _a.sent();
-                console.error('[Electron Main] Error materializing image presets:', err_4);
+                err_2 = _a.sent();
+                console.error('[Electron Main] Error materializing image presets:', err_2);
                 return [3 /*break*/, 3];
             case 3:
                 createWindow();

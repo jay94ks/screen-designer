@@ -42,6 +42,7 @@ import path from 'path';
 import fs from 'fs';
 import { getGitStatus, getFileDiff, getGitHistory, getCommitDetails, commitFiles, pushCommits } from './electron/gitService';
 import { materializePresets, listAssets, getMimeType } from './electron/assetService';
+import { saveProjectStructure, loadProjectStructure, migrateProjectFolder } from './electron/projectService';
 function gitApiPlugin() {
     return {
         name: 'screen-designer-git-api',
@@ -126,6 +127,72 @@ function gitApiPlugin() {
         }
     };
 }
+function projectApiPlugin() {
+    return {
+        name: 'screen-designer-project-api',
+        configureServer: function (server) {
+            var _this = this;
+            server.middlewares.use(function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+                var endpoint, body, data, data, data, err_2;
+                var _a;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            if (!((_a = req.url) === null || _a === void 0 ? void 0 : _a.startsWith('/api/project/')))
+                                return [2 /*return*/, next()];
+                            endpoint = req.url.replace('/api/project/', '').split('?')[0];
+                            body = {};
+                            if (!(req.method === 'POST')) return [3 /*break*/, 2];
+                            return [4 /*yield*/, new Promise(function (resolve) {
+                                    var data = '';
+                                    req.on('data', function (chunk) { return (data += chunk); });
+                                    req.on('end', function () {
+                                        try {
+                                            resolve(data ? JSON.parse(data) : {});
+                                        }
+                                        catch (_a) {
+                                            resolve({});
+                                        }
+                                    });
+                                })];
+                        case 1:
+                            body = _b.sent();
+                            _b.label = 2;
+                        case 2:
+                            _b.trys.push([2, 9, , 10]);
+                            res.setHeader('Content-Type', 'application/json');
+                            if (!(endpoint === 'save-project')) return [3 /*break*/, 4];
+                            return [4 /*yield*/, saveProjectStructure(body)];
+                        case 3:
+                            data = _b.sent();
+                            return [2 /*return*/, res.end(JSON.stringify(data))];
+                        case 4:
+                            if (!(endpoint === 'load-project')) return [3 /*break*/, 6];
+                            return [4 /*yield*/, loadProjectStructure(body)];
+                        case 5:
+                            data = _b.sent();
+                            return [2 /*return*/, res.end(JSON.stringify(data))];
+                        case 6:
+                            if (!(endpoint === 'migrate-folder')) return [3 /*break*/, 8];
+                            return [4 /*yield*/, migrateProjectFolder(body)];
+                        case 7:
+                            data = _b.sent();
+                            return [2 /*return*/, res.end(JSON.stringify(data))];
+                        case 8:
+                            next();
+                            return [3 /*break*/, 10];
+                        case 9:
+                            err_2 = _b.sent();
+                            res.statusCode = 500;
+                            res.end(JSON.stringify({ error: err_2.message }));
+                            return [3 /*break*/, 10];
+                        case 10: return [2 /*return*/];
+                    }
+                });
+            }); });
+        }
+    };
+}
 function assetsApiPlugin() {
     return {
         name: 'screen-designer-assets-api',
@@ -134,7 +201,7 @@ function assetsApiPlugin() {
             // Ensure presets exist when Vite dev server starts
             materializePresets().catch(function () { });
             server.middlewares.use(function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
-                var cleanUrl, projectRootDir, filePath, mime, endpoint, body, data, data, rootDir, assetsDir, fileName, targetPath, base64Data, relativePath, err_2;
+                var cleanUrl, projectRootDir, filePath, mime, endpoint, body, data, data, rootDir, assetsDir, fileName, targetPath, base64Data, relativePath, err_3;
                 var _a;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
@@ -214,9 +281,9 @@ function assetsApiPlugin() {
                             next();
                             return [3 /*break*/, 14];
                         case 13:
-                            err_2 = _b.sent();
+                            err_3 = _b.sent();
                             res.statusCode = 500;
-                            res.end(JSON.stringify({ error: err_2.message }));
+                            res.end(JSON.stringify({ error: err_3.message }));
                             return [3 /*break*/, 14];
                         case 14: return [2 /*return*/];
                     }
@@ -229,6 +296,7 @@ export default defineConfig({
     plugins: [
         react(),
         gitApiPlugin(),
+        projectApiPlugin(),
         assetsApiPlugin(),
         electron([
             {

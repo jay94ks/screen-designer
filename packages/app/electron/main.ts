@@ -17,6 +17,11 @@ import {
   copyAssetFile,
   listAssets
 } from './assetService';
+import {
+  saveProjectStructure,
+  loadProjectStructure,
+  migrateProjectFolder
+} from './projectService';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -133,89 +138,36 @@ ipcMain.on('window:drag-by', (_, { dx, dy }) => {
   }
 });
 
-// Project Storage IPC Handlers (.screen-designer/ & per-page JSON document)
+// Project Storage IPC Handlers (project.json, design-system.json, pages/{number}.json, assets/)
+ipcMain.handle('project:save-project', async (_, { project, pages, designSystem, pageDocsPath = 'docs/ui-boards', workspacePath }) => {
+  return saveProjectStructure({ project, pages, designSystem, pageDocsPath, workspacePath });
+});
+
+ipcMain.handle('project:load-project', async (_, { pageDocsPath = 'docs/ui-boards', workspacePath }) => {
+  return loadProjectStructure({ pageDocsPath, workspacePath });
+});
+
+ipcMain.handle('project:migrate-folder', async (_, { oldPath, newPath, workspacePath }) => {
+  return migrateProjectFolder({ oldPath, newPath, workspacePath });
+});
+
+// Legacy backwards compatibility aliases
 ipcMain.handle('project:save-page', async (_, { page, pageDocsPath = 'docs/ui-boards', workspacePath }) => {
-  try {
-    const rootDir = workspacePath || process.env.SCREEN_DESIGNER_WORKSPACE || process.cwd();
-    const dotDir = path.join(rootDir, '.screen-designer');
-    const cacheDir = path.join(dotDir, 'cache');
-    const docsDir = path.join(rootDir, pageDocsPath);
-
-    await fs.promises.mkdir(dotDir, { recursive: true });
-    await fs.promises.mkdir(cacheDir, { recursive: true });
-    await fs.promises.mkdir(docsDir, { recursive: true });
-
-    // 1. Save page document as structured VDOM JSON
-    const pageFileName = `${page.id}.json`;
-    const pageFilePath = path.join(docsDir, pageFileName);
-    const pageDoc = {
-      id: page.id,
-      name: page.name,
-      version: '1.0.0',
-      updatedAt: new Date().toISOString(),
-      artboards: page.artboards || []
-    };
-    await fs.promises.writeFile(pageFilePath, JSON.stringify(pageDoc, null, 2), 'utf-8');
-
-    // 2. Update .screen-designer/config.json
-    const configPath = path.join(dotDir, 'config.json');
-    let existingConfig: any = {};
-    try {
-      const raw = await fs.promises.readFile(configPath, 'utf-8');
-      existingConfig = JSON.parse(raw);
-    } catch {}
-
-    const updatedConfig = {
-      ...existingConfig,
-      version: '1.0.0',
-      pageDocsPath,
-      lastActivePage: page.id,
-      updatedAt: new Date().toISOString()
-    };
-    await fs.promises.writeFile(configPath, JSON.stringify(updatedConfig, null, 2), 'utf-8');
-
-    // 3. Cache metadata
-    const cacheManifest = path.join(cacheDir, 'manifest.json');
-    await fs.promises.writeFile(cacheManifest, JSON.stringify({
-      lastSavedPage: page.id,
-      lastSavedFile: pageFilePath,
-      savedAt: new Date().toISOString()
-    }, null, 2), 'utf-8');
-
-    return { success: true, savedPath: pageFilePath };
-  } catch (err: any) {
-    console.error('[Electron Main] Save page error:', err);
-    return { success: false, error: err.message };
-  }
+  return saveProjectStructure({
+    pages: [page],
+    pageDocsPath,
+    workspacePath
+  });
 });
 
 ipcMain.handle('project:load-pages', async (_, { pageDocsPath = 'docs/ui-boards', workspacePath }) => {
-  try {
-    const rootDir = workspacePath || process.env.SCREEN_DESIGNER_WORKSPACE || process.cwd();
-    const docsDir = path.join(rootDir, pageDocsPath);
-
-    await fs.promises.mkdir(docsDir, { recursive: true });
-    const files = await fs.promises.readdir(docsDir);
-    const jsonFiles = files.filter(f => f.endsWith('.json'));
-
-    const pages = [];
-    for (const f of jsonFiles) {
-      try {
-        const raw = await fs.promises.readFile(path.join(docsDir, f), 'utf-8');
-        const parsed = JSON.parse(raw);
-        if (parsed && parsed.id && parsed.name) {
-          pages.push(parsed);
-        }
-      } catch (e) {
-        console.error(`Failed to parse page file: ${f}`, e);
-      }
-    }
-
-    return { success: true, pages, docsDir };
-  } catch (err: any) {
-    console.error('[Electron Main] Load pages error:', err);
-    return { success: false, pages: [], error: err.message };
-  }
+  const result = await loadProjectStructure({ pageDocsPath, workspacePath });
+  return {
+    success: result.success,
+    pages: result.pages,
+    docsDir: result.docsDir,
+    error: result.error
+  };
 });
 
 ipcMain.handle('project:get-config', async (_, { workspacePath }) => {

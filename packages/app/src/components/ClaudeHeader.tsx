@@ -49,7 +49,7 @@ interface ClaudeHeaderProps {
   onSelectTool: (tool: CanvasTool) => void;
   onInsertNode?: (type: any, name: string, content?: string) => void;
   onOpenNewFrame: () => void;
-  onOpenExport: () => void;
+  onOpenExport?: () => void;
   onOpenSettings: (tab?: 'canvas' | 'components') => void;
   onOpenShortcuts: () => void;
   onOpenShare: () => void;
@@ -245,7 +245,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                 <button
                   onClick={() => {
                     closeMenus();
-                    onOpenExport();
+                    if (onOpenExport) onOpenExport();
                   }}
                   className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700 flex justify-between"
                 >

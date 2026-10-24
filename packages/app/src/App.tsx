@@ -11,6 +11,8 @@ import { ShareModal } from './components/Modals/ShareModal';
 import { NewArtboardModal } from './components/Modals/NewArtboardModal';
 import { GitDesktopModal } from './components/Modals/GitDesktopModal';
 import { gitClient } from './utils/gitClient';
+import { projectClient } from './utils/projectClient';
+import { exportArtboardImage, exportArtboardJson, exportArtboardCode } from './utils/artboardExporter';
 import { initProjectAssets } from './utils/assetManager';
 import { HistoryManager } from './utils/history';
 import { INITIAL_VDOM_ARTBOARDS } from './data/initialVdom';
@@ -29,7 +31,11 @@ import {
   Plus,
   Copy,
   Trash2,
-  Layout
+  Layout,
+  Image as ImageIcon,
+  FileJson,
+  FileCode,
+  Check
 } from 'lucide-react';
 
 const DEFAULT_SETTINGS: ProjectSettings = {
@@ -194,16 +200,47 @@ export default function App() {
     };
   }, [settings.pageDocsPath, settings.workspacePath]);
 
-  const saveActivePageDocument = async (targetPage = activePage) => {
+  // Auto-Save entire project structure (project.json, design-system.json, pages/{number}.json, assets/)
+  const saveProjectStructureNow = async () => {
     try {
       const docsPath = settings.pageDocsPath || 'docs/ui-boards';
-      if ((window as any).electronAPI?.project?.savePage) {
-        await (window as any).electronAPI.project.savePage(targetPage, docsPath, settings.workspacePath);
-        await refreshGitStatus();
-      }
+      await projectClient.saveProject({
+        project: {
+          name: 'Screen Designer Storyboard',
+          version: '1.0.0',
+          activePageId: activePageId,
+          settings: {
+            theme: settings.theme,
+            gridVisible: settings.gridVisible,
+            gridSize: settings.gridSize,
+            canvasBackground: settings.canvasBackground
+          }
+        },
+        pages: pages.map((p, idx) => ({
+          id: p.id,
+          name: p.name,
+          number: (p as any).number || (idx + 1),
+          artboards: p.artboards || []
+        })),
+        designSystem: {
+          version: '1.0.0',
+          updatedAt: new Date().toISOString(),
+          theme: settings.theme,
+          componentDefaults: settings.componentDefaults,
+          canvasBackground: settings.canvasBackground,
+          gridSize: settings.gridSize
+        },
+        pageDocsPath: docsPath,
+        workspacePath: settings.workspacePath
+      });
+      await refreshGitStatus();
     } catch (e) {
-      console.error('[App] Failed to save page document', e);
+      console.error('[App] Failed to save project structure', e);
     }
+  };
+
+  const saveActivePageDocument = async () => {
+    await saveProjectStructureNow();
   };
 
   const handleCommitDesign = async (message: string): Promise<boolean> => {
@@ -223,35 +260,98 @@ export default function App() {
     }
   };
 
-  // Workspace & Storage Auto-Initialization
+  // Workspace & Project Structure Auto-Initialization
   useEffect(() => {
     const initWorkspace = async () => {
       initProjectAssets();
       const docsPath = settings.pageDocsPath || 'docs/ui-boards';
-      if ((window as any).electronAPI?.project?.loadPages) {
-        const res = await (window as any).electronAPI.project.loadPages(docsPath, settings.workspacePath);
-        if (res && res.success && res.pages && res.pages.length > 0) {
-          setPages(res.pages);
-          setActivePageId(res.pages[0].id);
+      const res = await projectClient.loadProject(docsPath, settings.workspacePath);
+      if (res && res.success && res.pages && res.pages.length > 0) {
+        setPages(res.pages);
+        if (res.project?.activePageId) {
+          setActivePageId(res.project.activePageId);
         } else {
-          // Initialize first page document file on disk
-          await (window as any).electronAPI.project.savePage(INITIAL_PAGES[0], docsPath, settings.workspacePath);
+          setActivePageId(res.pages[0].id);
         }
+        if (res.designSystem?.componentDefaults) {
+          setSettings((prev) => ({
+            ...prev,
+            componentDefaults: res.designSystem.componentDefaults
+          }));
+        }
+      } else {
+        // Initialize default project structure on disk
+        await projectClient.saveProject({
+          project: {
+            name: 'Screen Designer Storyboard',
+            version: '1.0.0',
+            activePageId: INITIAL_PAGES[0].id
+          },
+          pages: INITIAL_PAGES,
+          designSystem: {
+            theme: settings.theme,
+            componentDefaults: settings.componentDefaults
+          },
+          pageDocsPath: docsPath,
+          workspacePath: settings.workspacePath
+        });
       }
       refreshGitStatus();
     };
     initWorkspace();
   }, []);
 
-  // Debounced Auto-Save Page Document on Edits
+  // Debounced Auto-Save Project Structure on Edits
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (activePage) {
-        saveActivePageDocument(activePage);
+      if (pages.length > 0) {
+        saveProjectStructureNow();
       }
     }, 1000);
     return () => clearTimeout(timer);
-  }, [pages, activePageId]);
+  }, [pages, activePageId, settings.componentDefaults, settings.pageDocsPath]);
+
+  // Settings update with automatic folder content migration
+  const handleUpdateSettings = async (newSettings: Partial<ProjectSettings>) => {
+    if (newSettings.pageDocsPath && newSettings.pageDocsPath !== settings.pageDocsPath) {
+      const oldPath = settings.pageDocsPath || 'docs/ui-boards';
+      const newPath = newSettings.pageDocsPath;
+      try {
+        const migResult = await projectClient.migrateFolder(oldPath, newPath, settings.workspacePath);
+        console.log('[App] Folder migration completed:', migResult);
+        await refreshGitStatus();
+      } catch (migErr) {
+        console.error('[App] Folder migration failed:', migErr);
+      }
+    }
+    setSettings((prev) => ({ ...prev, ...newSettings }));
+  };
+
+  // Export Toast State
+  const [exportToast, setExportToast] = useState<string | null>(null);
+
+  const handleExportImage = async (artboard: VDomArtboard) => {
+    setExportToast(`'${artboard.title}' 이미지를 생성하는 중...`);
+    const success = await exportArtboardImage(artboard);
+    if (success) {
+      setExportToast(`'${artboard.title}' 이미지(PNG)가 내보내졌습니다.`);
+    } else {
+      setExportToast(`'${artboard.title}' 이미지 내보내기 실패`);
+    }
+    setTimeout(() => setExportToast(null), 3000);
+  };
+
+  const handleExportJson = (artboard: VDomArtboard) => {
+    exportArtboardJson(artboard);
+    setExportToast(`'${artboard.title}' JSON 데이터가 내보내졌습니다.`);
+    setTimeout(() => setExportToast(null), 3000);
+  };
+
+  const handleExportCode = (artboard: VDomArtboard) => {
+    exportArtboardCode(artboard);
+    setExportToast(`'${artboard.title}' React(TSX) 코드가 내보내졌습니다.`);
+    setTimeout(() => setExportToast(null), 3000);
+  };
 
   // History Manager
   const historyRef = useRef(new HistoryManager<VDomArtboard[]>(30));
@@ -1038,7 +1138,45 @@ export default function App() {
                         className="font-bold text-slate-800 bg-transparent border-0 hover:bg-white/60 rounded px-1 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
                       />
 
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+                      <div className={`flex items-center gap-1 transition ${isSelected ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'}`}>
+                        {/* 1. Per-Artboard Export Group: Image, JSON, Code */}
+                        <div className="flex items-center bg-white/90 backdrop-blur-xs border border-slate-200/90 rounded-lg p-0.5 shadow-2xs mr-0.5">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleExportImage(artboard);
+                            }}
+                            className="px-1.5 py-0.5 hover:bg-indigo-50 hover:text-indigo-600 rounded text-slate-600 transition flex items-center gap-1 text-[10px] font-semibold"
+                            title="장표를 PNG 이미지 파일로 내보내기"
+                          >
+                            <ImageIcon size={11} className="text-indigo-500" />
+                            <span className="hidden xl:inline">이미지</span>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleExportJson(artboard);
+                            }}
+                            className="px-1.5 py-0.5 hover:bg-emerald-50 hover:text-emerald-600 rounded text-slate-600 transition flex items-center gap-1 text-[10px] font-semibold"
+                            title="장표를 VDOM JSON 파일로 내보내기"
+                          >
+                            <FileJson size={11} className="text-emerald-500" />
+                            <span className="hidden xl:inline">JSON</span>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleExportCode(artboard);
+                            }}
+                            className="px-1.5 py-0.5 hover:bg-purple-50 hover:text-purple-600 rounded text-slate-600 transition flex items-center gap-1 text-[10px] font-semibold"
+                            title="장표를 React (TSX) 컴포넌트 코드로 내보내기"
+                          >
+                            <FileCode size={11} className="text-purple-500" />
+                            <span className="hidden xl:inline">코드</span>
+                          </button>
+                        </div>
+
+                        {/* 2. Duplicate & Delete */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1064,6 +1202,7 @@ export default function App() {
 
                     {/* Artboard Frame with Selection Ring */}
                     <div
+                      id={`artboard-frame-${artboard.id}`}
                       className={`relative rounded-2xl overflow-hidden transition shadow-xl ${
                         isSelected
                           ? 'ring-2 ring-indigo-500 ring-offset-2'
@@ -1210,21 +1349,21 @@ export default function App() {
         onClose={() => setIsPlayOpen(false)}
       />
 
-      <ExportModal
-        isOpen={isExportOpen}
-        onClose={() => setIsExportOpen(false)}
-        artboard={selectedArtboard ? compatibleArtboards[currentIndex] : null}
-        project={compatibleProject}
-        onSaveToWorkspace={() => {}}
-      />
-
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         settings={settings}
-        onUpdateSettings={(newSettings) => setSettings((prev) => ({ ...prev, ...newSettings }))}
+        onUpdateSettings={handleUpdateSettings}
         initialTab={settingsTab}
       />
+
+      {/* Floating Export Toast Notification */}
+      {exportToast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-slate-900 text-white rounded-xl shadow-xl flex items-center gap-2 text-xs font-semibold animate-in fade-in slide-in-from-bottom-2 border border-slate-700">
+          <Check size={14} className="text-emerald-400" />
+          <span>{exportToast}</span>
+        </div>
+      )}
 
       <ShortcutsModal
         isOpen={isShortcutsOpen}

@@ -22,7 +22,7 @@ interface RightSidebarProps {
   activeCode: string;
   isOpen: boolean;
   onClose: () => void;
-  onOpenExport: () => void;
+  onOpenExport?: () => void;
   width?: number;
 }
 
@@ -166,19 +166,6 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
           </>
         )}
       </div>
-
-      {/* Bottom Export Action Footer */}
-      {artboard && (
-        <div className="p-3 border-t border-slate-200 bg-slate-50/80 shrink-0">
-          <button
-            onClick={onOpenExport}
-            className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition active:scale-98"
-          >
-            <Download size={14} />
-            <span>내보내기 스튜디오 (Export)</span>
-          </button>
-        </div>
-      )}
     </aside>
   );
 };

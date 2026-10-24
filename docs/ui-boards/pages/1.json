@@ -1,8 +1,9 @@
 {
   "id": "page-1",
   "name": "Page 1 (서비스 기획 보드 - v1.1 변경)",
+  "number": 1,
   "version": "1.0.0",
-  "updatedAt": "2026-10-24T18:17:13.178Z",
+  "updatedAt": "2026-10-24T19:39:50.089Z",
   "artboards": [
     {
       "id": "screen-1-main",

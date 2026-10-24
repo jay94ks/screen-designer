@@ -127,6 +127,29 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [categoryFilter, setCategoryFilter] = useState<ComponentCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Path Migration State
+  const [draftDocsPath, setDraftDocsPath] = useState(settings.pageDocsPath || 'docs/ui-boards');
+  const [isMigratingPath, setIsMigratingPath] = useState(false);
+  const [pathChangeSuccess, setPathChangeSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    setDraftDocsPath(settings.pageDocsPath || 'docs/ui-boards');
+  }, [settings.pageDocsPath]);
+
+  const handleApplyPathChange = async () => {
+    const trimmed = draftDocsPath.trim();
+    if (!trimmed || trimmed === settings.pageDocsPath) return;
+
+    setIsMigratingPath(true);
+    setPathChangeSuccess(null);
+    try {
+      await onUpdateSettings({ pageDocsPath: trimmed });
+      setPathChangeSuccess(`성공: '${settings.pageDocsPath || 'docs/ui-boards'}'의 모든 컨텐트가 '${trimmed}'(으)로 이동되었습니다.`);
+    } finally {
+      setIsMigratingPath(false);
+    }
+  };
+
   useEffect(() => {
     if (isOpen) {
       setActiveTab(initialTab);
@@ -273,22 +296,51 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   <span>프로젝트 파일 저장소 및 Git (Project Storage)</span>
                 </div>
                 <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 space-y-3.5">
-                  <div className="space-y-1">
+                  <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-slate-700">페이지별 JSON 문서 저장 경로</span>
+                      <span className="font-semibold text-slate-700">프로젝트 작업 및 저장 경로</span>
                       <span className="font-mono text-[10px] text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
                         기본값: docs/ui-boards
                       </span>
                     </div>
-                    <p className="text-[10px] text-slate-400">
-                      각 페이지는 이 폴더 내에 별도의 독립된 JSON 파일(가상 DOM 구조)로 개별 저장됩니다.
+                    <p className="text-[10px] text-slate-500 leading-relaxed">
+                      변경 시 이 폴더 내의 모든 컨텐트(<code>project.json</code>, <code>design-system.json</code>, <code>pages/</code>, <code>assets/</code>)가 새로운 경로로 자동 이동됩니다.
                     </p>
-                    <input
-                      type="text"
-                      value={settings.pageDocsPath || 'docs/ui-boards'}
-                      onChange={(e) => onUpdateSettings({ pageDocsPath: e.target.value })}
-                      className="w-full px-3 py-1.5 border border-slate-200 rounded-lg bg-white font-mono text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none"
-                    />
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={draftDocsPath}
+                        onChange={(e) => setDraftDocsPath(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleApplyPathChange();
+                        }}
+                        placeholder="docs/ui-boards"
+                        className="flex-1 px-3 py-1.5 border border-slate-200 rounded-lg bg-white font-mono text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+                      />
+                      <button
+                        onClick={handleApplyPathChange}
+                        disabled={isMigratingPath || draftDocsPath.trim() === settings.pageDocsPath}
+                        className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-2xs shrink-0"
+                      >
+                        <span>{isMigratingPath ? '이동 중...' : '경로 변경 및 파일 이동'}</span>
+                      </button>
+                    </div>
+
+                    {/* Project Structure Hierarchy Info Box */}
+                    <div className="p-2.5 rounded-lg bg-slate-900 text-slate-200 font-mono text-[10px] space-y-1">
+                      <div className="text-[10px] font-bold text-indigo-400">📁 {draftDocsPath || 'docs/ui-boards'} 내 자동 저장 파일 구조:</div>
+                      <div className="text-slate-300">├── project.json        <span className="text-slate-500"># 프로젝트 및 페이지 짜임새, asset 파일 목록 관리</span></div>
+                      <div className="text-slate-300">├── design-system.json  <span className="text-slate-500"># 디자인 시스템 설정 (컴포넌트별 기본값들)</span></div>
+                      <div className="text-slate-300">├── pages/              <span className="text-slate-500"># 페이지별 구조화된 JSON 데이터 (1.json, 2.json...)</span></div>
+                      <div className="text-slate-300">└── assets/             <span className="text-slate-500"># 프로젝트에서 사용하는 이미지, 폰트 등 에셋</span></div>
+                    </div>
+
+                    {pathChangeSuccess && (
+                      <div className="p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-[11px] text-emerald-700 font-medium flex items-center gap-1.5">
+                        <CheckSquare size={13} className="text-emerald-600 shrink-0" />
+                        <span>{pathChangeSuccess}</span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="p-2.5 rounded-lg bg-white border border-slate-200 space-y-1">

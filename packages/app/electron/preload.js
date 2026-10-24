@@ -27,8 +27,17 @@ window.electronAPI = {
     dragWindow: function (dx, dy) {
         ipcRenderer.send('window:drag-by', { dx: dx, dy: dy });
     },
-    // Project Storage (.screen-designer/ & per-page JSON)
+    // Project Storage (project.json, design-system.json, pages/{number}.json, assets/)
     project: {
+        saveProject: function (data) {
+            return ipcRenderer.invoke('project:save-project', data);
+        },
+        loadProject: function (pageDocsPath, workspacePath) {
+            return ipcRenderer.invoke('project:load-project', { pageDocsPath: pageDocsPath, workspacePath: workspacePath });
+        },
+        migrateFolder: function (oldPath, newPath, workspacePath) {
+            return ipcRenderer.invoke('project:migrate-folder', { oldPath: oldPath, newPath: newPath, workspacePath: workspacePath });
+        },
         savePage: function (page, pageDocsPath, workspacePath) {
             return ipcRenderer.invoke('project:save-page', { page: page, pageDocsPath: pageDocsPath, workspacePath: workspacePath });
         },

@@ -18,6 +18,11 @@ import {
   copyAssetFile,
   getMimeType
 } from './electron/assetService';
+import {
+  saveProjectStructure,
+  loadProjectStructure,
+  migrateProjectFolder
+} from './electron/projectService';
 
 function gitApiPlugin(): Plugin {
   return {
@@ -61,6 +66,47 @@ function gitApiPlugin(): Plugin {
             return res.end(JSON.stringify(data));
           } else if (endpoint === 'push') {
             const data = await pushCommits(body.workspacePath);
+            return res.end(JSON.stringify(data));
+          }
+          next();
+        } catch (err: any) {
+          res.statusCode = 500;
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+    }
+  };
+}
+
+function projectApiPlugin(): Plugin {
+  return {
+    name: 'screen-designer-project-api',
+    configureServer(server) {
+      server.middlewares.use(async (req, res, next) => {
+        if (!req.url?.startsWith('/api/project/')) return next();
+
+        const endpoint = req.url.replace('/api/project/', '').split('?')[0];
+        let body: any = {};
+        if (req.method === 'POST') {
+          body = await new Promise((resolve) => {
+            let data = '';
+            req.on('data', (chunk) => (data += chunk));
+            req.on('end', () => {
+              try { resolve(data ? JSON.parse(data) : {}); } catch { resolve({}); }
+            });
+          });
+        }
+
+        try {
+          res.setHeader('Content-Type', 'application/json');
+          if (endpoint === 'save-project') {
+            const data = await saveProjectStructure(body);
+            return res.end(JSON.stringify(data));
+          } else if (endpoint === 'load-project') {
+            const data = await loadProjectStructure(body);
+            return res.end(JSON.stringify(data));
+          } else if (endpoint === 'migrate-folder') {
+            const data = await migrateProjectFolder(body);
             return res.end(JSON.stringify(data));
           }
           next();
@@ -155,6 +201,7 @@ export default defineConfig({
   plugins: [
     react(),
     gitApiPlugin(),
+    projectApiPlugin(),
     assetsApiPlugin(),
     electron([
       {

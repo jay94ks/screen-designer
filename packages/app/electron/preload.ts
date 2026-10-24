@@ -28,8 +28,14 @@ import { ipcRenderer } from 'electron';
   dragWindow: (dx: number, dy: number) => {
     ipcRenderer.send('window:drag-by', { dx, dy });
   },
-  // Project Storage (.screen-designer/ & per-page JSON)
+  // Project Storage (project.json, design-system.json, pages/{number}.json, assets/)
   project: {
+    saveProject: (data: { project?: any; pages: any[]; designSystem?: any; pageDocsPath?: string; workspacePath?: string }) =>
+      ipcRenderer.invoke('project:save-project', data),
+    loadProject: (pageDocsPath?: string, workspacePath?: string) =>
+      ipcRenderer.invoke('project:load-project', { pageDocsPath, workspacePath }),
+    migrateFolder: (oldPath: string, newPath: string, workspacePath?: string) =>
+      ipcRenderer.invoke('project:migrate-folder', { oldPath, newPath, workspacePath }),
     savePage: (page: any, pageDocsPath: string, workspacePath?: string) =>
       ipcRenderer.invoke('project:save-page', { page, pageDocsPath, workspacePath }),
     loadPages: (pageDocsPath: string, workspacePath?: string) =>
