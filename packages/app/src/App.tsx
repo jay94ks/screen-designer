@@ -141,7 +141,9 @@ export default function App() {
     return typeof window !== 'undefined' && window.location.search.includes('play');
   });
   const [isExportOpen, setIsExportOpen] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(() => {
+    return typeof window !== 'undefined' && (window.location.search.includes('openSettings') || window.location.search.includes('settings'));
+  });
   const [settingsTab, setSettingsTab] = useState<'canvas' | 'components'>('components');
 
   const handleOpenSettings = (tab: 'canvas' | 'components' = 'components') => {
@@ -603,6 +605,7 @@ export default function App() {
 
   const handleInsertNewNode = (type: NodeType, name: string, content?: string, props?: Record<string, any>) => {
     const defs = settings.componentDefaults || DEFAULT_COMPONENT_STYLES;
+    const itemDef = (defs && defs[type]) || DEFAULT_COMPONENT_STYLES[type] || {};
     const isCircle = type === 'circle';
     const isInput = type === 'input';
     const isButton = type === 'button';
@@ -694,100 +697,19 @@ export default function App() {
       props: nodeProps,
       children: nodeChildren,
       style: {
-        padding: isButton
-          ? defs.button.padding
-          : isCard
-          ? defs.card.padding
-          : isCircle
-          ? 0
-          : isInput
-          ? defs.input.padding
-          : isTextarea
-          ? 10
-          : isScroll
-          ? 10
-          : 8,
-        borderRadius: isCircle
-          ? 999
-          : isButton
-          ? defs.button.borderRadius
-          : isCard
-          ? defs.card.borderRadius
-          : isInput
-          ? defs.input.borderRadius
-          : type === 'box'
-          ? defs.box.borderRadius
-          : isImage
-          ? 12
-          : isScroll
-          ? 12
-          : isDialog
-          ? 16
-          : 0,
-        backgroundColor: isCircle
-          ? defs.circle.backgroundColor
-          : isButton
-          ? defs.button.backgroundColor
-          : isCard
-          ? defs.card.backgroundColor
-          : isInput
-          ? defs.input.backgroundColor
-          : type === 'box'
-          ? defs.box.backgroundColor
-          : isScroll
-          ? '#1e293b60'
-          : isDialog
-          ? '#0f172a'
-          : isTextarea
-          ? '#ffffff'
-          : isSelect
-          ? '#ffffff'
-          : 'transparent',
-        borderColor: isCard
-          ? defs.card.borderColor
-          : isInput
-          ? defs.input.borderColor
-          : isScroll
-          ? '#334155'
-          : isDialog
-          ? '#334155'
-          : undefined,
-        borderWidth: isCard
-          ? defs.card.borderWidth
-          : isInput
-          ? defs.input.borderWidth
-          : isScroll
-          ? 1
-          : isDialog
-          ? 1
-          : undefined,
-        color: isInput
-          ? defs.input.color
-          : isButton
-          ? defs.button.color
-          : isCircle
-          ? defs.circle.color
-          : isText
-          ? defs.text.color
-          : isTextarea || isSelect
-          ? '#0f172a'
-          : '#ffffff',
-        fontSize: isButton
-          ? defs.button.fontSize
-          : isHeading
-          ? 22
-          : isText
-          ? defs.text.fontSize
-          : 14,
-        fontWeight: isButton
-          ? defs.button.fontWeight
-          : isHeading
-          ? 'bold'
-          : isText
-          ? defs.text.fontWeight
-          : 'normal',
-        width: isCircle ? defs.circle.size : type === 'box' ? defs.box.width : '100%',
-        height: isCircle ? defs.circle.size : type === 'box' ? defs.box.height : isImage ? 180 : isTextarea ? 80 : undefined,
+        padding: itemDef.padding !== undefined ? itemDef.padding : (isCircle ? 0 : 8),
+        borderRadius: itemDef.borderRadius !== undefined ? itemDef.borderRadius : (isCircle ? 999 : 0),
+        backgroundColor: itemDef.backgroundColor !== undefined ? itemDef.backgroundColor : 'transparent',
+        borderColor: itemDef.borderColor !== undefined ? itemDef.borderColor : undefined,
+        borderWidth: itemDef.borderWidth !== undefined ? itemDef.borderWidth : undefined,
+        color: itemDef.color !== undefined ? itemDef.color : '#ffffff',
+        fontSize: itemDef.fontSize !== undefined ? itemDef.fontSize : 14,
+        fontWeight: itemDef.fontWeight !== undefined ? itemDef.fontWeight : 'normal',
+        boxShadow: itemDef.boxShadow !== undefined ? itemDef.boxShadow : undefined,
+        opacity: itemDef.opacity !== undefined ? itemDef.opacity : undefined,
+        textAlign: itemDef.textAlign !== undefined ? itemDef.textAlign : undefined,
+        width: itemDef.width !== undefined ? itemDef.width : (isCircle ? (itemDef.size || 40) : '100%'),
+        height: itemDef.height !== undefined ? itemDef.height : (isCircle ? (itemDef.size || 40) : isImage ? 180 : isTextarea ? 80 : undefined),
         maxHeight: isScroll ? 220 : undefined,
         overflowY: isScroll ? 'auto' : undefined,
         objectFit: isImage ? 'cover' : undefined,
