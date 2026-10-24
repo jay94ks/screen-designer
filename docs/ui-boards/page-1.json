@@ -1,0 +1,166 @@
+{
+  "id": "page-1",
+  "name": "Page 1 (서비스 기획 보드)",
+  "version": "1.0.0",
+  "updatedAt": "2026-10-25T01:46:00.000Z",
+  "artboards": [
+    {
+      "id": "screen-1-main",
+      "title": "1. 메인 홈 화면",
+      "viewport": "mobile",
+      "width": 375,
+      "height": 812,
+      "rootNode": {
+        "id": "root-1",
+        "type": "frame",
+        "name": "Home Frame",
+        "style": {
+          "width": "100%",
+          "height": "100%",
+          "backgroundColor": "#090d16",
+          "padding": 20,
+          "display": "flex",
+          "flexDirection": "column",
+          "justifyContent": "space-between",
+          "color": "#ffffff",
+          "gap": 12
+        },
+        "children": [
+          {
+            "id": "box-top-section",
+            "type": "box",
+            "name": "Top Header & Media",
+            "style": {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": 12
+            },
+            "children": [
+              {
+                "id": "text-title",
+                "type": "heading",
+                "name": "App Heading (H2)",
+                "content": "스마트 AI 자산 관리",
+                "props": { "headingLevel": 2 },
+                "style": { "fontSize": 20, "fontWeight": "bold", "color": "#ffffff" }
+              },
+              {
+                "id": "img-featured-banner",
+                "type": "image",
+                "name": "마켓 분석 프로모션 배너 (Image)",
+                "content": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80",
+                "props": {
+                  "src": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80",
+                  "alt": "AI Market Insights",
+                  "loading": "lazy"
+                },
+                "style": {
+                  "width": "100%",
+                  "height": 110,
+                  "borderRadius": 14,
+                  "objectFit": "cover",
+                  "aspectRatio": "16/9",
+                  "boxShadow": "0 8px 16px rgba(0,0,0,0.3)"
+                }
+              },
+              {
+                "id": "card-gradient-hero",
+                "type": "card",
+                "name": "총 자산 카드 (배경 그라디언트 적용)",
+                "style": {
+                  "padding": 16,
+                  "borderRadius": 16,
+                  "backgroundImage": "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                  "boxShadow": "0 10px 20px -5px rgba(79, 70, 229, 0.4)",
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": 4
+                },
+                "children": [
+                  {
+                    "id": "text-hero-sub",
+                    "type": "text",
+                    "name": "평가 자산 라벨",
+                    "content": "총 평가 잔고",
+                    "style": { "fontSize": 11, "color": "#e0e7ff" }
+                  },
+                  {
+                    "id": "text-hero-val",
+                    "type": "text",
+                    "name": "잔고 금액",
+                    "content": "₩ 42,950,000",
+                    "style": { "fontSize": 24, "fontWeight": "900", "color": "#ffffff" }
+                  }
+                ]
+              },
+              {
+                "id": "scroll-asset-list",
+                "type": "scroll-container",
+                "name": "보유 자산 스크롤 컨테이너",
+                "style": {
+                  "maxHeight": 190,
+                  "overflowY": "auto",
+                  "padding": 10,
+                  "borderRadius": 14,
+                  "backgroundColor": "#111827",
+                  "borderWidth": 1,
+                  "borderColor": "#1f2937",
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": 8
+                },
+                "children": [
+                  {
+                    "id": "item-1",
+                    "type": "card",
+                    "name": "자산 아이템 1 (S&P 500)",
+                    "content": "미국 대형 기술주 ETF • ₩ 22,400,000 (+14.2%)",
+                    "style": { "padding": 10, "borderRadius": 8, "backgroundColor": "#1e293b", "fontSize": 11, "fontWeight": "bold", "color": "#60a5fa" }
+                  },
+                  {
+                    "id": "item-2",
+                    "type": "card",
+                    "name": "자산 아이템 2 (비트코인)",
+                    "content": "비트코인 디지털 자산 • ₩ 12,850,000 (+28.4%)",
+                    "style": { "padding": 10, "borderRadius": 8, "backgroundColor": "#1e293b", "fontSize": 11, "fontWeight": "bold", "color": "#f59e0b" }
+                  },
+                  {
+                    "id": "item-3",
+                    "type": "card",
+                    "name": "자산 아이템 3 (이더리움)",
+                    "content": "이더리움 스테이킹 • ₩ 5,100,000 (+8.6%)",
+                    "style": { "padding": 10, "borderRadius": 8, "backgroundColor": "#1e293b", "fontSize": 11, "fontWeight": "bold", "color": "#a855f7" }
+                  },
+                  {
+                    "id": "item-4",
+                    "type": "card",
+                    "name": "자산 아이템 4 (현금 잔고)",
+                    "content": "원화 예수금 • ₩ 2,600,000 (대기 자금)",
+                    "style": { "padding": 10, "borderRadius": 8, "backgroundColor": "#1e293b", "fontSize": 11, "fontWeight": "bold", "color": "#10b981" }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "btn-cta",
+            "type": "button",
+            "name": "Start Button",
+            "content": "+ 즉시 추가 매수하기",
+            "style": {
+              "padding": 14,
+              "borderRadius": 14,
+              "backgroundColor": "#4f46e5",
+              "color": "#ffffff",
+              "fontWeight": "bold",
+              "textAlign": "center",
+              "boxShadow": "0 8px 16px -2px rgba(79, 70, 229, 0.4)"
+            }
+          }
+        ]
+      },
+      "tweaksSchema": [],
+      "tweakValues": {}
+    }
+  ]
+}
