@@ -243,21 +243,28 @@ export function resolveProjectRoot(workspacePath?: string): string {
 }
 
 /**
- * Ensures `<rootDir>/assets/` exists and writes all built-in SVG preset files.
+ * Ensures `<rootDir>/docs/ui-boards/assets/` (and root `assets/`) exists and writes all built-in SVG preset files.
  * Also copies them to packages/app/public/assets if that folder exists.
  */
-export async function materializePresets(workspacePath?: string): Promise<{ success: boolean; count: number; files: string[] }> {
+export async function materializePresets(
+  workspacePath?: string,
+  pageDocsPath: string = 'docs/ui-boards'
+): Promise<{ success: boolean; count: number; files: string[] }> {
   const rootDir = resolveProjectRoot(workspacePath);
-  const assetsDir = path.join(rootDir, 'assets');
+  const docsAssetsDir = path.join(rootDir, pageDocsPath, 'assets');
+  const rootAssetsDir = path.join(rootDir, 'assets');
 
-  await fs.promises.mkdir(assetsDir, { recursive: true });
+  await fs.promises.mkdir(docsAssetsDir, { recursive: true });
+  await fs.promises.mkdir(rootAssetsDir, { recursive: true });
 
   const writtenFiles: string[] = [];
 
   for (const preset of BUILTIN_IMAGE_PRESETS) {
-    const targetFile = path.join(assetsDir, preset.fileName);
+    const targetFile1 = path.join(docsAssetsDir, preset.fileName);
+    const targetFile2 = path.join(rootAssetsDir, preset.fileName);
     // Write preset SVG to disk
-    await fs.promises.writeFile(targetFile, preset.svg.trim(), 'utf-8');
+    await fs.promises.writeFile(targetFile1, preset.svg.trim(), 'utf-8');
+    await fs.promises.writeFile(targetFile2, preset.svg.trim(), 'utf-8');
     writtenFiles.push(preset.fileName);
   }
 
@@ -276,17 +283,20 @@ export async function materializePresets(workspacePath?: string): Promise<{ succ
 }
 
 /**
- * Copies a local file picked by the user into `<rootDir>/assets/<sanitized_name>`.
+ * Copies a local file picked by the user into `<rootDir>/docs/ui-boards/assets/<sanitized_name>` and `assets/`.
  * Returns asset info including relativePath and dataUrl.
  */
 export async function copyAssetFile(
   sourcePath: string,
-  workspacePath?: string
+  workspacePath?: string,
+  pageDocsPath: string = 'docs/ui-boards'
 ): Promise<{ success: boolean; relativePath: string; fileName: string; dataUrl: string; error?: string }> {
   try {
     const rootDir = resolveProjectRoot(workspacePath);
-    const assetsDir = path.join(rootDir, 'assets');
-    await fs.promises.mkdir(assetsDir, { recursive: true });
+    const docsAssetsDir = path.join(rootDir, pageDocsPath, 'assets');
+    const rootAssetsDir = path.join(rootDir, 'assets');
+    await fs.promises.mkdir(docsAssetsDir, { recursive: true });
+    await fs.promises.mkdir(rootAssetsDir, { recursive: true });
 
     if (!fs.existsSync(sourcePath)) {
       return { success: false, relativePath: '', fileName: '', dataUrl: '', error: 'Source file does not exist' };
@@ -297,7 +307,8 @@ export async function copyAssetFile(
     const baseWithoutExt = path.basename(originalName, ext).replace(/[^a-zA-Z0-9_\-\uac00-\ud7a3]/g, '_');
 
     let targetFileName = `${baseWithoutExt}${ext}`;
-    let targetPath = path.join(assetsDir, targetFileName);
+    let targetPath = path.join(docsAssetsDir, targetFileName);
+    let fallbackPath = path.join(rootAssetsDir, targetFileName);
 
     // If file with same name exists and is different, append timestamp
     if (fs.existsSync(targetPath)) {
@@ -305,12 +316,14 @@ export async function copyAssetFile(
       const sourceStat = await fs.promises.stat(sourcePath);
       if (existingStat.size !== sourceStat.size) {
         targetFileName = `${baseWithoutExt}_${Date.now()}${ext}`;
-        targetPath = path.join(assetsDir, targetFileName);
+        targetPath = path.join(docsAssetsDir, targetFileName);
+        fallbackPath = path.join(rootAssetsDir, targetFileName);
       }
     }
 
-    // Copy file to project assets folder
+    // Copy file to project docs assets and root assets
     await fs.promises.copyFile(sourcePath, targetPath);
+    await fs.promises.copyFile(sourcePath, fallbackPath);
 
     // Also mirror to public/assets for immediate browser serving
     const publicAssetsDir = path.join(rootDir, 'packages', 'app', 'public', 'assets');
@@ -337,12 +350,17 @@ export async function copyAssetFile(
 }
 
 /**
- * Lists all assets in `<rootDir>/assets/`
+ * Lists all assets in `<rootDir>/docs/ui-boards/assets/` or `<rootDir>/assets/`
  */
-export async function listAssets(workspacePath?: string): Promise<{ success: boolean; assets: AssetInfo[] }> {
+export async function listAssets(
+  workspacePath?: string,
+  pageDocsPath: string = 'docs/ui-boards'
+): Promise<{ success: boolean; assets: AssetInfo[] }> {
   try {
     const rootDir = resolveProjectRoot(workspacePath);
-    const assetsDir = path.join(rootDir, 'assets');
+    const docsAssetsDir = path.join(rootDir, pageDocsPath, 'assets');
+    const rootAssetsDir = path.join(rootDir, 'assets');
+    const assetsDir = fs.existsSync(docsAssetsDir) ? docsAssetsDir : rootAssetsDir;
 
     if (!fs.existsSync(assetsDir)) {
       return { success: true, assets: [] };

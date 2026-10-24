@@ -127,11 +127,15 @@ function assetsApiPlugin(): Plugin {
       materializePresets().catch(() => {});
 
       server.middlewares.use(async (req, res, next) => {
-        // 1. Static asset serving from project root /assets/
+        // 1. Static asset serving from project docs/ui-boards/assets/ or root assets/
         if (req.url && (req.url.startsWith('/assets/') || req.url.startsWith('/@fs/assets/'))) {
           const cleanUrl = req.url.replace(/^\/@fs/, '').replace(/^\/assets\//, '').split('?')[0];
           const projectRootDir = path.resolve(__dirname, '../../');
-          const filePath = path.join(projectRootDir, 'assets', cleanUrl);
+          const primaryPath = path.join(projectRootDir, 'docs/ui-boards/assets', cleanUrl);
+          const fallbackPath = path.join(projectRootDir, 'assets', cleanUrl);
+          const filePath = fs.existsSync(primaryPath) && fs.statSync(primaryPath).isFile()
+            ? primaryPath
+            : fallbackPath;
 
           if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
             const mime = getMimeType(filePath);
@@ -163,25 +167,33 @@ function assetsApiPlugin(): Plugin {
         try {
           res.setHeader('Content-Type', 'application/json');
           if (endpoint === 'materialize-presets') {
-            const data = await materializePresets(body.workspacePath);
+            const data = await materializePresets(body.workspacePath, body.pageDocsPath);
             return res.end(JSON.stringify(data));
           } else if (endpoint === 'list') {
-            const data = await listAssets(body.workspacePath);
+            const data = await listAssets(body.workspacePath, body.pageDocsPath);
             return res.end(JSON.stringify(data));
           } else if (endpoint === 'save-file') {
-            // Allows saving uploaded base64 data to assets/
+            // Allows saving uploaded base64 data to docs/ui-boards/assets/ & assets/
             const rootDir = body.workspacePath || path.resolve(__dirname, '../../');
-            const assetsDir = path.join(rootDir, 'assets');
-            await fs.promises.mkdir(assetsDir, { recursive: true });
+            const pageDocsPath = body.pageDocsPath || 'docs/ui-boards';
+            const docsAssetsDir = path.join(rootDir, pageDocsPath, 'assets');
+            const fallbackAssetsDir = path.join(rootDir, 'assets');
+
+            await fs.promises.mkdir(docsAssetsDir, { recursive: true });
+            await fs.promises.mkdir(fallbackAssetsDir, { recursive: true });
 
             const fileName = (body.fileName || `image_${Date.now()}.png`).replace(/[^a-zA-Z0-9_.\-\uac00-\ud7a3]/g, '_');
-            const targetPath = path.join(assetsDir, fileName);
+            const targetPath = path.join(docsAssetsDir, fileName);
+            const fallbackPath = path.join(fallbackAssetsDir, fileName);
 
             if (body.dataUrl) {
               const base64Data = body.dataUrl.replace(/^data:image\/\w+;base64,/, '');
-              await fs.promises.writeFile(targetPath, Buffer.from(base64Data, 'base64'));
+              const buffer = Buffer.from(base64Data, 'base64');
+              await fs.promises.writeFile(targetPath, buffer);
+              await fs.promises.writeFile(fallbackPath, buffer);
             } else if (body.content) {
               await fs.promises.writeFile(targetPath, body.content, 'utf-8');
+              await fs.promises.writeFile(fallbackPath, body.content, 'utf-8');
             }
 
             const relativePath = `assets/${fileName}`;

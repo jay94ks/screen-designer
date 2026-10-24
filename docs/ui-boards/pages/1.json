@@ -3,7 +3,7 @@
   "name": "Page 1 (핀테크 가상 DOM)",
   "number": 1,
   "version": "1.0.0",
-  "updatedAt": "2026-10-24T21:13:42.056Z",
+  "updatedAt": "2026-10-24T21:28:35.839Z",
   "artboards": [
     {
       "id": "artboard-1",
@@ -110,7 +110,7 @@
                   "gap": 8,
                   "padding": 20,
                   "borderRadius": 24,
-                  "backgroundGradient": "linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%)",
+                  "backgroundImage": "assets/preset-gradient.svg",
                   "boxShadow": "0 20px 25px -5px rgba(79, 70, 229, 0.3)"
                 },
                 "children": [

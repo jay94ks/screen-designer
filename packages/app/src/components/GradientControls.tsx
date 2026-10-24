@@ -75,6 +75,12 @@ export const GradientControls: React.FC<GradientControlsProps> = ({
         setNeonColor1(colors[0]);
         setNeonColor2(colors[1]);
       }
+
+      const stopsMatch = Array.from(currentValue.matchAll(/#([0-9a-fA-F]{3,8})\s+(\d+)%/g));
+      if (stopsMatch.length >= 2) {
+        setNeonStop1(parseInt(stopsMatch[0][2], 10));
+        setNeonStop2(parseInt(stopsMatch[1][2], 10));
+      }
     } else if (gradientType === 'dark-mesh' && currentValue.includes('radial-gradient')) {
       const colors = currentValue.match(/#(?:[0-9a-fA-F]{3}){1,2}/g);
       if (colors && colors.length >= 2) {
@@ -82,8 +88,22 @@ export const GradientControls: React.FC<GradientControlsProps> = ({
         setSpot2Color(colors[1]);
         if (colors.length >= 3) setMeshBaseColor(colors[2]);
       }
+
+      const spotsMatch = Array.from(
+        currentValue.matchAll(/at\s+(\d+)%\s+(\d+)%[,\s]+(#[0-9a-fA-F]{3,8}|\w+)\s+0(?:px)?,\s*transparent\s+(\d+)%/g)
+      );
+      if (spotsMatch.length >= 1) {
+        setSpot1X(parseInt(spotsMatch[0][1], 10));
+        setSpot1Y(parseInt(spotsMatch[0][2], 10));
+        setSpot1Radius(parseInt(spotsMatch[0][4], 10));
+      }
+      if (spotsMatch.length >= 2) {
+        setSpot2X(parseInt(spotsMatch[1][1], 10));
+        setSpot2Y(parseInt(spotsMatch[1][2], 10));
+        setSpot2Radius(parseInt(spotsMatch[1][4], 10));
+      }
     }
-  }, [gradientType]);
+  }, [gradientType, currentValue]);
 
   // Update Neon Gradient
   const updateNeon = (

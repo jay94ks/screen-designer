@@ -725,15 +725,25 @@ export default function App() {
           bg === 'neon'
             ? 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)'
             : bg === 'mesh'
-            ? 'radial-gradient(at 0% 0%, #1e1b4b 0px, transparent 50%), radial-gradient(at 100% 100%, #311042 0px, transparent 50%)'
+            ? 'radial-gradient(at 0% 0%, #1e1b4b 0px, transparent 50%), radial-gradient(at 100% 100%, #311042 0px, transparent 50%), linear-gradient(0deg, #090514, #090514)'
+            : bg === 'aurora'
+            ? 'assets/preset-gradient.svg'
             : undefined;
         if (bgUrl) {
           setTimeout(() => {
-            handleUpdateNode(targetNodeId, {
-              style: {
-                backgroundImage: bgUrl
-              }
-            });
+            setArtboards((prev) =>
+              prev.map((a) => ({
+                ...a,
+                rootNode: updateNodeRecursive(a.rootNode, targetNodeId, (n) => ({
+                  ...n,
+                  style: {
+                    ...n.style,
+                    backgroundImage: bgUrl,
+                    backgroundGradient: undefined
+                  }
+                }))
+              }))
+            );
           }, 150);
         }
       }

@@ -1,7 +1,7 @@
 {
   "name": "Screen Designer Storyboard",
   "version": "1.0.0",
-  "updatedAt": "2026-10-24T21:13:42.058Z",
+  "updatedAt": "2026-10-24T21:28:35.841Z",
   "activePageId": "page-1",
   "pageDocsPath": "docs/ui-boards",
   "pages": [
@@ -20,7 +20,14 @@
       "artboardsCount": 0
     }
   ],
-  "assets": [],
+  "assets": [
+    "assets/preset-avatar.svg",
+    "assets/preset-chart.svg",
+    "assets/preset-gradient.svg",
+    "assets/preset-minimal.svg",
+    "assets/preset-nature.svg",
+    "assets/preset-tech.svg"
+  ],
   "settings": {
     "theme": "light",
     "gridVisible": true,

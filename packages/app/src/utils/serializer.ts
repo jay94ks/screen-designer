@@ -45,17 +45,23 @@ export function styleToCssProperties(style: VNodeStyle): React.CSSProperties {
 
   // Background & Image Background
   if (style.backgroundColor) css.backgroundColor = style.backgroundColor;
-  if (style.backgroundGradient) css.background = style.backgroundGradient;
+  if (style.backgroundGradient && !style.backgroundImage) {
+    css.backgroundImage = style.backgroundGradient;
+  }
   if (style.backgroundImage) {
-    let bg = ((style as any).backgroundImageDataUrl || style.backgroundImage).trim();
+    let bg = style.backgroundImage.trim();
     if (bg.startsWith('assets/')) {
       const fileName = bg.replace(/^assets\//, '');
       const preset = getPresetByFileName(fileName);
       if (preset) {
         bg = preset.dataUrl;
+      } else if ((style as any).backgroundImageDataUrl) {
+        bg = (style as any).backgroundImageDataUrl;
+      } else {
+        bg = `/${bg}`;
       }
     }
-    css.backgroundImage = bg.startsWith('url(') || bg.startsWith('linear-gradient(') || bg.startsWith('radial-gradient(')
+    css.backgroundImage = bg.startsWith('url(') || bg.startsWith('linear-gradient(') || bg.startsWith('radial-gradient(') || bg.startsWith('conic-gradient(')
       ? bg
       : `url("${bg}")`;
   }

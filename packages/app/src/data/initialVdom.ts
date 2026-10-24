@@ -92,7 +92,7 @@ const screen1Root: VNode = {
             gap: 8,
             padding: 20,
             borderRadius: 24,
-            backgroundGradient: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%)',
+            backgroundImage: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%)',
             boxShadow: '0 20px 25px -5px rgba(79, 70, 229, 0.3)'
           },
           children: [

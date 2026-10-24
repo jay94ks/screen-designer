@@ -100,6 +100,19 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     onUpdateNode(selectedNode.id, { style: nextStyle });
   };
 
+  const handleBatchStyleChange = (updates: Partial<VNodeStyle> & Record<string, any>) => {
+    const nextStyle = { ...selectedNode.style, ...updates };
+    for (const key of Object.keys(updates)) {
+      if (updates[key] === undefined) {
+        delete (nextStyle as any)[key];
+      }
+    }
+    if (updates.backgroundImage !== undefined) {
+      delete (nextStyle as any).backgroundGradient;
+    }
+    onUpdateNode(selectedNode.id, { style: nextStyle });
+  };
+
   const handlePropsChange = (key: string, value: any) => {
     const nextProps = { ...(selectedNode.props || {}), [key]: value };
     onUpdateNode(selectedNode.id, { props: nextProps });
@@ -143,8 +156,12 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     try {
       const asset = await chooseAndCopyImageFile();
       if (asset) {
-        handleStyleChange('backgroundImage', asset.relativePath);
-        handleStyleChange('backgroundImageDataUrl' as any, asset.dataUrl);
+        handleBatchStyleChange({
+          backgroundImage: asset.relativePath,
+          backgroundImageDataUrl: asset.dataUrl,
+          backgroundGradient: undefined
+        });
+        setActiveGradientType(null);
       }
     } finally {
       setIsChoosingAsset(false);
@@ -154,8 +171,11 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   const handleApplyBackgroundPreset = async (presetId: string) => {
     const asset = await applyPresetImage(presetId);
     if (asset) {
-      handleStyleChange('backgroundImage', asset.relativePath);
-      handleStyleChange('backgroundImageDataUrl' as any, asset.dataUrl);
+      handleBatchStyleChange({
+        backgroundImage: asset.relativePath,
+        backgroundImageDataUrl: asset.dataUrl,
+        backgroundGradient: undefined
+      });
       setActiveGradientType(null);
     }
   };
@@ -168,17 +188,23 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     setIsEditorDismissed(false);
   }, [selectedNode?.id]);
 
+  const currentBg = selectedNode?.style?.backgroundImage || selectedNode?.style?.backgroundGradient || '';
+
   const effectiveGradientType: GradientType = !isEditorDismissed
     ? activeGradientType ||
-      (selectedNode?.style?.backgroundImage?.includes('radial-gradient')
+      (currentBg.includes('radial-gradient')
         ? 'dark-mesh'
-        : selectedNode?.style?.backgroundImage?.includes('linear-gradient')
+        : currentBg.includes('linear-gradient')
         ? 'linear-neon'
         : null)
     : activeGradientType;
 
   const handlePatternClick = (pattern: { name: string; url: string }) => {
-    handleStyleChange('backgroundImage', pattern.url);
+    handleBatchStyleChange({
+      backgroundImage: pattern.url,
+      backgroundImageDataUrl: undefined,
+      backgroundGradient: undefined
+    });
     setIsEditorDismissed(false);
     if (pattern.name === '네온 그라데이션') {
       setActiveGradientType('linear-neon');
@@ -516,12 +542,16 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <Palette size={11} />
             <span>배경 이미지 & 패턴 (Background Image)</span>
           </label>
-          {selectedNode.style.backgroundImage && (
+          {(selectedNode.style.backgroundImage || selectedNode.style.backgroundGradient) && (
             <button
               onClick={() => {
-                handleStyleChange('backgroundImage', undefined);
-                handleStyleChange('backgroundImageDataUrl' as any, undefined);
+                handleBatchStyleChange({
+                  backgroundImage: undefined,
+                  backgroundImageDataUrl: undefined,
+                  backgroundGradient: undefined
+                });
                 setActiveGradientType(null);
+                setIsEditorDismissed(true);
               }}
               className="text-[10px] text-rose-500 hover:underline"
             >
@@ -535,9 +565,16 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           <div className="flex gap-1.5">
             <input
               type="text"
-              value={selectedNode.style.backgroundImage || ''}
+              value={selectedNode.style.backgroundImage || selectedNode.style.backgroundGradient || ''}
               placeholder="url(...) 또는 assets/파일명"
-              onChange={(e) => handleStyleChange('backgroundImage', e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value.trim();
+                handleBatchStyleChange({
+                  backgroundImage: val || undefined,
+                  backgroundImageDataUrl: undefined,
+                  backgroundGradient: undefined
+                });
+              }}
               className="flex-1 min-w-0 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-mono text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
             <button
@@ -556,7 +593,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         <div className="space-y-1">
           <span className="text-[9px] text-slate-400 font-semibold block">내장 배경 프리셋 (Electron Presets)</span>
           <div className="grid grid-cols-3 gap-1">
-            {IMAGE_PRESETS.slice(0, 3).map((p) => (
+            {IMAGE_PRESETS.filter((p) => ['gradient', 'tech', 'nature'].includes(p.category)).slice(0, 3).map((p) => (
               <button
                 key={p.id}
                 onClick={() => handleApplyBackgroundPreset(p.id)}
@@ -592,10 +629,14 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         {/* Live Gradient & Mesh Option Controls */}
         {effectiveGradientType && (
           <GradientControls
-            currentValue={selectedNode.style.backgroundImage || ''}
+            currentValue={selectedNode.style.backgroundImage || selectedNode.style.backgroundGradient || ''}
             gradientType={effectiveGradientType}
             onChange={(newBg) => {
-              handleStyleChange('backgroundImage', newBg);
+              handleBatchStyleChange({
+                backgroundImage: newBg,
+                backgroundImageDataUrl: undefined,
+                backgroundGradient: undefined
+              });
             }}
             onClose={() => {
               setIsEditorDismissed(true);
@@ -605,7 +646,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         )}
 
         {/* Background Size & Repeat Settings */}
-        {selectedNode.style.backgroundImage && (
+        {(selectedNode.style.backgroundImage || selectedNode.style.backgroundGradient) && (
           <div className="grid grid-cols-2 gap-2 pt-1">
             <div className="space-y-1">
               <span className="text-[10px] text-slate-500 block">크기 (Size)</span>
