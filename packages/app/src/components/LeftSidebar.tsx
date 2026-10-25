@@ -54,6 +54,7 @@ interface LeftSidebarProps {
   onInsertNode: (type: NodeType, name: string, content?: string, props?: Record<string, any>) => void;
   onUpdateNode?: (nodeId: string, updates: Partial<VNode>) => void;
   onDeleteNode?: (nodeId: string) => void;
+  onDeleteArtboard?: (id: string) => void;
   onDuplicateNode?: (node: VNode) => void;
   onMoveNode?: (nodeId: string, direction: 'up' | 'down') => void;
   onInsertTemplate?: (templateNode: VNode) => void;
@@ -72,6 +73,7 @@ const LeftSidebarComponent: React.FC<LeftSidebarProps> = ({
   onInsertNode,
   onUpdateNode,
   onDeleteNode,
+  onDeleteArtboard,
   onDuplicateNode,
   onMoveNode,
   onInsertTemplate,
@@ -693,13 +695,28 @@ const LeftSidebarComponent: React.FC<LeftSidebarProps> = ({
                           <Icon size={12} className="text-indigo-600 shrink-0" />
                           <span className="truncate">{artboard.title}</span>
                         </div>
-                        <span
-                          className={`text-[9px] font-mono shrink-0 ${
-                            isPreviewActive ? 'text-cyan-700 font-bold' : 'text-slate-400'
-                          }`}
-                        >
-                          {activeW}×{activeH}
-                        </span>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <span
+                            className={`text-[9px] font-mono shrink-0 ${
+                              isPreviewActive ? 'text-cyan-700 font-bold' : 'text-slate-400'
+                            }`}
+                          >
+                            {activeW}×{activeH}
+                          </span>
+                          {onDeleteArtboard && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onDeleteArtboard(artboard.id);
+                              }}
+                              className="p-1 rounded text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition"
+                              title="아트보드 삭제"
+                            >
+                              <Trash2 size={11} />
+                            </button>
+                          )}
+                        </div>
                       </div>
 
                       <div className="flex items-center justify-between gap-1 pl-4">

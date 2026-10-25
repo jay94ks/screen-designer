@@ -72,6 +72,7 @@ interface PropertiesPanelProps {
   selectedNode: VNode | null;
   onUpdateNode: (nodeId: string, updates: Partial<VNode>) => void;
   onDeleteNode: (nodeId: string) => void;
+  onDeleteArtboard?: (id: string) => void;
   onUpdateArtboard?: (updates: Partial<VDomArtboard>) => void;
   onSwitchToTweaksTab?: () => void;
 }
@@ -81,6 +82,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   selectedNode,
   onUpdateNode,
   onDeleteNode,
+  onDeleteArtboard,
   onUpdateArtboard,
   onSwitchToTweaksTab
 }) => {
@@ -129,9 +131,21 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <Layers size={13} className="text-indigo-600 shrink-0" />
             <span className="truncate">캔버스 역할 & 설계 해상도</span>
           </div>
-          <span className={`px-1.5 py-0.5 rounded border text-[9px] font-bold shrink-0 ${roleMeta.badgeClass}`}>
-            {roleMeta.shortLabel}
-          </span>
+          <div className="flex items-center gap-1 shrink-0">
+            <span className={`px-1.5 py-0.5 rounded border text-[9px] font-bold shrink-0 ${roleMeta.badgeClass}`}>
+              {roleMeta.shortLabel}
+            </span>
+            {onDeleteArtboard && (
+              <button
+                type="button"
+                onClick={() => onDeleteArtboard(artboard.id)}
+                className="p-1 hover:bg-rose-100 hover:text-rose-600 rounded text-slate-400 transition"
+                title="아트보드 삭제 (Delete)"
+              >
+                <Trash2 size={12} />
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-1.5">
@@ -731,7 +745,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <span className="text-[10px] font-mono text-slate-400 truncate max-w-[90px]" title={selectedNode.id}>
               #{selectedNode.id}
             </span>
-            {selectedNode.type !== 'frame' && (
+            {selectedNode.type !== 'frame' ? (
               <button
                 onClick={() => onDeleteNode(selectedNode.id)}
                 className="p-1 hover:bg-rose-50 hover:text-rose-600 rounded text-slate-400 transition"
@@ -739,7 +753,15 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               >
                 <Trash2 size={13} />
               </button>
-            )}
+            ) : onDeleteArtboard ? (
+              <button
+                onClick={() => onDeleteArtboard(artboard.id)}
+                className="p-1 hover:bg-rose-50 hover:text-rose-600 rounded text-slate-400 transition"
+                title="아트보드 삭제 (Delete)"
+              >
+                <Trash2 size={13} />
+              </button>
+            ) : null}
           </div>
         </div>
 

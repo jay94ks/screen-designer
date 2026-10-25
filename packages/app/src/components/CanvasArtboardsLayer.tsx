@@ -187,12 +187,13 @@ const CanvasArtboardsLayerComponent: React.FC<CanvasArtboardsLayerProps> = ({
                     <Copy size={12} />
                   </button>
                   <button
+                    type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       onDeleteArtboard(artboard.id);
                     }}
-                    className="p-1 hover:bg-rose-100 hover:text-rose-600 rounded text-slate-500 shadow-2xs"
-                    title="화면 삭제"
+                    className="p-1 hover:bg-rose-100 hover:text-rose-600 rounded text-slate-500 shadow-2xs cursor-pointer transition"
+                    title="아트보드 삭제 (Delete)"
                   >
                     <Trash2 size={12} />
                   </button>

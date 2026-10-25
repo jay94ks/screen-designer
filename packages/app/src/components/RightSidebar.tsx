@@ -17,6 +17,7 @@ interface RightSidebarProps {
   allArtboards?: VDomArtboard[];
   onUpdateNode: (nodeId: string, updates: Partial<VNode>) => void;
   onDeleteNode: (nodeId: string) => void;
+  onDeleteArtboard?: (id: string) => void;
   onUpdateArtboard?: (updates: Partial<VDomArtboard>) => void;
   onSelectArtboard?: (artboardId: string) => void;
   onSelectNode?: (node: VNode) => void;
@@ -37,6 +38,7 @@ const RightSidebarComponent: React.FC<RightSidebarProps> = ({
   allArtboards = [],
   onUpdateNode,
   onDeleteNode,
+  onDeleteArtboard,
   onUpdateArtboard,
   onSelectArtboard,
   onSelectNode,
@@ -161,6 +163,7 @@ const RightSidebarComponent: React.FC<RightSidebarProps> = ({
                 selectedNode={selectedNode}
                 onUpdateNode={onUpdateNode}
                 onDeleteNode={onDeleteNode}
+                onDeleteArtboard={onDeleteArtboard}
                 onUpdateArtboard={onUpdateArtboard}
                 onSwitchToTweaksTab={() => setActiveTab('tweaks')}
               />

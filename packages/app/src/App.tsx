@@ -119,18 +119,23 @@ export default function App() {
     return 'node-s1-ai-badge';
   });
 
+  const activePageIdRef = useRef(activePageId);
+  useEffect(() => {
+    activePageIdRef.current = activePageId;
+  }, [activePageId]);
+
   // Multi-page Artboard Mutator
-  const setArtboards = (updater: VDomArtboard[] | ((prev: VDomArtboard[]) => VDomArtboard[])) => {
+  const setArtboards = useCallback((updater: VDomArtboard[] | ((prev: VDomArtboard[]) => VDomArtboard[])) => {
     setPages((prevPages) =>
       prevPages.map((p) => {
-        if (p.id === activePageId) {
+        if (p.id === activePageIdRef.current) {
           const next = typeof updater === 'function' ? updater(p.artboards) : updater;
           return { ...p, artboards: next };
         }
         return p;
       })
     );
-  };
+  }, []);
 
   const handleSelectPage = (pageId: string) => {
     setActivePageId(pageId);
@@ -1096,21 +1101,41 @@ export default function App() {
     handleUpdateNode(nodeId, { content });
   }, [handleUpdateNode]);
 
-  // Artboard Actions
+  // Artboard Actions: Duplicate
   const handleDuplicateArtboard = useCallback((id: string) => {
-    setArtboards((prev) => {
-      const target = prev.find((a) => a.id === id);
-      if (!target) return prev;
-      pushHistory(prev);
-      const copy: VDomArtboard = {
-        ...JSON.parse(JSON.stringify(target)),
-        id: `artboard-${Date.now()}`,
-        title: `${target.title} (사본)`
-      };
-      setSelectedArtboardId(copy.id);
-      return [...prev, copy];
+    historyRef.current.push(artboards);
+    setCanUndo(historyRef.current.canUndo());
+    setCanRedo(historyRef.current.canRedo());
+
+    setPages((prevPages) => {
+      let createdCopyId = '';
+      const nextPages = prevPages.map((p) => {
+        const target = p.artboards.find((a) => a.id === id);
+        if (!target) return p;
+
+        const copy: VDomArtboard = {
+          ...JSON.parse(JSON.stringify(target)),
+          id: `artboard-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          title: `${target.title} (사본)`,
+          x: target.x + 40,
+          y: target.y + 40
+        };
+        createdCopyId = copy.id;
+        return { ...p, artboards: [...p.artboards, copy] };
+      });
+
+      if (createdCopyId) {
+        setTimeout(() => {
+          setSelectedArtboardId(createdCopyId);
+          setSelectedNodeId(null);
+        }, 0);
+        setExportToast('아트보드가 복제되었습니다.');
+        setTimeout(() => setExportToast(null), 2500);
+      }
+
+      return nextPages;
     });
-  }, []);
+  }, [artboards]);
 
   // Node Copy, Duplicate & Paste Power Operations
   const cloneNodeWithNewIds = (source: VNode): VNode => {
@@ -1206,20 +1231,50 @@ export default function App() {
     setTimeout(() => setExportToast(null), 2500);
   };
 
+  // Artboard Actions: Delete
   const handleDeleteArtboard = useCallback((id: string) => {
-    setArtboards((prev) => {
-      pushHistory(prev);
-      const rem = prev.filter((a) => a.id !== id);
-      if (rem.length > 0) {
-        setSelectedArtboardId(rem[0].id);
-        setSelectedNodeId(rem[0].rootNode.id);
-      } else {
-        setSelectedArtboardId('');
-        setSelectedNodeId(null);
+    historyRef.current.push(artboards);
+    setCanUndo(historyRef.current.canUndo());
+    setCanRedo(historyRef.current.canRedo());
+
+    setPages((prevPages) => {
+      let deletedTitle = '';
+      let nextSelectedArtboardId = selectedArtboardId;
+      let nextSelectedNodeId = selectedNodeId;
+
+      const nextPages = prevPages.map((p) => {
+        const found = p.artboards.find((a) => a.id === id);
+        if (!found) return p;
+
+        deletedTitle = found.title || found.name || '아트보드';
+        const rem = p.artboards.filter((a) => a.id !== id);
+
+        // If currently selected artboard is deleted, pick the next or clear
+        if (selectedArtboardId === id) {
+          if (rem.length > 0) {
+            nextSelectedArtboardId = rem[0].id;
+            nextSelectedNodeId = rem[0].rootNode?.id || null;
+          } else {
+            nextSelectedArtboardId = '';
+            nextSelectedNodeId = null;
+          }
+        }
+
+        return { ...p, artboards: rem };
+      });
+
+      if (deletedTitle) {
+        setTimeout(() => {
+          setSelectedArtboardId(nextSelectedArtboardId);
+          setSelectedNodeId(nextSelectedNodeId);
+        }, 0);
+        setExportToast(`'${deletedTitle}' 아트보드가 삭제되었습니다.`);
+        setTimeout(() => setExportToast(null), 2500);
       }
-      return rem;
+
+      return nextPages;
     });
-  }, []);
+  }, [artboards, selectedArtboardId, selectedNodeId]);
 
   const handleSelectArtboard = useCallback((id: string) => {
     setSelectedArtboardId(id);
@@ -1615,6 +1670,7 @@ export default function App() {
           onInsertNode={handleInsertNewNode}
           onUpdateNode={handleUpdateNode}
           onDeleteNode={handleDeleteNode}
+          onDeleteArtboard={handleDeleteArtboard}
           onDuplicateNode={handleDuplicateNode}
           onMoveNode={handleMoveNode}
           onInsertTemplate={handleInsertTemplateCallback}
@@ -1766,6 +1822,7 @@ export default function App() {
           onSelectNode={handleSelectNodeFromSidebar}
           onUpdateNode={handleUpdateNode}
           onDeleteNode={handleDeleteNode}
+          onDeleteArtboard={handleDeleteArtboard}
           onUpdateArtboard={handleUpdateArtboard}
           onUpdateCode={() => {}}
           onUpdateTweakValue={handleUpdateTweakValue}
