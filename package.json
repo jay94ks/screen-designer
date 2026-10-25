@@ -1,8 +1,10 @@
 {
-  "name": "screen-designer-monorepo",
+  "name": "screen-designer",
   "version": "0.1.0",
-  "private": true,
   "description": "Universal Cross-Agent UI Storyboard Canvas & MCP Tool for Gemini, Claude, and Codex",
+  "bin": {
+    "screen-designer": "./packages/cli/bin/index.js"
+  },
   "workspaces": [
     "packages/*"
   ],

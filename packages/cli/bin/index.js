@@ -1,13 +1,14 @@
 #!/usr/bin/env node
-import { promises as fs, existsSync, mkdirSync, writeFileSync } from 'fs';
+import { promises as fs, existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
 import path from 'path';
 import os from 'os';
-import { execSync } from 'child_process';
+import { execSync, spawn } from 'child_process';
+import { fileURLToPath } from 'url';
 import { simpleGit } from 'simple-git';
 import Registry from 'winreg';
 
-const args = process.argv.slice(2);
-const command = args[0] || 'help';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function getHtmlTag(type, props) {
   switch (type) {
@@ -297,19 +298,19 @@ This project is integrated with Screen Designer Storyboard Canvas.
 - On-demand Code Generation: npx screen-designer export --format=react|vue|html
 `;
 
-async function init() {
-  const cwd = process.cwd();
-  console.log(`[Screen Designer] Initializing in: ${cwd}`);
+async function init(targetDir = process.cwd()) {
+  const resolvedTarget = path.resolve(process.cwd(), targetDir);
+  console.log(`[Screen Designer] Initializing in: ${resolvedTarget}`);
 
   // 1. Create .screen-designer directory & cache
-  const dotDir = path.join(cwd, '.screen-designer');
+  const dotDir = path.join(resolvedTarget, '.screen-designer');
   const cacheDir = path.join(dotDir, 'cache');
   await fs.mkdir(dotDir, { recursive: true });
   await fs.mkdir(cacheDir, { recursive: true });
 
   const config = {
     version: '1.0.0',
-    workspace: cwd,
+    workspace: resolvedTarget,
     pageDocsPath: 'docs/ui-boards',
     mcpServer: '@screen-designer/mcp-server',
     bridgePort: 49494,
@@ -318,13 +319,64 @@ async function init() {
   await fs.writeFile(path.join(dotDir, 'config.json'), JSON.stringify(config, null, 2), 'utf-8');
   console.log('  ✔ Created .screen-designer/ directory & config.json');
 
-  // 2. Create docs/ui-boards/ directory & initial page document
-  const docsDir = path.join(cwd, 'docs', 'ui-boards');
+  // 2. Create docs/ui-boards/ directory structure
+  const docsDir = path.join(resolvedTarget, 'docs', 'ui-boards');
+  const pagesDir = path.join(docsDir, 'pages');
+  const assetsDir = path.join(docsDir, 'assets');
   await fs.mkdir(docsDir, { recursive: true });
+  await fs.mkdir(pagesDir, { recursive: true });
+  await fs.mkdir(assetsDir, { recursive: true });
 
+  // 2.1 project.json
+  const initialProject = {
+    name: path.basename(resolvedTarget) + ' UI Storyboard',
+    version: '1.0.0',
+    updatedAt: new Date().toISOString(),
+    activePageId: 'page-1',
+    pageDocsPath: 'docs/ui-boards',
+    pages: [
+      {
+        id: 'page-1',
+        name: 'Page 1 (서비스 기획 보드)',
+        number: 1,
+        fileName: 'pages/1.json',
+        artboardsCount: 1
+      }
+    ],
+    assets: [
+      'assets/preset-gradient.svg',
+      'assets/preset-tech.svg',
+      'assets/preset-nature.svg'
+    ],
+    settings: {
+      theme: 'light',
+      gridVisible: true,
+      gridSize: 24,
+      canvasBackground: '#e5e7eb'
+    }
+  };
+  await fs.writeFile(path.join(docsDir, 'project.json'), JSON.stringify(initialProject, null, 2), 'utf-8');
+  console.log('  ✔ Created docs/ui-boards/project.json');
+
+  // 2.2 design-system.json
+  const initialDesignSystem = {
+    version: '1.0.0',
+    updatedAt: new Date().toISOString(),
+    theme: 'light',
+    componentDefaults: {
+      frame: { backgroundColor: '#0f172a', color: '#f8fafc', padding: 20, borderRadius: 0 },
+      card: { backgroundColor: '#1e293b', color: '#f8fafc', padding: 16, borderRadius: 16, borderColor: '#334155', borderWidth: 1 },
+      button: { backgroundColor: '#4f46e5', color: '#ffffff', padding: 12, borderRadius: 12, fontWeight: 'bold' }
+    }
+  };
+  await fs.writeFile(path.join(docsDir, 'design-system.json'), JSON.stringify(initialDesignSystem, null, 2), 'utf-8');
+  console.log('  ✔ Created docs/ui-boards/design-system.json');
+
+  // 2.3 pages/1.json
   const initialPage = {
     id: 'page-1',
     name: 'Page 1 (서비스 기획 보드)',
+    number: 1,
     version: '1.0.0',
     updatedAt: new Date().toISOString(),
     artboards: [
@@ -371,19 +423,20 @@ async function init() {
     ]
   };
 
-  const initialPagePath = path.join(docsDir, 'page-1.json');
-  await fs.writeFile(initialPagePath, JSON.stringify(initialPage, null, 2), 'utf-8');
-  console.log('  ✔ Created docs/ui-boards/page-1.json (VDOM structured document)');
+  await fs.writeFile(path.join(pagesDir, '1.json'), JSON.stringify(initialPage, null, 2), 'utf-8');
+  await fs.writeFile(path.join(docsDir, 'page-1.json'), JSON.stringify(initialPage, null, 2), 'utf-8');
+  console.log('  ✔ Created docs/ui-boards/pages/1.json');
 
   // 3. Write LLM guideline files
-  await fs.writeFile(path.join(cwd, 'AGENTS.md'), AGENTS_TEMPLATE, 'utf-8');
-  await fs.writeFile(path.join(cwd, 'CLAUDE.md'), AGENTS_TEMPLATE, 'utf-8');
+  await fs.writeFile(path.join(resolvedTarget, 'AGENTS.md'), AGENTS_TEMPLATE, 'utf-8');
+  await fs.writeFile(path.join(resolvedTarget, 'CLAUDE.md'), AGENTS_TEMPLATE, 'utf-8');
   console.log('  ✔ Created AGENTS.md & CLAUDE.md guidelines');
 
-  console.log('\n🎉 Screen Designer successfully initialized!');
-  console.log('  - Page documents: docs/ui-boards/*.json');
-  console.log('  - Cache & Config: .screen-designer/');
-  console.log('  - Generate Code:  npx screen-designer export --format=react|vue|html');
+  console.log('\n🎉 Screen Designer successfully initialized in target directory!');
+  console.log(`  - Storyboard Project: ${path.join(docsDir, 'project.json')}`);
+  console.log(`  - Design System:     ${path.join(docsDir, 'design-system.json')}`);
+  console.log(`  - Page Documents:    ${path.join(pagesDir, '1.json')}`);
+  console.log(`  - Assets Folder:     ${assetsDir}`);
 }
 
 async function exportCode() {
@@ -912,14 +965,117 @@ ${contentHtml}
   console.log(`  🌐 Absolute: ${finalOut}`);
 }
 
+function openBrowser(url) {
+  const platform = process.platform;
+  try {
+    if (platform === 'win32') {
+      execSync(`start "" "${url}"`);
+    } else if (platform === 'darwin') {
+      execSync(`open "${url}"`);
+    } else {
+      let isWsl = false;
+      try {
+        if (existsSync('/proc/version')) {
+          const v = readFileSync('/proc/version', 'utf8').toLowerCase();
+          if (v.includes('microsoft')) isWsl = true;
+        }
+      } catch {}
+
+      if (isWsl) {
+        execSync(`cmd.exe /c start "${url}" 2>/dev/null || xdg-open "${url}"`);
+      } else {
+        execSync(`xdg-open "${url}" 2>/dev/null`);
+      }
+    }
+  } catch {
+    console.log(`\n  👉 브라우저를 열어 다음 주소로 접속하세요: ${url}\n`);
+  }
+}
+
+async function launch(targetDir = '.', opts = {}) {
+  const resolvedTarget = path.resolve(process.cwd(), targetDir);
+  console.log(`\n🚀 [Screen Designer] Starting workspace: ${resolvedTarget}`);
+
+  if (!existsSync(resolvedTarget)) {
+    await fs.mkdir(resolvedTarget, { recursive: true });
+  }
+
+  const docsDir = path.join(resolvedTarget, 'docs', 'ui-boards');
+  const projectJson = path.join(docsDir, 'project.json');
+  if (!existsSync(projectJson)) {
+    console.log('  ✨ No storyboard found in target directory. Auto-initializing docs/ui-boards/...');
+    await init(resolvedTarget);
+  }
+
+  let appDir = path.resolve(__dirname, '../../app');
+  if (!existsSync(path.join(appDir, 'package.json'))) {
+    appDir = path.resolve(__dirname, '..');
+  }
+
+  const isHeadlessLinux = process.platform === 'linux' && !process.env.DISPLAY && !process.env.WAYLAND_DISPLAY;
+  const forceWeb = opts.web || isHeadlessLinux;
+  const port = opts.port || 5173;
+
+  process.env.SCREEN_DESIGNER_WORKSPACE = resolvedTarget;
+
+  if (!forceWeb && (process.platform === 'win32' || process.platform === 'darwin' || process.env.DISPLAY || process.env.WAYLAND_DISPLAY)) {
+    console.log('  🖥️  Launching Electron Desktop App...');
+    try {
+      execSync('npx electron .', {
+        cwd: appDir,
+        stdio: 'inherit',
+        env: {
+          ...process.env,
+          SCREEN_DESIGNER_WORKSPACE: resolvedTarget
+        }
+      });
+      return;
+    } catch (err) {
+      console.warn('  ⚠️ Electron desktop launch failed or exited, falling back to Web browser mode...');
+    }
+  }
+
+  console.log(`  🌐 Starting Screen Designer Web Server on port ${port}...`);
+  console.log(`  📁 Target Workspace: ${resolvedTarget}`);
+
+  const viteProc = spawn('npx', ['vite', '--host', '0.0.0.0', '--port', String(port)], {
+    cwd: appDir,
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      SCREEN_DESIGNER_WORKSPACE: resolvedTarget,
+      NO_ELECTRON: 'true'
+    }
+  });
+
+  const url = `http://localhost:${port}`;
+  if (!opts.noOpen) {
+    setTimeout(() => {
+      openBrowser(url);
+    }, 1500);
+  }
+
+  process.on('SIGINT', () => {
+    viteProc.kill();
+    process.exit(0);
+  });
+}
+
 function help() {
   console.log(`
 Screen Designer CLI
 Usage:
-  npx screen-designer init                                      Initialize .screen-designer & docs/ui-boards
-  npx screen-designer status                                    Check git status of UI design documents
-  npx screen-designer export [pageId] [options]                 Generate code on-demand from VDOM JSON
-  npx screen-designer render-image <pageId> [artboard] [opts]   Render specific artboard (시안) to an image
+  screen-designer [target-path] [options]                       Open Screen Designer on target project (default: .)
+  screen-designer init [target-path]                            Initialize .screen-designer & docs/ui-boards
+  screen-designer status                                        Check git status of UI design documents
+  screen-designer export [pageId] [options]                     Generate code on-demand from VDOM JSON
+  screen-designer render-image <pageId> [artboard] [opts]       Render specific artboard (시안) to an image
+
+Launch Options:
+  --web, -w                 Run in Web Browser mode instead of Electron Desktop
+  --port=<num>, -p=<num>    Custom port for Web server (default: 5173)
+  --no-open                 Do not automatically open the default web browser
+  --init, -i                Scaffold docs/ui-boards structure without launching GUI
 
 Export Options:
   --format=react|vue|html   Output language format (default: react)
@@ -931,33 +1087,63 @@ Render Image Options:
   --height=<pixels>         Custom viewport height (e.g. 812)
 
 Examples:
-  npx screen-designer render-image page-1
-  npx screen-designer render-image page-1 screen-1-main --out=dist/screen.png
-  npx screen-designer export --format=react --out=src/components
-  npx screen-designer export page-1 --format=vue --out=src/views
+  screen-designer .                                  # Open Screen Designer for current directory
+  screen-designer /path/to/my-project                # Open Screen Designer for specific project
+  screen-designer . --web --port=3000                # Run in web mode on port 3000
+  screen-designer export --format=react              # Generate React code
+  screen-designer render-image page-1                # Render page-1 to PNG image
 `);
 }
 
-// Route command
-switch (command) {
-  case 'init':
-    init().catch(console.error);
-    break;
-  case 'export':
-    exportCode().catch(console.error);
-    break;
-  case 'status':
-    status().catch(console.error);
-    break;
-  case 'render-image':
-  case 'render':
-  case 'screenshot':
-  case 'image':
-    renderImage().catch(console.error);
-    break;
-  case 'help':
-  case '--help':
-  default:
-    help();
-    break;
+// Parse arguments and route
+const args = process.argv.slice(2);
+const firstArg = args[0];
+
+const isWeb = args.includes('--web') || args.includes('-w');
+const isNoOpen = args.includes('--no-open');
+const isInitOnly = args.includes('--init') || args.includes('-i');
+const portArg = args.find(a => a.startsWith('--port=') || a.startsWith('-p='));
+const port = portArg ? parseInt(portArg.split('=')[1], 10) : 5173;
+
+const SUB_COMMANDS = [
+  'init', 'export', 'status', 'render-image', 'render', 'screenshot', 'image',
+  'help', '--help', '-h', 'version', '--version', '-v'
+];
+
+if (!firstArg || (!firstArg.startsWith('-') && !SUB_COMMANDS.includes(firstArg)) || firstArg.startsWith('--web') || firstArg.startsWith('--port') || firstArg.startsWith('--no-open') || firstArg.startsWith('--init') || firstArg.startsWith('-w') || firstArg.startsWith('-p') || firstArg.startsWith('-i')) {
+  const targetDir = (!firstArg || firstArg.startsWith('-')) ? '.' : firstArg;
+  if (isInitOnly) {
+    init(targetDir).catch(console.error);
+  } else {
+    launch(targetDir, { web: isWeb, port, noOpen: isNoOpen }).catch(console.error);
+  }
+} else {
+  switch (firstArg) {
+    case 'init':
+      init(args[1] || '.').catch(console.error);
+      break;
+    case 'export':
+      exportCode().catch(console.error);
+      break;
+    case 'status':
+      status().catch(console.error);
+      break;
+    case 'render-image':
+    case 'render':
+    case 'screenshot':
+    case 'image':
+      renderImage().catch(console.error);
+      break;
+    case 'version':
+    case '--version':
+    case '-v':
+      console.log('Screen Designer v0.1.0');
+      break;
+    case 'help':
+    case '--help':
+    case '-h':
+    default:
+      help();
+      break;
+  }
 }

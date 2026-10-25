@@ -9,6 +9,7 @@
 
 - [기능 명세서 (Features)](./features.md): 현재까지 구현된 모든 기능(캔버스, 프로토타이핑, 디자인 시스템, Git 연동 등)의 상세 안내
 - [프로젝트 파일 구조 스펙 (Project Structure)](./project-structure.md): `docs/ui-boards/` 내 자동 저장 데이터 규격 (`project.json`, `design-system.json`, `pages/`, `assets/`)
+- [전역 설치 및 특정 프로젝트 대상 실행 설계서 (Global Installation & Target Execution)](./global-install-and-target-execution.md): `npm install -g` 전역 설치, `screen-designer [path]` 특정 프로젝트 지정 실행 및 스마트 실행 모드 설계
 - [단축키 & 생산성 가이드 (Shortcuts)](./shortcuts.md): 커맨드 팔레트(`Ctrl+K`), 도구 전환 및 캔버스 조작 단축키
 
 ---
