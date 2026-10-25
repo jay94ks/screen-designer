@@ -35,7 +35,9 @@ import {
   Upload,
   Search,
   Globe,
-  Check
+  Check,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 import { CanvasTool, Page, GitStatusInfo } from '../types';
 import { useTranslation } from '../i18n';
@@ -129,6 +131,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
   const [showZoomMenu, setShowZoomMenu] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
+  const isElectron = typeof window !== 'undefined' && Boolean((window as any).electronAPI);
 
   useEffect(() => {
     const api = (window as any).electronAPI;
@@ -140,51 +143,29 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
     }
 
     const handleFullscreenChange = () => {
-      if (!(window as any).electronAPI) {
+      if (!isElectron) {
         setIsMaximized(!!document.fullscreenElement);
       }
     };
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
+  }, [isElectron]);
 
-  const handleMinimize = () => {
-    const api = (window as any).electronAPI;
-    if (api?.minimizeWindow) {
-      api.minimizeWindow();
-    }
-  };
-
-  const handleMaximize = () => {
-    const api = (window as any).electronAPI;
-    if (api?.maximizeWindow) {
-      api.maximizeWindow();
-    } else if (typeof document !== 'undefined') {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(() => {});
-        setIsMaximized(true);
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen().catch(() => {});
-        }
-        setIsMaximized(false);
-      }
-    }
-  };
-
-  const handleClose = () => {
-    const api = (window as any).electronAPI;
-    if (api?.closeWindow) {
-      api.closeWindow();
+  const handleToggleFullscreen = () => {
+    if (typeof document === 'undefined') return;
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+      setIsMaximized(true);
     } else {
-      window.close();
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+      setIsMaximized(false);
     }
   };
 
   const handleHeaderMouseDown = (_e: React.MouseEvent) => {
-    // In Electron with frame: false, CSS -webkit-app-region: drag natively handles OS-level window movement.
-    // Attaching JavaScript mousemove setPosition listeners while native drag is active causes
-    // Windows DWM message deadlocks and renderer whiteout/freeze.
+    // In Electron with frame: false or titleBarOverlay, CSS -webkit-app-region: drag natively handles OS-level window movement.
   };
 
   const handleHeaderDoubleClick = (e: React.MouseEvent) => {
@@ -196,7 +177,12 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
     ) {
       return;
     }
-    handleMaximize();
+    if (isElectron) {
+      const api = (window as any).electronAPI;
+      if (api?.maximizeWindow) api.maximizeWindow();
+    } else {
+      handleToggleFullscreen();
+    }
   };
 
   const activePage = pages.find((p) => p.id === activePageId) || pages[0];
@@ -389,43 +375,40 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             <PanelRight size={13} />
           </button>
 
-          {/* Native Electron Window Caption Controls */}
-          <div
-            className="flex items-center h-9 ml-2 border-l border-slate-200 -mr-3 pl-1 app-region-no-drag"
-            style={{ WebkitAppRegion: 'no-drag' } as any}
-          >
-            <button
-              type="button"
-              onClick={handleMinimize}
+          {/* Window Caption Controls:
+              1) Electron on Windows: Electron's titleBarOverlay natively renders real Windows 10/11
+                 minimize/maximize/close buttons with Snap Layouts and native window animations.
+                 We reserve a 138px placeholder area so header controls do not collide with native buttons.
+              2) Web Browser: OS window minimize is impossible in standard web sandbox, and full-screen
+                 is fundamentally different from window maximize. We render a clean Fullscreen Toggle instead.
+          */}
+          {isElectron ? (
+            <div
+              className="w-[138px] h-9 shrink-0 app-region-no-drag -mr-3"
               style={{ WebkitAppRegion: 'no-drag' } as any}
-              className="w-9 h-9 flex items-center justify-center text-slate-500 hover:bg-slate-200/80 hover:text-slate-800 transition app-region-no-drag cursor-pointer select-none"
-              title={t('header.minimize')}
-            >
-              <Minus size={12} className="pointer-events-none" />
-            </button>
-            <button
-              type="button"
-              onClick={handleMaximize}
-              style={{ WebkitAppRegion: 'no-drag' } as any}
-              className="w-9 h-9 flex items-center justify-center text-slate-500 hover:bg-slate-200/80 hover:text-slate-800 transition app-region-no-drag cursor-pointer select-none"
-              title={isMaximized ? t('header.restore') : t('header.maximize')}
-            >
-              {isMaximized ? (
-                <Copy size={11} className="rotate-180 pointer-events-none" />
-              ) : (
-                <Square size={11} className="pointer-events-none" />
-              )}
-            </button>
-            <button
-              type="button"
-              onClick={handleClose}
-              style={{ WebkitAppRegion: 'no-drag' } as any}
-              className="w-10 h-9 flex items-center justify-center text-slate-500 hover:bg-rose-600 hover:text-white transition app-region-no-drag cursor-pointer select-none"
-              title={t('header.close')}
-            >
-              <X size={13} className="pointer-events-none" />
-            </button>
-          </div>
+            />
+          ) : (
+            <div className="flex items-center h-9 ml-1.5 border-l border-slate-200 pl-1.5 app-region-no-drag">
+              <button
+                type="button"
+                onClick={handleToggleFullscreen}
+                className="px-2 py-1 flex items-center gap-1.5 rounded-md hover:bg-slate-200/70 text-slate-600 hover:text-slate-900 transition text-[11px] font-medium cursor-pointer"
+                title={isMaximized ? '전체 화면 종료 (ESC)' : '전체 화면 토글 (F11)'}
+              >
+                {isMaximized ? (
+                  <>
+                    <Minimize2 size={13} className="text-slate-500" />
+                    <span className="hidden sm:inline">전체화면 종료</span>
+                  </>
+                ) : (
+                  <>
+                    <Maximize2 size={13} className="text-slate-500" />
+                    <span className="hidden sm:inline">전체화면</span>
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

@@ -41,6 +41,8 @@ let win: BrowserWindow | null;
 let ws: WebSocket | null = null;
 
 function createWindow() {
+  const isWin = process.platform === 'win32';
+
   win = new BrowserWindow({
     width: 1440,
     height: 900,
@@ -49,7 +51,16 @@ function createWindow() {
     resizable: true,
     maximizable: true,
     minimizable: true,
-    frame: false, // Hide native OS window caption / titlebar
+    titleBarStyle: isWin ? 'hidden' : 'hiddenInset',
+    ...(isWin
+      ? {
+          titleBarOverlay: {
+            color: '#f8fafc',
+            symbolColor: '#475569',
+            height: 36
+          }
+        }
+      : {}),
     title: 'Screen Designer - Live Storyboard Canvas',
     backgroundColor: '#020617',
     webPreferences: {
