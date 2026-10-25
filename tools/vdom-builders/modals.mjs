@@ -17,17 +17,17 @@ export function wrapInBackdrop(prefix, modalNode, zIndex = 100) {
   }, {}, [modalNode]);
 }
 
-// 1. Play Mode Simulator Root (Artboard 5 - Mirrors 07-modal-play.png)
+// 1. Play Mode Simulator Root (Artboard 5 - Upgraded with Resolution Combobox, Direct W×H Input & Responsive Drag Handles)
 export function createPlayModalRootVNode(prefix = 'play') {
   // Top Floating Control Bar
   const topBar = vnode(`${prefix}-topbar`, 'header', 'Play Simulator Control Bar', {
-    height: 44,
-    paddingLeft: 16,
-    paddingRight: 16,
-    borderRadius: 9999,
+    height: 46,
+    paddingLeft: 18,
+    paddingRight: 18,
+    borderRadius: 16,
     backgroundColor: '#0f172a',
     borderWidth: 1,
-    borderColor: '#1e293b',
+    borderColor: '#334155',
     borderStyle: 'solid',
     boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)',
     display: 'flex',
@@ -38,47 +38,69 @@ export function createPlayModalRootVNode(prefix = 'play') {
     // Green Status Dot + Counter
     vnode(`${prefix}-tb-l`, 'container', 'Status & Counter', { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8 }, {}, [
       vnode(`${prefix}-dot`, 'box', 'Green Dot', { width: 8, height: 8, borderRadius: 9999, backgroundColor: '#10b981' }),
-      vnode(`${prefix}-cnt`, 'text', '(1 / 4)', { fontSize: 11, fontWeight: 700, color: '#94a3b8' }, {}, [], '(1 / 4)')
+      vnode(`${prefix}-title`, 'text', '1. 코어 3-Pane 워크스페이스', { fontSize: 12, fontWeight: 700, color: '#ffffff', whiteSpace: 'nowrap' }, {}, [], '1. 코어 3-Pane 워크스페이스'),
+      vnode(`${prefix}-cnt`, 'text', '(1/4)', { fontSize: 11, fontMono: true, color: '#94a3b8' }, {}, [], '(1/4)')
     ]),
 
-    // Device Switcher Pill
-    vnode(`${prefix}-dev-grp`, 'container', 'Device Switcher Group', {
-      padding: 3,
-      borderRadius: 10,
+    vnode(`${prefix}-div0`, 'divider', 'Divider', { width: 1, height: 18, backgroundColor: '#334155' }),
+
+    // Resolution Combination Combobox (Replaces 3-Device Toggle)
+    vnode(`${prefix}-res-combo`, 'button', 'Resolution Combobox', {
+      height: 30,
+      paddingLeft: 12,
+      paddingRight: 12,
+      borderRadius: 8,
       backgroundColor: '#1e293b',
+      borderWidth: 1,
+      borderColor: '#475569',
+      borderStyle: 'solid',
+      color: '#ffffff',
+      fontSize: 11,
+      fontWeight: 700,
+      whiteSpace: 'nowrap'
+    }, {}, [], '↔ 반응형 (외곽 드래그 자유 조절) ⌄'),
+
+    // Direct W x H Resolution Inputs + Swap
+    vnode(`${prefix}-wh-box`, 'container', 'Direct WxH Input Group', {
+      height: 30,
+      paddingLeft: 8,
+      paddingRight: 8,
+      borderRadius: 8,
+      backgroundColor: '#1e293b',
+      borderWidth: 1,
+      borderColor: '#334155',
+      borderStyle: 'solid',
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 4
+      gap: 6
     }, {}, [
-      { id: 'iphone', label: '📱 iPhone', active: true },
-      { id: 'ipad', label: '📟 iPad', active: false },
-      { id: 'mac', label: '🖥 Mac', active: false },
-      { id: 'orig', label: '⤢ 원본', active: false }
-    ].map((d) =>
-      vnode(`${prefix}-dev-${d.id}`, 'button', d.label, {
-        height: 26,
-        paddingLeft: 10,
-        paddingRight: 10,
-        borderRadius: 7,
-        backgroundColor: d.active ? '#4f46e5' : 'transparent',
-        color: d.active ? '#ffffff' : '#94a3b8',
-        fontSize: 11,
-        fontWeight: 700
-      }, {}, [], d.label)
-    )),
+      vnode(`${prefix}-wl`, 'text', 'W', { fontSize: 10, fontMono: true, color: '#94a3b8' }, {}, [], 'W'),
+      vnode(`${prefix}-wv`, 'box', 'Width Input', { paddingLeft: 6, paddingRight: 6, height: 22, borderRadius: 4, backgroundColor: '#0f172a', borderWidth: 1, borderColor: '#334155', borderStyle: 'solid', display: 'flex', alignItems: 'center', fontSize: 11, fontMono: true, fontWeight: 700, color: '#a5b4fc' }, {}, [], '1280'),
+      vnode(`${prefix}-mul`, 'text', '×', { fontSize: 11, fontMono: true, color: '#64748b' }, {}, [], '×'),
+      vnode(`${prefix}-hl`, 'text', 'H', { fontSize: 10, fontMono: true, color: '#94a3b8' }, {}, [], 'H'),
+      vnode(`${prefix}-hv`, 'box', 'Height Input', { paddingLeft: 6, paddingRight: 6, height: 22, borderRadius: 4, backgroundColor: '#0f172a', borderWidth: 1, borderColor: '#334155', borderStyle: 'solid', display: 'flex', alignItems: 'center', fontSize: 11, fontMono: true, fontWeight: 700, color: '#a5b4fc' }, {}, [], '800'),
+      vnode(`${prefix}-px`, 'text', 'px', { fontSize: 10, fontMono: true, color: '#64748b' }, {}, [], 'px'),
+      vnode(`${prefix}-rot`, 'icon', 'Swap W/H', { color: '#94a3b8' }, { icon: 'rotate-cw', size: 12 })
+    ]),
 
-    // Orientation & Hotspot Hints
-    vnode(`${prefix}-btn-rot`, 'button', 'Orientation Button', {
-      height: 28,
-      paddingLeft: 10,
-      paddingRight: 10,
-      borderRadius: 8,
-      backgroundColor: '#1e293b',
-      color: '#cbd5e1',
-      fontSize: 11,
-      fontWeight: 600
-    }, {}, [], '↻ 세로'),
+    // Responsive Drag Active Badge
+    vnode(`${prefix}-resp-bdg`, 'badge', 'Responsive Drag Active', {
+      paddingLeft: 8,
+      paddingRight: 8,
+      paddingTop: 4,
+      paddingBottom: 4,
+      borderRadius: 9999,
+      backgroundColor: 'rgba(99, 102, 241, 0.2)',
+      borderWidth: 1,
+      borderColor: 'rgba(99, 102, 241, 0.45)',
+      borderStyle: 'solid',
+      color: '#a5b4fc',
+      fontSize: 10,
+      fontWeight: 700,
+      whiteSpace: 'nowrap'
+    }, {}, [], '⤡ 외곽 드래그 조절 활성'),
+
     vnode(`${prefix}-btn-hot`, 'button', 'Hotspot Hint Button', {
       height: 28,
       paddingLeft: 10,
@@ -87,8 +109,9 @@ export function createPlayModalRootVNode(prefix = 'play') {
       backgroundColor: '#1e293b',
       color: '#cbd5e1',
       fontSize: 11,
-      fontWeight: 600
-    }, {}, [], '✨ 핫스팟 힌트'),
+      fontWeight: 600,
+      whiteSpace: 'nowrap'
+    }, {}, [], '✨ 핫스팟'),
 
     vnode(`${prefix}-div`, 'divider', 'Divider', { width: 1, height: 18, backgroundColor: '#334155' }),
 
@@ -100,115 +123,128 @@ export function createPlayModalRootVNode(prefix = 'play') {
     ])
   ]);
 
-  // iPhone 15 Pro Bezel Frame (396 x 812)
-  const iphoneBezel = vnode(`${prefix}-iphone`, 'container', 'iPhone 15 Pro Bezel', {
-    width: 396,
-    height: 812,
-    borderRadius: 54,
-    backgroundColor: '#131b2e',
-    borderWidth: 3,
-    borderColor: '#26324d',
-    borderStyle: 'solid',
-    boxShadow: '0 30px 60px -12px rgba(0, 0, 0, 0.75)',
-    padding: 14,
+  // Responsive Resizable Viewport Frame with Outer Drag Handles
+  const responsiveViewport = vnode(`${prefix}-viewport-wrap`, 'container', 'Responsive Resizable Viewport Container', {
+    width: 1120,
+    height: 720,
+    position: 'relative',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    position: 'relative'
+    justifyContent: 'center'
   }, {}, [
-    // Dynamic Island
-    vnode(`${prefix}-island`, 'container', 'Dynamic Island', {
-      width: 112,
-      height: 28,
-      borderRadius: 9999,
-      backgroundColor: '#04070d',
-      paddingLeft: 12,
-      paddingRight: 12,
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      marginTop: 6
-    }, {}, [
-      vnode(`${prefix}-cam1`, 'box', 'Lens', { width: 9, height: 9, borderRadius: 9999, backgroundColor: '#1e293b' }),
-      vnode(`${prefix}-cam2`, 'box', 'Sensor', { width: 8, height: 8, borderRadius: 9999, backgroundColor: '#10b981' })
-    ]),
-
     // Screen Interactive Preview Content
-    vnode(`${prefix}-screen`, 'container', 'Interactive Prototype Screen', {
-      width: '100%',
-      height: 440,
+    vnode(`${prefix}-screen`, 'container', 'Interactive Prototype Screen (1440×900 Scaled)', {
+      width: 1080,
+      height: 675,
       borderRadius: 12,
       backgroundColor: '#f1f5f9',
+      borderWidth: 2,
+      borderColor: '#334155',
+      borderStyle: 'solid',
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
-      boxShadow: '0 10px 25px rgba(0,0,0,0.4)'
+      boxShadow: '0 25px 60px rgba(0,0,0,0.65)'
     }, {}, [
       vnode(`${prefix}-sc-hdr`, 'container', 'Mini Header', {
-        height: 28,
+        height: 40,
         backgroundColor: '#ffffff',
         borderBottomWidth: 1,
         borderBottomColor: '#e2e8f0',
         borderBottomStyle: 'solid',
-        paddingLeft: 8,
-        paddingRight: 8,
+        paddingLeft: 16,
+        paddingRight: 16,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
       }, {}, [
-        vnode(`${prefix}-sc-t`, 'text', 'Title', { fontSize: 8, fontWeight: 700, color: '#0f172a' }, {}, [], '● Fintech Service UI Storyboard'),
-        vnode(`${prefix}-sc-p`, 'badge', 'PLAY', { fontSize: 7, backgroundColor: '#4f46e5', color: '#ffffff', paddingLeft: 4, paddingRight: 4, borderRadius: 3 }, {}, [], 'PLAY')
+        vnode(`${prefix}-sc-t`, 'text', 'Title', { fontSize: 12, fontWeight: 700, color: '#0f172a' }, {}, [], '● Fintech Service UI Storyboard — 01. 기본 워크스페이스 & 속성 인스펙터'),
+        vnode(`${prefix}-sc-p`, 'badge', 'RESPONSIVE PLAY (1440 × 900)', { fontSize: 10, backgroundColor: '#4f46e5', color: '#ffffff', paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3, borderRadius: 6 }, {}, [], 'RESPONSIVE 1440 × 900 px')
       ]),
       vnode(`${prefix}-sc-body`, 'container', 'Mini Body', {
         flex: 1,
         backgroundColor: '#cbd5e1',
-        padding: 12,
+        padding: 24,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
       }, {}, [
         vnode(`${prefix}-sc-card`, 'card', 'Mini Spotlight Card', {
-          width: '90%',
-          padding: 10,
-          borderRadius: 10,
+          width: 480,
+          padding: 18,
+          borderRadius: 14,
           backgroundColor: '#ffffff',
-          boxShadow: '0 10px 20px rgba(0,0,0,0.2)',
+          boxShadow: '0 15px 35px rgba(0,0,0,0.2)',
           display: 'flex',
           flexDirection: 'column',
-          gap: 6
+          gap: 10
         }, {}, [
           vnode(`${prefix}-scc-1`, 'box', 'Active Cmd', {
-            padding: 6,
-            borderRadius: 6,
+            padding: 10,
+            borderRadius: 8,
             backgroundColor: '#4f46e5',
             color: '#ffffff',
-            fontSize: 8,
+            fontSize: 12,
             fontWeight: 700
-          }, {}, [], '▶ 인터랙티브 프로토타입 실행 (Ctrl+P)'),
-          vnode(`${prefix}-scc-2`, 'text', 'Cmd 2', { fontSize: 8, color: '#334155' }, {}, [], '🎨 디자인 시스템 스튜디오 열기 (Alt+D)'),
-          vnode(`${prefix}-scc-3`, 'text', 'Cmd 3', { fontSize: 8, color: '#334155' }, {}, [], '🌿 Git 변경사항 감지 & 커밋 다이얼로그'),
-          vnode(`${prefix}-scc-4`, 'text', 'Cmd 4', { fontSize: 8, color: '#334155' }, {}, [], '＋ 새 스크린 프레임/아트보드 추가 (F)')
+          }, {}, [], '▶ 인터랙티브 프로토타입 실행 (Ctrl+P) — 반응형 드래그 리사이즈 지원'),
+          vnode(`${prefix}-scc-2`, 'text', 'Cmd 2', { fontSize: 11, color: '#334155' }, {}, [], '🎨 디자인 시스템 스튜디오 열기 (Alt+D)'),
+          vnode(`${prefix}-scc-3`, 'text', 'Cmd 3', { fontSize: 11, color: '#334155' }, {}, [], '🌿 Git 변경사항 감지 & 커밋 다이얼로그'),
+          vnode(`${prefix}-scc-4`, 'text', 'Cmd 4', { fontSize: 11, color: '#334155' }, {}, [], '＋ 새 스크린 프레임/아트보드 추가 (F) — 직접 크기 입력 지원')
         ])
       ])
     ]),
 
-    // Bottom Home Indicator Bar
-    vnode(`${prefix}-home-bar`, 'box', 'Home Indicator', {
-      width: 128,
-      height: 5,
+    // Right Drag Handle Pill
+    vnode(`${prefix}-handle-r`, 'box', 'Right Resize Handle (↔)', {
+      width: 6,
+      height: 64,
       borderRadius: 9999,
-      backgroundColor: '#475569',
-      marginBottom: 4
+      backgroundColor: '#6366f1',
+      position: 'absolute',
+      right: 4,
+      top: 328
+    }),
+    // Left Drag Handle Pill
+    vnode(`${prefix}-handle-l`, 'box', 'Left Resize Handle (↔)', {
+      width: 6,
+      height: 64,
+      borderRadius: 9999,
+      backgroundColor: '#6366f1',
+      position: 'absolute',
+      left: 4,
+      top: 328
+    }),
+    // Bottom Drag Handle Pill
+    vnode(`${prefix}-handle-b`, 'box', 'Bottom Resize Handle (↕)', {
+      width: 64,
+      height: 6,
+      borderRadius: 9999,
+      backgroundColor: '#6366f1',
+      position: 'absolute',
+      bottom: 6,
+      left: 528
+    }),
+    // Bottom-Right Corner Handle
+    vnode(`${prefix}-handle-br`, 'box', 'Corner Resize Handle (↘)', {
+      width: 16,
+      height: 16,
+      borderRadius: 4,
+      backgroundColor: '#4f46e5',
+      borderWidth: 1,
+      borderColor: '#a5b4fc',
+      borderStyle: 'solid',
+      position: 'absolute',
+      right: 10,
+      bottom: 10
     })
   ]);
 
   const footerText = vnode(`${prefix}-footer`, 'text', 'Play Mode Legend', {
     fontSize: 11,
     color: '#64748b'
-  }, {}, [], '인터랙티브 모드 가동 중 · 화면 내 버튼 클릭 시 연결된 화면으로 전환 (좌/우 방향키 또는 Esc)');
+  }, {}, [], '인터랙티브 모드 가동 중 · 반응형 모드에서는 화면 우측/좌측/하단/모서리 핸들을 드래그하거나 상단 W×H 입력창에서 해상도를 직접 테스트할 수 있습니다 (Esc 종료)');
 
   return vnode(`${prefix}-root`, 'frame', 'Play Mode Fullscreen Frame', {
     width: '100%',
@@ -221,7 +257,7 @@ export function createPlayModalRootVNode(prefix = 'play') {
     paddingTop: 18,
     paddingBottom: 16,
     overflow: 'hidden'
-  }, {}, [topBar, iphoneBezel, footerText]);
+  }, {}, [topBar, responsiveViewport, footerText]);
 }
 
 // 2. Design System Studio Modal (Artboard 9 - Mirrors 08-modal-design-system.png)

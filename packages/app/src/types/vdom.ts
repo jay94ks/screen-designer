@@ -181,6 +181,7 @@ export interface VNodeStyle {
   textOverflow?: 'clip' | 'ellipsis';
   whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-wrap';
   wordBreak?: 'normal' | 'break-all' | 'keep-all' | 'break-word';
+  lineClamp?: number;
 
   // Positioning
   position?: 'static' | 'relative' | 'absolute' | 'fixed' | 'sticky';
@@ -207,7 +208,7 @@ export interface VNodeCondition {
   rules: TweakConditionRule[];
 }
 
-export type EventTrigger = 'click' | 'dblclick' | 'contextmenu';
+export type EventTrigger = 'click' | 'dblclick' | 'contextmenu' | 'mouseenter';
 
 export type EventActionType = 'change_tweak' | 'navigate';
 

@@ -1,37 +1,23 @@
 {
   "name": "Screen Designer Storyboard",
   "version": "1.0.0",
-  "updatedAt": "2026-10-25T09:20:37.344Z",
-  "activePageId": "page-4",
+  "updatedAt": "2026-10-25T10:10:35.097Z",
+  "activePageId": "page-1",
   "pageDocsPath": "docs/ui-boards",
   "pages": [
     {
       "id": "page-1",
-      "name": "1. 핵심 작업 공간 & 인스펙터",
+      "name": "Page 1 (핀테크 가상 DOM)",
       "number": 1,
       "fileName": "pages/1.json",
-      "artboardsCount": 4
+      "artboardsCount": 3
     },
     {
       "id": "page-2",
-      "name": "2. 프로토타이핑 & 동적 트윅",
+      "name": "Page 2 (새로운 작업 공간)",
       "number": 2,
       "fileName": "pages/2.json",
-      "artboardsCount": 4
-    },
-    {
-      "id": "page-3",
-      "name": "3. 디자인 시스템 & Git 데스크톱",
-      "number": 3,
-      "fileName": "pages/3.json",
-      "artboardsCount": 2
-    },
-    {
-      "id": "page-4",
-      "name": "4. 커맨드 팔레트 & 환경설정",
-      "number": 4,
-      "fileName": "pages/4.json",
-      "artboardsCount": 4
+      "artboardsCount": 0
     }
   ],
   "assets": [
@@ -43,10 +29,5 @@
     "assets/preset-tech.svg",
     "assets/screenshots"
   ],
-  "settings": {
-    "theme": "light",
-    "gridVisible": true,
-    "gridSize": 24,
-    "canvasBackground": "#e5e7eb"
-  }
+  "settings": {}
 }

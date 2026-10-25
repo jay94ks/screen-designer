@@ -4,8 +4,8 @@
   "pageDocsPath": "docs/ui-boards",
   "mcpServer": "@screen-designer/mcp-server",
   "bridgePort": 49494,
-  "updatedAt": "2026-10-25T09:20:37.346Z",
-  "lastActivePage": "page-4",
+  "updatedAt": "2026-10-25T10:10:35.099Z",
+  "lastActivePage": "page-1",
   "migratedFrom": "docs/ui-boards-test",
   "migratedAt": "2026-10-24T19:45:52.289Z"
 }

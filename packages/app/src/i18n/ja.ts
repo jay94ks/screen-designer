@@ -90,7 +90,7 @@ export const ja: TranslationSchema = {
     applyTemplate: 'キャンバスに挿入'
   },
   properties: {
-    title: 'プロパティインスペクター',
+    title: '属性',
     tabDesign: 'デザイン',
     tabInteractions: '操作フロー',
     tabCode: 'コード',
@@ -137,7 +137,7 @@ export const ja: TranslationSchema = {
     variable: '変数名',
     operator: '演算子',
     value: '目標値',
-    dynamicTweaks: '動的設定変数 (Tweaks)',
+    dynamicTweaks: 'Tweaks',
     addTweak: '変数を追加',
     tweakName: '変数名',
     controlType: 'コントロールタイプ',
@@ -145,7 +145,7 @@ export const ja: TranslationSchema = {
     options: '選択肢 (カンマ区切り)'
   },
   interactions: {
-    title: 'プロトタイプイベント＆画面遷移',
+    title: 'イベント',
     addEvent: '+ 新規イベント追加',
     trigger: 'トリガー',
     triggerClick: 'クリック時 (On Click)',

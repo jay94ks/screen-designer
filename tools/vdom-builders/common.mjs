@@ -1160,20 +1160,20 @@ export function createCenterCanvasVNode(prefix = 'cv', options = {}) {
   }, {}, children);
 }
 
-// 4. Right Inspector Sidebar (Properties, Events, Code, Tweaks)
-export function createRightSidebarVNode(prefix = 'rs', activeTab = 'properties', width = 320, selectedMode = 'selected') {
+// 4. Right Inspector Sidebar (Properties, Events, Code, Tweaks - Upgraded with Text Overflow Policy & Min Width 320px)
+export function createRightSidebarVNode(prefix = 'rs', activeTab = 'properties', width = 350, selectedMode = 'selected') {
   const tabDefs = [
-    { id: 'properties', label: '속성 인스펙터', color: '#4f46e5' },
-    { id: 'events', label: '프로토타입 이벤트 & 플로우', color: '#d97706' },
-    { id: 'code', label: '코드', color: '#4f46e5' },
-    { id: 'tweaks', label: '동적 트윅 변수', color: '#4f46e5' }
+    { id: 'properties', label: '속성', color: '#4f46e5' },
+    { id: 'events', label: '⚡ 이벤트', color: '#b45309' },
+    { id: 'code', label: '코드', color: '#047857' },
+    { id: 'tweaks', label: '트윅', color: '#4f46e5' }
   ];
 
-  const tabBar = vnode(`${prefix}-tabs`, 'container', 'Right Sidebar Tabs', {
+  const tabBar = vnode(`${prefix}-tabs`, 'container', 'Right Sidebar Tabs (No-Wrap Policy)', {
     width: '100%',
-    height: 46,
-    paddingLeft: 6,
-    paddingRight: 6,
+    height: 44,
+    paddingLeft: 8,
+    paddingRight: 8,
     backgroundColor: '#f8fafc',
     borderBottomWidth: 1,
     borderBottomColor: '#e2e8f0',
@@ -1182,30 +1182,42 @@ export function createRightSidebarVNode(prefix = 'rs', activeTab = 'properties',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 2,
+    gap: 4,
     flexShrink: 0
   }, {}, [
-    ...tabDefs.map((t) => {
+    vnode(`${prefix}-tab-seg`, 'container', '4-Tab Segmented Grid', {
+      flex: 1,
+      padding: 2,
+      borderRadius: 8,
+      backgroundColor: '#e2e8f0',
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 2
+    }, {}, tabDefs.map((t) => {
       const isAct = activeTab === t.id;
       return vnode(`${prefix}-tab-${t.id}`, 'button', t.label, {
         flex: 1,
-        height: 36,
-        borderRadius: 8,
+        height: 28,
+        borderRadius: 6,
         backgroundColor: isAct ? '#ffffff' : 'transparent',
         borderWidth: isAct ? 1 : 0,
-        borderColor: '#e2e8f0',
+        borderColor: '#cbd5e1',
         borderStyle: 'solid',
-        fontSize: 10,
+        fontSize: 11,
         fontWeight: isAct ? 700 : 600,
-        color: isAct ? t.color : '#64748b',
+        color: isAct ? t.color : '#475569',
         textAlign: 'center',
-        lineHeight: 1.2
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden'
       }, {}, [], t.label);
-    }),
+    })),
     vnode(`${prefix}-tab-close`, 'button', 'Close Inspector', {
       width: 24,
       height: 24,
-      borderRadius: 6
+      borderRadius: 6,
+      flexShrink: 0
     }, {}, [
       vnode(`${prefix}-ic-x`, 'icon', 'X', { color: '#94a3b8' }, { icon: 'x', size: 12 })
     ])
@@ -1381,6 +1393,29 @@ export function createRightSidebarVNode(prefix = 'rs', activeTab = 'properties',
             fontSize: 10,
             fontWeight: 600
           }, {}, [], '세로 방향 (Col ⇣)')
+        ])
+      ]),
+
+      // Text Overflow Policy & Minimum Size Section
+      vnode(`${prefix}-sec-overflow`, 'card', 'Text Overflow & Min Size Policy', {
+        padding: 10,
+        borderRadius: 10,
+        backgroundColor: '#eef2ff',
+        borderWidth: 1,
+        borderColor: '#c7d2fe',
+        borderStyle: 'solid',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 6
+      }, {}, [
+        vnode(`${prefix}-ov-lbl`, 'text', '글자 넘침 정책 & 최소 크기 (OVERFLOW & MIN SIZE)', { fontSize: 10, fontWeight: 700, color: '#3730a3' }, {}, [], '글자 넘침 정책 & 최소 크기 (OVERFLOW & MIN SIZE)'),
+        vnode(`${prefix}-ov-row`, 'container', 'Overflow Pills', { display: 'flex', flexDirection: 'row', gap: 4 }, {}, [
+          vnode(`${prefix}-ov-1`, 'button', '단어 보호', { flex: 1, height: 24, borderRadius: 6, backgroundColor: '#4f46e5', color: '#ffffff', fontSize: 9, fontWeight: 700, whiteSpace: 'nowrap' }, {}, [], '단어 단위 (keep-all)'),
+          vnode(`${prefix}-ov-2`, 'button', '1줄 말줄임', { flex: 1, height: 24, borderRadius: 6, backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#cbd5e1', borderStyle: 'solid', color: '#334155', fontSize: 9, fontWeight: 600, whiteSpace: 'nowrap' }, {}, [], '1줄 말줄임 (...)')
+        ]),
+        vnode(`${prefix}-ov-min`, 'container', 'Min W/H Row', { display: 'flex', flexDirection: 'row', gap: 6 }, {}, [
+          vnode(`${prefix}-ov-mw`, 'box', 'Min W', { flex: 1, height: 24, paddingLeft: 6, borderRadius: 6, backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#cbd5e1', borderStyle: 'solid', display: 'flex', alignItems: 'center', fontSize: 10, fontMono: true, color: '#0f172a' }, {}, [], 'Min W: 120px'),
+          vnode(`${prefix}-ov-mh`, 'box', 'Min H', { flex: 1, height: 24, paddingLeft: 6, borderRadius: 6, backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#cbd5e1', borderStyle: 'solid', display: 'flex', alignItems: 'center', fontSize: 10, fontMono: true, color: '#0f172a' }, {}, [], 'Min H: 36px')
         ])
       ]),
 
@@ -1723,7 +1758,7 @@ export function createFullWorkspaceShell(prefix, options = {}) {
   const header = createHeaderVNode(`${prefix}-hdr`, { pageTitle, activeMenu });
   const leftSidebar = createLeftSidebarVNode(`${prefix}-ls`, leftTab, 270);
   const centerCanvas = createCenterCanvasVNode(`${prefix}-cv`, { showRulers });
-  const rightSidebar = createRightSidebarVNode(`${prefix}-rs`, rightTab, 320, rightMode);
+  const rightSidebar = createRightSidebarVNode(`${prefix}-rs`, rightTab, 350, rightMode);
 
   const mainRow = vnode(`${prefix}-main-row`, 'container', '3-Pane Workspace Body', {
     flex: 1,

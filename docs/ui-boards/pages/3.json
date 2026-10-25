@@ -3,7 +3,7 @@
   "name": "3. 디자인 시스템 & Git 데스크톱",
   "number": 3,
   "version": "1.0.0",
-  "updatedAt": "2026-10-25T09:20:37.309Z",
+  "updatedAt": "2026-10-25T10:08:33.805Z",
   "artboards": [
     {
       "id": "ab-sd-09-modal-design-system",
@@ -260,7 +260,7 @@
                               "fontWeight": 700,
                               "color": "#4f46e5"
                             },
-                            "content": "���자��� 시스템"
+                            "content": "디자인 시스템"
                           }
                         ]
                       },
@@ -3016,7 +3016,7 @@
                 "type": "aside",
                 "name": "Right Inspector Panel",
                 "style": {
-                  "width": 320,
+                  "width": 350,
                   "height": "100%",
                   "backgroundColor": "#ffffff",
                   "borderLeftWidth": 1,
@@ -3031,12 +3031,12 @@
                   {
                     "id": "ab9-rs-tabs",
                     "type": "container",
-                    "name": "Right Sidebar Tabs",
+                    "name": "Right Sidebar Tabs (No-Wrap Policy)",
                     "style": {
                       "width": "100%",
-                      "height": 46,
-                      "paddingLeft": 6,
-                      "paddingRight": 6,
+                      "height": 44,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
                       "backgroundColor": "#f8fafc",
                       "borderBottomWidth": 1,
                       "borderBottomColor": "#e2e8f0",
@@ -3045,89 +3045,114 @@
                       "flexDirection": "row",
                       "alignItems": "center",
                       "justifyContent": "space-between",
-                      "gap": 2,
+                      "gap": 4,
                       "flexShrink": 0
                     },
                     "children": [
                       {
-                        "id": "ab9-rs-tab-properties",
-                        "type": "button",
-                        "name": "속성 인스펙터",
+                        "id": "ab9-rs-tab-seg",
+                        "type": "container",
+                        "name": "4-Tab Segmented Grid",
                         "style": {
                           "flex": 1,
-                          "height": 36,
+                          "padding": 2,
                           "borderRadius": 8,
-                          "backgroundColor": "#ffffff",
-                          "borderWidth": 1,
-                          "borderColor": "#e2e8f0",
-                          "borderStyle": "solid",
-                          "fontSize": 10,
-                          "fontWeight": 700,
-                          "color": "#4f46e5",
-                          "textAlign": "center",
-                          "lineHeight": 1.2
+                          "backgroundColor": "#e2e8f0",
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "alignItems": "center",
+                          "gap": 2
                         },
-                        "content": "속성 인스펙터"
-                      },
-                      {
-                        "id": "ab9-rs-tab-events",
-                        "type": "button",
-                        "name": "프로토타입 이벤트 & 플로우",
-                        "style": {
-                          "flex": 1,
-                          "height": 36,
-                          "borderRadius": 8,
-                          "backgroundColor": "transparent",
-                          "borderWidth": 0,
-                          "borderColor": "#e2e8f0",
-                          "borderStyle": "solid",
-                          "fontSize": 10,
-                          "fontWeight": 600,
-                          "color": "#64748b",
-                          "textAlign": "center",
-                          "lineHeight": 1.2
-                        },
-                        "content": "프로토타입 이벤트 & 플로우"
-                      },
-                      {
-                        "id": "ab9-rs-tab-code",
-                        "type": "button",
-                        "name": "코드",
-                        "style": {
-                          "flex": 1,
-                          "height": 36,
-                          "borderRadius": 8,
-                          "backgroundColor": "transparent",
-                          "borderWidth": 0,
-                          "borderColor": "#e2e8f0",
-                          "borderStyle": "solid",
-                          "fontSize": 10,
-                          "fontWeight": 600,
-                          "color": "#64748b",
-                          "textAlign": "center",
-                          "lineHeight": 1.2
-                        },
-                        "content": "코드"
-                      },
-                      {
-                        "id": "ab9-rs-tab-tweaks",
-                        "type": "button",
-                        "name": "동적 트윅 변수",
-                        "style": {
-                          "flex": 1,
-                          "height": 36,
-                          "borderRadius": 8,
-                          "backgroundColor": "transparent",
-                          "borderWidth": 0,
-                          "borderColor": "#e2e8f0",
-                          "borderStyle": "solid",
-                          "fontSize": 10,
-                          "fontWeight": 600,
-                          "color": "#64748b",
-                          "textAlign": "center",
-                          "lineHeight": 1.2
-                        },
-                        "content": "동적 트윅 변수"
+                        "children": [
+                          {
+                            "id": "ab9-rs-tab-properties",
+                            "type": "button",
+                            "name": "속성",
+                            "style": {
+                              "flex": 1,
+                              "height": 28,
+                              "borderRadius": 6,
+                              "backgroundColor": "#ffffff",
+                              "borderWidth": 1,
+                              "borderColor": "#cbd5e1",
+                              "borderStyle": "solid",
+                              "fontSize": 11,
+                              "fontWeight": 700,
+                              "color": "#4f46e5",
+                              "textAlign": "center",
+                              "whiteSpace": "nowrap",
+                              "textOverflow": "ellipsis",
+                              "overflow": "hidden"
+                            },
+                            "content": "속성"
+                          },
+                          {
+                            "id": "ab9-rs-tab-events",
+                            "type": "button",
+                            "name": "⚡ 이벤트",
+                            "style": {
+                              "flex": 1,
+                              "height": 28,
+                              "borderRadius": 6,
+                              "backgroundColor": "transparent",
+                              "borderWidth": 0,
+                              "borderColor": "#cbd5e1",
+                              "borderStyle": "solid",
+                              "fontSize": 11,
+                              "fontWeight": 600,
+                              "color": "#475569",
+                              "textAlign": "center",
+                              "whiteSpace": "nowrap",
+                              "textOverflow": "ellipsis",
+                              "overflow": "hidden"
+                            },
+                            "content": "⚡ 이벤트"
+                          },
+                          {
+                            "id": "ab9-rs-tab-code",
+                            "type": "button",
+                            "name": "코드",
+                            "style": {
+                              "flex": 1,
+                              "height": 28,
+                              "borderRadius": 6,
+                              "backgroundColor": "transparent",
+                              "borderWidth": 0,
+                              "borderColor": "#cbd5e1",
+                              "borderStyle": "solid",
+                              "fontSize": 11,
+                              "fontWeight": 600,
+                              "color": "#475569",
+                              "textAlign": "center",
+                              "whiteSpace": "nowrap",
+                              "textOverflow": "ellipsis",
+                              "overflow": "hidden"
+                            },
+                            "content": "코드"
+                          },
+                          {
+                            "id": "ab9-rs-tab-tweaks",
+                            "type": "button",
+                            "name": "트윅",
+                            "style": {
+                              "flex": 1,
+                              "height": 28,
+                              "borderRadius": 6,
+                              "backgroundColor": "transparent",
+                              "borderWidth": 0,
+                              "borderColor": "#cbd5e1",
+                              "borderStyle": "solid",
+                              "fontSize": 11,
+                              "fontWeight": 600,
+                              "color": "#475569",
+                              "textAlign": "center",
+                              "whiteSpace": "nowrap",
+                              "textOverflow": "ellipsis",
+                              "overflow": "hidden"
+                            },
+                            "content": "트윅"
+                          }
+                        ]
                       },
                       {
                         "id": "ab9-rs-tab-close",
@@ -3136,7 +3161,8 @@
                         "style": {
                           "width": 24,
                           "height": 24,
-                          "borderRadius": 6
+                          "borderRadius": 6,
+                          "flexShrink": 0
                         },
                         "children": [
                           {
@@ -4960,7 +4986,7 @@
                                           {
                                             "id": "ab9-ds-c1i-nm-12",
                                             "type": "text",
-                                            "name": "���드 컨테이너",
+                                            "name": "카드 컨테이너",
                                             "style": {
                                               "fontSize": 11,
                                               "fontWeight": 700,
@@ -9433,7 +9459,7 @@
                 "type": "aside",
                 "name": "Right Inspector Panel",
                 "style": {
-                  "width": 320,
+                  "width": 350,
                   "height": "100%",
                   "backgroundColor": "#ffffff",
                   "borderLeftWidth": 1,
@@ -9448,12 +9474,12 @@
                   {
                     "id": "ab10-rs-tabs",
                     "type": "container",
-                    "name": "Right Sidebar Tabs",
+                    "name": "Right Sidebar Tabs (No-Wrap Policy)",
                     "style": {
                       "width": "100%",
-                      "height": 46,
-                      "paddingLeft": 6,
-                      "paddingRight": 6,
+                      "height": 44,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
                       "backgroundColor": "#f8fafc",
                       "borderBottomWidth": 1,
                       "borderBottomColor": "#e2e8f0",
@@ -9462,89 +9488,114 @@
                       "flexDirection": "row",
                       "alignItems": "center",
                       "justifyContent": "space-between",
-                      "gap": 2,
+                      "gap": 4,
                       "flexShrink": 0
                     },
                     "children": [
                       {
-                        "id": "ab10-rs-tab-properties",
-                        "type": "button",
-                        "name": "속성 인스펙터",
+                        "id": "ab10-rs-tab-seg",
+                        "type": "container",
+                        "name": "4-Tab Segmented Grid",
                         "style": {
                           "flex": 1,
-                          "height": 36,
+                          "padding": 2,
                           "borderRadius": 8,
-                          "backgroundColor": "#ffffff",
-                          "borderWidth": 1,
-                          "borderColor": "#e2e8f0",
-                          "borderStyle": "solid",
-                          "fontSize": 10,
-                          "fontWeight": 700,
-                          "color": "#4f46e5",
-                          "textAlign": "center",
-                          "lineHeight": 1.2
+                          "backgroundColor": "#e2e8f0",
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "alignItems": "center",
+                          "gap": 2
                         },
-                        "content": "속성 인스펙터"
-                      },
-                      {
-                        "id": "ab10-rs-tab-events",
-                        "type": "button",
-                        "name": "프로토타입 이벤트 & 플로우",
-                        "style": {
-                          "flex": 1,
-                          "height": 36,
-                          "borderRadius": 8,
-                          "backgroundColor": "transparent",
-                          "borderWidth": 0,
-                          "borderColor": "#e2e8f0",
-                          "borderStyle": "solid",
-                          "fontSize": 10,
-                          "fontWeight": 600,
-                          "color": "#64748b",
-                          "textAlign": "center",
-                          "lineHeight": 1.2
-                        },
-                        "content": "프로토타입 이벤트 & 플로우"
-                      },
-                      {
-                        "id": "ab10-rs-tab-code",
-                        "type": "button",
-                        "name": "코드",
-                        "style": {
-                          "flex": 1,
-                          "height": 36,
-                          "borderRadius": 8,
-                          "backgroundColor": "transparent",
-                          "borderWidth": 0,
-                          "borderColor": "#e2e8f0",
-                          "borderStyle": "solid",
-                          "fontSize": 10,
-                          "fontWeight": 600,
-                          "color": "#64748b",
-                          "textAlign": "center",
-                          "lineHeight": 1.2
-                        },
-                        "content": "코드"
-                      },
-                      {
-                        "id": "ab10-rs-tab-tweaks",
-                        "type": "button",
-                        "name": "동적 트윅 변수",
-                        "style": {
-                          "flex": 1,
-                          "height": 36,
-                          "borderRadius": 8,
-                          "backgroundColor": "transparent",
-                          "borderWidth": 0,
-                          "borderColor": "#e2e8f0",
-                          "borderStyle": "solid",
-                          "fontSize": 10,
-                          "fontWeight": 600,
-                          "color": "#64748b",
-                          "textAlign": "center",
-                          "lineHeight": 1.2
-                        },
-                        "content": "동적 트윅 변수"
+                        "children": [
+                          {
+                            "id": "ab10-rs-tab-properties",
+                            "type": "button",
+                            "name": "속성",
+                            "style": {
+                              "flex": 1,
+                              "height": 28,
+                              "borderRadius": 6,
+                              "backgroundColor": "#ffffff",
+                              "borderWidth": 1,
+                              "borderColor": "#cbd5e1",
+                              "borderStyle": "solid",
+                              "fontSize": 11,
+                              "fontWeight": 700,
+                              "color": "#4f46e5",
+                              "textAlign": "center",
+                              "whiteSpace": "nowrap",
+                              "textOverflow": "ellipsis",
+                              "overflow": "hidden"
+                            },
+                            "content": "속성"
+                          },
+                          {
+                            "id": "ab10-rs-tab-events",
+                            "type": "button",
+                            "name": "⚡ 이벤트",
+                            "style": {
+                              "flex": 1,
+                              "height": 28,
+                              "borderRadius": 6,
+                              "backgroundColor": "transparent",
+                              "borderWidth": 0,
+                              "borderColor": "#cbd5e1",
+                              "borderStyle": "solid",
+                              "fontSize": 11,
+                              "fontWeight": 600,
+                              "color": "#475569",
+                              "textAlign": "center",
+                              "whiteSpace": "nowrap",
+                              "textOverflow": "ellipsis",
+                              "overflow": "hidden"
+                            },
+                            "content": "⚡ 이벤트"
+                          },
+                          {
+                            "id": "ab10-rs-tab-code",
+                            "type": "button",
+                            "name": "코드",
+                            "style": {
+                              "flex": 1,
+                              "height": 28,
+                              "borderRadius": 6,
+                              "backgroundColor": "transparent",
+                              "borderWidth": 0,
+                              "borderColor": "#cbd5e1",
+                              "borderStyle": "solid",
+                              "fontSize": 11,
+                              "fontWeight": 600,
+                              "color": "#475569",
+                              "textAlign": "center",
+                              "whiteSpace": "nowrap",
+                              "textOverflow": "ellipsis",
+                              "overflow": "hidden"
+                            },
+                            "content": "코드"
+                          },
+                          {
+                            "id": "ab10-rs-tab-tweaks",
+                            "type": "button",
+                            "name": "트윅",
+                            "style": {
+                              "flex": 1,
+                              "height": 28,
+                              "borderRadius": 6,
+                              "backgroundColor": "transparent",
+                              "borderWidth": 0,
+                              "borderColor": "#cbd5e1",
+                              "borderStyle": "solid",
+                              "fontSize": 11,
+                              "fontWeight": 600,
+                              "color": "#475569",
+                              "textAlign": "center",
+                              "whiteSpace": "nowrap",
+                              "textOverflow": "ellipsis",
+                              "overflow": "hidden"
+                            },
+                            "content": "트윅"
+                          }
+                        ]
                       },
                       {
                         "id": "ab10-rs-tab-close",
@@ -9553,7 +9604,8 @@
                         "style": {
                           "width": 24,
                           "height": 24,
-                          "borderRadius": 6
+                          "borderRadius": 6,
+                          "flexShrink": 0
                         },
                         "children": [
                           {

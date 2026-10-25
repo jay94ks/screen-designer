@@ -541,8 +541,8 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
 
   return (
     <aside
-      style={{ width: `${width}px` }}
-      className="border-r border-slate-200 bg-white flex flex-col shrink-0 h-full shadow-xs z-20 select-none text-xs"
+      style={{ width: `${Math.max(240, width)}px`, minWidth: '240px' }}
+      className="border-r border-slate-200 bg-white flex flex-col shrink-0 h-full shadow-xs z-20 select-none text-xs overflow-hidden"
     >
       {/* Header Tabs: Layers / Components / Templates */}
       <div className="h-11 border-b border-slate-200 px-2 flex items-center justify-between shrink-0 bg-slate-50/70">

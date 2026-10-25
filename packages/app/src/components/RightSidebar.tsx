@@ -5,8 +5,11 @@ import { PropertiesPanel } from './PropertiesPanel';
 import { EventsPanel } from './EventsPanel';
 import { VDomArtboard, VNode } from '../types/vdom';
 import { TweakDefinition } from '../types';
-import { X, Download, Save, Sparkles, Zap } from 'lucide-react';
+import { X, SlidersHorizontal, Zap, Code2, Sliders } from 'lucide-react';
 import { useTranslation } from '../i18n';
+
+export const MIN_RIGHT_SIDEBAR_WIDTH = 340;
+export const DEFAULT_RIGHT_SIDEBAR_WIDTH = 360;
 
 interface RightSidebarProps {
   artboard: VDomArtboard | null;
@@ -16,6 +19,7 @@ interface RightSidebarProps {
   onDeleteNode: (nodeId: string) => void;
   onUpdateArtboard?: (updates: Partial<VDomArtboard>) => void;
   onSelectArtboard?: (artboardId: string) => void;
+  onSelectNode?: (node: VNode) => void;
   onUpdateCode: (newCode: string) => void;
   onUpdateTweakValue: (key: string, val: any) => void;
   onAddTweakDefinition: (def: TweakDefinition) => void;
@@ -35,6 +39,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   onDeleteNode,
   onUpdateArtboard,
   onSelectArtboard,
+  onSelectNode,
   onUpdateCode,
   onUpdateTweakValue,
   onAddTweakDefinition,
@@ -42,8 +47,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   activeCode,
   isOpen,
   onClose,
-  onOpenExport,
-  width = 320
+  width = DEFAULT_RIGHT_SIDEBAR_WIDTH
 }) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'properties' | 'events' | 'code' | 'tweaks'>(() => {
@@ -59,66 +63,84 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
 
   if (!isOpen) return null;
 
+  const effectiveWidth = Math.max(MIN_RIGHT_SIDEBAR_WIDTH, width);
+  const eventCount = selectedNode?.events?.length || 0;
+  const tweakCount = artboard?.tweaksSchema?.length || 0;
+
   return (
     <aside
-      style={{ width: `${width}px` }}
-      className="border-l border-slate-200 bg-white flex flex-col shrink-0 h-full shadow-lg z-20 select-none"
+      style={{ width: `${effectiveWidth}px`, minWidth: `${MIN_RIGHT_SIDEBAR_WIDTH}px` }}
+      className="border-l border-slate-200 bg-white flex flex-col shrink-0 h-full shadow-lg z-20 select-none overflow-hidden"
     >
-      {/* 4-Tab Header (Properties | Events | Code | Tweaks) */}
-      <div className="h-11 border-b border-slate-200 px-2.5 flex items-center justify-between shrink-0 bg-slate-50/70">
-        <div className="flex items-center gap-1 text-xs">
+      {/* 4-Tab Header (Properties | Events | Code | Tweaks) - Strict No-Wrap Text Overflow Policy */}
+      <div className="h-11 border-b border-slate-200 px-2 flex items-center justify-between gap-1.5 shrink-0 bg-slate-50/80">
+        <div className="grid grid-cols-4 gap-0.5 flex-1 min-w-0 bg-slate-200/60 p-0.5 rounded-lg">
           <button
             onClick={() => setActiveTab('properties')}
-            className={`px-2.5 py-1.5 rounded-md font-medium transition text-[11px] ${
+            title="속성 인스펙터 (Properties)"
+            className={`px-1 py-1.5 rounded-md transition text-[11px] flex items-center justify-center gap-1 min-w-0 whitespace-nowrap ${
               activeTab === 'properties'
-                ? 'bg-white text-slate-900 shadow-2xs font-bold border border-slate-200/80'
-                : 'text-slate-500 hover:text-slate-800'
+                ? 'bg-white text-indigo-700 shadow-2xs font-bold border border-slate-200/80'
+                : 'text-slate-600 hover:text-slate-900 font-medium'
             }`}
           >
-            {t('properties.title')}
+            <SlidersHorizontal size={11} className="shrink-0" />
+            <span>{t('properties.title')}</span>
           </button>
+
           <button
             onClick={() => setActiveTab('events')}
-            className={`px-2.5 py-1.5 rounded-md font-medium transition text-[11px] flex items-center gap-1 ${
+            title="프로토타입 이벤트 & 플로우 (Events)"
+            className={`px-1 py-1.5 rounded-md transition text-[11px] flex items-center justify-center gap-1 min-w-0 whitespace-nowrap ${
               activeTab === 'events'
                 ? 'bg-white text-amber-700 shadow-2xs font-bold border border-slate-200/80'
-                : 'text-slate-500 hover:text-slate-800'
+                : 'text-slate-600 hover:text-slate-900 font-medium'
             }`}
           >
-            <Zap size={11} className={activeTab === 'events' ? 'text-amber-500 fill-amber-500' : 'text-slate-400'} />
+            <Zap size={11} className={`shrink-0 ${activeTab === 'events' ? 'text-amber-500 fill-amber-500' : 'text-slate-400'}`} />
             <span>{t('interactions.title')}</span>
-            {selectedNode?.events && selectedNode.events.length > 0 && (
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+            {eventCount > 0 && (
+              <span className="px-1 py-0 rounded-full bg-amber-500 text-white text-[9px] font-bold leading-tight shrink-0">
+                {eventCount}
+              </span>
             )}
           </button>
+
           <button
             onClick={() => setActiveTab('code')}
-            className={`px-2.5 py-1.5 rounded-md font-medium transition text-[11px] ${
+            title="코드 추출 및 편집 (React / HTML / JSON)"
+            className={`px-1 py-1.5 rounded-md transition text-[11px] flex items-center justify-center gap-1 min-w-0 whitespace-nowrap ${
               activeTab === 'code'
-                ? 'bg-white text-slate-900 shadow-2xs font-bold border border-slate-200/80'
-                : 'text-slate-500 hover:text-slate-800'
+                ? 'bg-white text-emerald-700 shadow-2xs font-bold border border-slate-200/80'
+                : 'text-slate-600 hover:text-slate-900 font-medium'
             }`}
           >
-            {t('properties.tabCode')}
+            <Code2 size={11} className="shrink-0" />
+            <span>{t('properties.tabCode')}</span>
           </button>
+
           <button
             onClick={() => setActiveTab('tweaks')}
-            className={`px-2.5 py-1.5 rounded-md font-medium transition text-[11px] flex items-center gap-1 ${
+            title="동적 트윅 변수 및 상태 제어 (Tweaks)"
+            className={`px-1 py-1.5 rounded-md transition text-[11px] flex items-center justify-center gap-1 min-w-0 whitespace-nowrap ${
               activeTab === 'tweaks'
                 ? 'bg-white text-indigo-700 shadow-2xs font-bold border border-slate-200/80'
-                : 'text-slate-500 hover:text-slate-800'
+                : 'text-slate-600 hover:text-slate-900 font-medium'
             }`}
           >
+            <Sliders size={11} className="shrink-0" />
             <span>{t('properties.dynamicTweaks')}</span>
-            {artboard && artboard.tweaksSchema && artboard.tweaksSchema.length > 0 && (
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-600" />
+            {tweakCount > 0 && (
+              <span className="px-1 py-0 rounded-full bg-indigo-600 text-white text-[9px] font-bold leading-tight shrink-0">
+                {tweakCount}
+              </span>
             )}
           </button>
         </div>
 
         <button
           onClick={onClose}
-          className="p-1 hover:bg-slate-200 rounded text-slate-400 hover:text-slate-600 transition"
+          className="p-1 hover:bg-slate-200 rounded text-slate-400 hover:text-slate-600 transition shrink-0"
           title="패널 닫기"
         >
           <X size={14} />
@@ -126,7 +148,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
       </div>
 
       {/* Tab Contents */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">
         {!artboard ? (
           <div className="p-8 text-center text-slate-400 text-xs">
             선택된 화면이 없습니다.
@@ -151,18 +173,26 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                 onUpdateNode={onUpdateNode}
                 onUpdateTweakValue={onUpdateTweakValue}
                 onSelectArtboard={onSelectArtboard}
+                onSelectNode={onSelectNode}
               />
             )}
             {activeTab === 'code' && (
-              <CodePanel code={activeCode} onCodeChange={onUpdateCode} />
+              <CodePanel
+                code={activeCode}
+                artboard={artboard}
+                selectedNode={selectedNode}
+                onCodeChange={onUpdateCode}
+              />
             )}
             {activeTab === 'tweaks' && (
               <DynamicTweaksPanel
+                artboard={artboard}
                 schema={artboard.tweaksSchema || []}
                 values={artboard.tweakValues || {}}
                 onChange={onUpdateTweakValue}
                 onAddTweak={onAddTweakDefinition}
                 onRemoveTweak={onRemoveTweakDefinition}
+                onSelectNode={onSelectNode}
               />
             )}
           </>

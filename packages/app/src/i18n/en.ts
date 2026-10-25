@@ -90,7 +90,7 @@ export const en: TranslationSchema = {
     applyTemplate: 'Insert to Canvas'
   },
   properties: {
-    title: 'Properties Inspector',
+    title: 'Properties',
     tabDesign: 'Design',
     tabInteractions: 'Interactions',
     tabCode: 'Code',
@@ -137,7 +137,7 @@ export const en: TranslationSchema = {
     variable: 'Tweak Variable',
     operator: 'Operator',
     value: 'Target Value',
-    dynamicTweaks: 'Dynamic Tweaks',
+    dynamicTweaks: 'Tweaks',
     addTweak: 'Add Tweak Variable',
     tweakName: 'Variable Name',
     controlType: 'Control Type',
@@ -145,7 +145,7 @@ export const en: TranslationSchema = {
     options: 'Options (comma separated)'
   },
   interactions: {
-    title: 'Prototype Events & Flow',
+    title: 'Events',
     addEvent: '+ Add New Event',
     trigger: 'Trigger',
     triggerClick: 'On Click',

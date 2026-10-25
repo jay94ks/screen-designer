@@ -188,7 +188,9 @@ export default function App() {
     return typeof window !== 'undefined' && (window.location.search.includes('shortcuts') || window.location.search.includes('helpModal'));
   });
   const [isShareOpen, setIsShareOpen] = useState(false);
-  const [isNewFrameOpen, setIsNewFrameOpen] = useState(false);
+  const [isNewFrameOpen, setIsNewFrameOpen] = useState(() => {
+    return typeof window !== 'undefined' && (window.location.search.includes('newFrame') || window.location.search.includes('addFrame'));
+  });
   const [isGitModalOpen, setIsGitModalOpen] = useState(() => {
     return typeof window !== 'undefined' && (window.location.search.includes('openGit') || window.location.search.includes('git'));
   });
@@ -493,11 +495,11 @@ export default function App() {
     artboards.find((a) => a.id === selectedArtboardId) || (artboards.length > 0 ? artboards[0] : null);
   const currentIndex = selectedArtboard ? artboards.findIndex((a) => a.id === selectedArtboard.id) : -1;
 
-  // Left & Right Sidebar Resizing State (stored in localStorage)
+  // Left & Right Sidebar Resizing State (stored in localStorage, enforcing minimum widths)
   const [leftSidebarWidth, setLeftSidebarWidth] = useState<number>(() => {
     try {
       const saved = localStorage.getItem('sd_left_sidebar_width');
-      return saved ? parseInt(saved, 10) : 270;
+      return saved ? Math.max(240, Math.min(520, parseInt(saved, 10))) : 270;
     } catch {
       return 270;
     }
@@ -506,9 +508,9 @@ export default function App() {
   const [rightSidebarWidth, setRightSidebarWidth] = useState<number>(() => {
     try {
       const saved = localStorage.getItem('sd_right_sidebar_width');
-      return saved ? parseInt(saved, 10) : 320;
+      return saved ? Math.max(340, Math.min(680, parseInt(saved, 10))) : 360;
     } catch {
-      return 320;
+      return 360;
     }
   });
 
@@ -548,7 +550,7 @@ export default function App() {
 
     const onMouseMove = (moveEvent: MouseEvent) => {
       const delta = moveEvent.clientX - startX;
-      const newWidth = Math.max(180, Math.min(520, startWidth + delta));
+      const newWidth = Math.max(240, Math.min(520, startWidth + delta));
       setLeftSidebarWidth(newWidth);
     };
 
@@ -574,7 +576,7 @@ export default function App() {
 
     const onMouseMove = (moveEvent: MouseEvent) => {
       const delta = startX - moveEvent.clientX; // Dragging left increases right panel width
-      const newWidth = Math.max(240, Math.min(680, startWidth + delta));
+      const newWidth = Math.max(340, Math.min(680, startWidth + delta));
       setRightSidebarWidth(newWidth);
     };
 
@@ -665,8 +667,8 @@ export default function App() {
       if (!resizingArtboardId) return;
       const dx = (e.clientX - resizeStart.x) / zoom;
       const dy = (e.clientY - resizeStart.y) / zoom;
-      const nextW = Math.max(260, Math.round(resizeStart.width + dx));
-      const nextH = Math.max(300, Math.round(resizeStart.height + dy));
+      const nextW = Math.max(200, Math.round(resizeStart.width + dx));
+      const nextH = Math.max(200, Math.round(resizeStart.height + dy));
 
       setArtboards((prev) =>
         prev.map((a) => (a.id === resizingArtboardId ? { ...a, width: nextW, height: nextH } : a))
@@ -1723,11 +1725,11 @@ export default function App() {
         {isRightSidebarOpen && (
           <div
             onMouseDown={handleRightResizeStart}
-            onDoubleClick={() => setRightSidebarWidth(320)}
+            onDoubleClick={() => setRightSidebarWidth(350)}
             className={`w-1.5 hover:w-2 hover:bg-indigo-500 active:bg-indigo-600 transition-all cursor-col-resize z-30 select-none relative shrink-0 group flex items-center justify-center ${
               isResizingRight ? 'bg-indigo-600 w-2' : 'bg-slate-200/80'
             }`}
-            title="드래그하여 우측 패널 크기 조절 (더블 클릭 시 기본값 320px 복원)"
+            title="드래그하여 우측 패널 크기 조절 (더블 클릭 시 기본값 350px 복원, 최소 320px)"
           >
             <div
               className={`w-0.5 h-6 rounded-full transition-opacity ${
@@ -1748,6 +1750,9 @@ export default function App() {
           onSelectArtboard={(id) => {
             setSelectedArtboardId(id);
             setSelectedNodeId(null);
+          }}
+          onSelectNode={(node) => {
+            setSelectedNodeId(node.id);
           }}
           onUpdateNode={handleUpdateNode}
           onDeleteNode={handleDeleteNode}

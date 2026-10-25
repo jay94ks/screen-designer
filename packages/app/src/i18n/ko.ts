@@ -90,7 +90,7 @@ export const ko: TranslationSchema = {
     applyTemplate: '캔버스에 추가'
   },
   properties: {
-    title: '속성 인스펙터',
+    title: '속성',
     tabDesign: '디자인',
     tabInteractions: '인터랙션',
     tabCode: '코드',
@@ -137,7 +137,7 @@ export const ko: TranslationSchema = {
     variable: '트윅 변수',
     operator: '연산자',
     value: '기준값',
-    dynamicTweaks: '동적 트윅 변수',
+    dynamicTweaks: '트윅',
     addTweak: '트윅 변수 추가',
     tweakName: '변수명',
     controlType: '컨트롤 유형',
@@ -145,7 +145,7 @@ export const ko: TranslationSchema = {
     options: '선택 옵션 (쉼표 구분)'
   },
   interactions: {
-    title: '프로토타입 이벤트 & 플로우',
+    title: '이벤트',
     addEvent: '+ 새 이벤트 추가',
     trigger: '트리거',
     triggerClick: '클릭 시 (On Click)',

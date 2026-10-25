@@ -24,7 +24,7 @@ interface VNodeRendererProps {
   onSelectNode: (node: VNode, e: React.MouseEvent) => void;
   onUpdateContent?: (nodeId: string, content: string) => void;
   onNodeAction?: (node: VNode) => void;
-  onNodeEvent?: (node: VNode, trigger: 'click' | 'dblclick' | 'contextmenu', e: React.MouseEvent) => void;
+  onNodeEvent?: (node: VNode, trigger: 'click' | 'dblclick' | 'contextmenu' | 'mouseenter', e: React.MouseEvent) => void;
   onDeleteNode?: (nodeId: string) => void;
   onDuplicateNode?: (node: VNode) => void;
   tweakValues?: Record<string, any>;
@@ -200,6 +200,14 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
       if (onNodeEvent) {
         onNodeEvent(node, 'contextmenu', e);
       }
+    }
+  };
+
+  const handleMouseEnter = (e: React.MouseEvent) => {
+    if (!interactive) return;
+    if (isPlayMode && onNodeEvent && node.events?.some((ev) => ev.trigger === 'mouseenter')) {
+      e.stopPropagation();
+      onNodeEvent(node, 'mouseenter', e);
     }
   };
 
@@ -589,6 +597,7 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onContextMenu={handleContextMenu}
+      onMouseEnter={handleMouseEnter}
       style={cssStyle}
       className={`${cssStyle.position ? '' : 'relative'} transition-all duration-75 group ${
         node.className || ''

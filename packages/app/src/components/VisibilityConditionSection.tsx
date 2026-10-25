@@ -278,12 +278,12 @@ export const VisibilityConditionSection: React.FC<VisibilityConditionSectionProp
                   className="bg-white border border-slate-200 rounded-xl p-2.5 space-y-2 shadow-2xs text-xs"
                 >
                   {/* Rule Header: Tweak Selection + Operator + Delete */}
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5 min-w-0">
                     {/* Tweak Target Dropdown */}
                     <select
                       value={rule.tweakId}
                       onChange={(e) => handleUpdateRule(rule.id, { tweakId: e.target.value })}
-                      className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-[11px] font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 truncate"
+                      className="flex-1 min-w-0 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-[11px] font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 truncate"
                     >
                       {tweaksSchema.map((t) => (
                         <option key={t.id} value={t.id}>
@@ -298,7 +298,7 @@ export const VisibilityConditionSection: React.FC<VisibilityConditionSectionProp
                       onChange={(e) =>
                         handleUpdateRule(rule.id, { operator: e.target.value as ConditionOperator })
                       }
-                      className="w-28 bg-slate-50 border border-slate-200 rounded-lg px-1.5 py-1 text-[11px] text-slate-700 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      className="w-24 shrink-0 bg-slate-50 border border-slate-200 rounded-lg px-1.5 py-1 text-[11px] text-slate-700 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                     >
                       <option value="in">일치 (포함됨)</option>
                       <option value="not_in">불일치 (제외)</option>
@@ -437,7 +437,7 @@ export const VisibilityConditionSection: React.FC<VisibilityConditionSectionProp
             className="w-full py-1.5 bg-white hover:bg-indigo-50 border border-dashed border-indigo-300 text-indigo-700 rounded-lg font-bold text-[10px] flex items-center justify-center gap-1.5 transition"
           >
             <Plus size={12} />
-            <span>+ 추가 조건 규칙 추가 (AND/OR)</span>
+            <span>추가 조건 규칙 추가 (AND/OR)</span>
           </button>
         </div>
       )}

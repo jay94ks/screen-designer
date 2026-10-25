@@ -158,9 +158,21 @@ export function styleToCssProperties(style: VNodeStyle): React.CSSProperties {
       : style.lineHeight;
   }
   if (style.letterSpacing) css.letterSpacing = style.letterSpacing;
-  if (style.textOverflow) css.textOverflow = style.textOverflow;
+  if (style.textOverflow) {
+    css.textOverflow = style.textOverflow;
+    if (style.textOverflow === 'ellipsis' && !style.lineClamp) {
+      if (!css.overflow) css.overflow = 'hidden';
+      if (!style.whiteSpace) css.whiteSpace = 'nowrap';
+    }
+  }
   if (style.whiteSpace) css.whiteSpace = style.whiteSpace;
   if (style.wordBreak) css.wordBreak = style.wordBreak;
+  if (style.lineClamp && style.lineClamp >= 1) {
+    css.display = '-webkit-box' as any;
+    (css as any).WebkitLineClamp = style.lineClamp;
+    (css as any).WebkitBoxOrient = 'vertical';
+    css.overflow = 'hidden';
+  }
 
   // Positioning
   if (style.position) css.position = style.position;

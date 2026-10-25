@@ -5,9 +5,19 @@
 html, body, #root {
   height: 100%;
   width: 100%;
+  min-width: 960px;
+  min-height: 600px;
   margin: 0;
   padding: 0;
   user-select: none;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* Global Text Overflow & UI Control Policy:
+   Buttons, tabs, and badges never break Korean words mid-syllable */
+button, label, select, th {
+  word-break: keep-all;
 }
 
 /* Electron Titlebar Dragging */
