@@ -1,5 +1,3 @@
-# Screen Designer Storyboard Integration
-This project is integrated with Screen Designer Storyboard Canvas.
-- Page documents: docs/ui-boards/*.json (Raw Virtual DOM JSON)
-- Settings & Cache: .screen-designer/
-- On-demand Code Generation: npx screen-designer export --format=react|vue|html
+# Claude Guidelines
+
+Please refer to [AGENTS.md](./AGENTS.md) for all project architecture, conventions, CLI commands, MCP tools, and workflow guidelines.
