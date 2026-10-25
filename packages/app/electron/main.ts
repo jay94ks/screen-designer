@@ -22,6 +22,9 @@ import {
   migrateProjectFolder
 } from './projectService';
 
+// Suppress Electron DevTools security warning noise in local desktop environment
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
+
 // Windows Whiteout / DWM GPU Crash Prevention
 app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
 if (process.platform === 'win32' || process.env.DISABLE_HARDWARE_ACCELERATION === 'true') {
@@ -40,8 +43,19 @@ process.env.VITE_PUBLIC = app.isPackaged
 let win: BrowserWindow | null;
 let ws: WebSocket | null = null;
 
+function safeSendToRenderer(channel: string, payload: any) {
+  try {
+    if (win && !win.isDestroyed() && win.webContents && !win.webContents.isDestroyed()) {
+      win.webContents.send(channel, payload);
+    }
+  } catch {}
+}
+
 function createWindow() {
   const isWin = process.platform === 'win32';
+  const preloadCjs = path.join(__dirname, 'preload.cjs');
+  const preloadJs = path.join(__dirname, 'preload.js');
+  const preloadPath = fs.existsSync(preloadCjs) ? preloadCjs : preloadJs;
 
   win = new BrowserWindow({
     width: 1440,
@@ -64,22 +78,22 @@ function createWindow() {
     title: 'Screen Designer - Live Storyboard Canvas',
     backgroundColor: '#020617',
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: preloadPath,
       nodeIntegration: true,
       contextIsolation: false
     }
   });
 
   win.on('maximize', () => {
-    win?.webContents.send('window:maximized-change', true);
+    safeSendToRenderer('window:maximized-change', true);
   });
 
   win.on('unmaximize', () => {
-    win?.webContents.send('window:maximized-change', false);
+    safeSendToRenderer('window:maximized-change', false);
   });
 
   win.on('restore', () => {
-    win?.webContents.send('window:maximized-change', false);
+    safeSendToRenderer('window:maximized-change', false);
   });
 
   // Watch for renderer crash / GPU whiteout and recover gracefully
@@ -122,20 +136,20 @@ function setupWebSocket() {
 
       ws.on('open', () => {
         console.log('[Electron Main] Connected to Screen Designer MCP Bridge');
-        win?.webContents.send('bridge-status', { connected: true });
+        safeSendToRenderer('bridge-status', { connected: true });
       });
 
       ws.on('message', (data) => {
         try {
           const msg = JSON.parse(data.toString());
-          win?.webContents.send('bridge-message', msg);
+          safeSendToRenderer('bridge-message', msg);
         } catch (e) {
           console.error('Failed to parse bridge msg', e);
         }
       });
 
       ws.on('close', () => {
-        win?.webContents.send('bridge-status', { connected: false });
+        safeSendToRenderer('bridge-status', { connected: false });
         setTimeout(tryConnect, 2000);
       });
 

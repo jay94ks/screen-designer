@@ -1,12 +1,15 @@
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
+
+// Suppress Electron DevTools security warning noise in local desktop environment
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 
 // Expose safe IPC to renderer
 (window as any).electronAPI = {
   onBridgeStatus: (callback: (status: { connected: boolean }) => void) => {
-    ipcRenderer.on('bridge-status', (_, data) => callback(data));
+    ipcRenderer.on('bridge-status', (_: any, data: any) => callback(data));
   },
   onBridgeMessage: (callback: (msg: any) => void) => {
-    ipcRenderer.on('bridge-message', (_, data) => callback(data));
+    ipcRenderer.on('bridge-message', (_: any, data: any) => callback(data));
   },
   sendToBridge: (msg: any) => {
     ipcRenderer.send('renderer-to-bridge', msg);
@@ -26,7 +29,7 @@ import { ipcRenderer } from 'electron';
   },
   isMaximized: () => ipcRenderer.invoke('window:isMaximized'),
   onMaximizedChange: (callback: (maximized: boolean) => void) => {
-    ipcRenderer.on('window:maximized-change', (_, val) => callback(val));
+    ipcRenderer.on('window:maximized-change', (_: any, val: boolean) => callback(val));
   },
   dragWindow: (dx: number, dy: number) => {
     ipcRenderer.send('window:drag-by', { dx, dy });

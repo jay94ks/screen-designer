@@ -135,7 +135,7 @@ const COMPONENT_CATALOG: ComponentMeta[] = [
   { key: 'form', name: '폼 그룹', tag: '<form>', desc: '입력 폼 래퍼 그룹', category: 'forms', icon: Layout, defaultContent: '폼 입력 그룹' },
 
   // 4. Media & Embedded (4)
-  { key: 'image', name: '이미지', tag: '<img>', desc: '반응형 이미지 (Cover / Fit)', category: 'media', icon: ImageIcon, defaultProps: { src: 'assets/sample-fintech-chart.svg', alt: 'Sample Chart' } },
+  { key: 'image', name: '이미지', tag: '<img>', desc: '반응형 이미지 (Cover / Fit)', category: 'media', icon: ImageIcon, defaultProps: { src: 'assets/preset-chart.svg', alt: 'Sample Chart' } },
   { key: 'video', name: '비디오 플레이어', tag: '<video>', desc: '미디어 영상 플레이어', category: 'media', icon: Video, defaultProps: { controls: true } },
   { key: 'audio', name: '오디오 바', tag: '<audio>', desc: '음악 및 사운드 플레이어', category: 'media', icon: Music, defaultProps: { controls: true } },
   { key: 'iframe', name: '웹 프레임', tag: '<iframe>', desc: '외부 웹사이트 임베드', category: 'media', icon: ExternalLink, defaultProps: { src: 'https://example.com' } },

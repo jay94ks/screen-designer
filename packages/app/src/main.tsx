@@ -1,8 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { ensureElectronAPI } from './utils/electronBridge';
 import App from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import './index.css';
+
+// Ensure Electron IPC bridge is attached before React mounts
+ensureElectronAPI();
 
 // Global error handlers to prevent unhandled exceptions causing whiteout
 window.addEventListener('error', (event) => {

@@ -1,4 +1,4 @@
-import { ProjectSettings } from '../types';
+import { ensureElectronAPI, canUseHttpDevApi } from './electronBridge';
 
 export interface ProjectSavePayload {
   project?: {
@@ -30,21 +30,23 @@ export interface ProjectSavePayload {
 
 export const projectClient = {
   async saveProject(payload: ProjectSavePayload): Promise<{ success: boolean; docsDir?: string; error?: string }> {
-    const api = (window as any).electronAPI?.project;
+    const api = ensureElectronAPI()?.project;
     if (api?.saveProject) {
       return api.saveProject(payload);
     }
 
-    try {
-      const res = await fetch('/api/project/save-project', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) return await res.json();
-    } catch (e: any) {
-      console.warn('[projectClient] Failed to save project via API', e);
-      return { success: false, error: e.message };
+    if (canUseHttpDevApi()) {
+      try {
+        const res = await fetch('/api/project/save-project', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) return await res.json();
+      } catch (e: any) {
+        console.warn('[projectClient] Failed to save project via API', e);
+        return { success: false, error: e.message };
+      }
     }
 
     return { success: false, error: 'No storage API available' };
@@ -58,21 +60,23 @@ export const projectClient = {
     docsDir?: string;
     error?: string;
   }> {
-    const api = (window as any).electronAPI?.project;
+    const api = ensureElectronAPI()?.project;
     if (api?.loadProject) {
       return api.loadProject(pageDocsPath, workspacePath);
     }
 
-    try {
-      const res = await fetch('/api/project/load-project', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pageDocsPath, workspacePath })
-      });
-      if (res.ok) return await res.json();
-    } catch (e: any) {
-      console.warn('[projectClient] Failed to load project via API', e);
-      return { success: false, pages: [], error: e.message };
+    if (canUseHttpDevApi()) {
+      try {
+        const res = await fetch('/api/project/load-project', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pageDocsPath, workspacePath })
+        });
+        if (res.ok) return await res.json();
+      } catch (e: any) {
+        console.warn('[projectClient] Failed to load project via API', e);
+        return { success: false, pages: [], error: e.message };
+      }
     }
 
     return { success: false, pages: [] };
@@ -85,23 +89,25 @@ export const projectClient = {
     newPath: string;
     error?: string;
   }> {
-    const api = (window as any).electronAPI?.project;
+    const api = ensureElectronAPI()?.project;
     if (api?.migrateFolder) {
       return api.migrateFolder(oldPath, newPath, workspacePath);
     }
 
-    try {
-      const res = await fetch('/api/project/migrate-folder', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ oldPath, newPath, workspacePath })
-      });
-      if (res.ok) return await res.json();
-    } catch (e: any) {
-      console.warn('[projectClient] Failed to migrate folder via API', e);
-      return { success: false, oldPath, newPath, error: e.message };
+    if (canUseHttpDevApi()) {
+      try {
+        const res = await fetch('/api/project/migrate-folder', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ oldPath, newPath, workspacePath })
+        });
+        if (res.ok) return await res.json();
+      } catch (e: any) {
+        console.warn('[projectClient] Failed to migrate folder via API', e);
+        return { success: false, oldPath, newPath, error: e.message };
+      }
     }
 
-    return { success: false, oldPath, newPath };
+    return { success: false, oldPath, newPath, error: 'No migration API available' };
   }
 };

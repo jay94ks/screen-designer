@@ -1,4 +1,5 @@
 import { IMAGE_PRESETS, getPresetById, getPresetByFileName, ImagePreset } from '../data/imagePresets';
+import { ensureElectronAPI, canUseHttpDevApi } from './electronBridge';
 
 export interface ChosenAsset {
   relativePath: string;
@@ -41,9 +42,10 @@ declare global {
  */
 export async function initProjectAssets(): Promise<void> {
   try {
-    if (window.electronAPI?.assets?.materializePresets) {
-      await window.electronAPI.assets.materializePresets();
-    } else {
+    const api = ensureElectronAPI();
+    if (api?.assets?.materializePresets) {
+      await api.assets.materializePresets();
+    } else if (canUseHttpDevApi()) {
       await fetch('/api/assets/materialize-presets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

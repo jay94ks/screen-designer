@@ -168,6 +168,34 @@ export const PlayModal: React.FC<PlayModalProps> = ({
     };
   }, [resizingDir]);
 
+  // Auto-switch to a resolution-matching artboard if autoSwitchByResolution is enabled and current is hidden
+  useEffect(() => {
+    if (!isOpen || artboards.length === 0 || !autoSwitchByResolution) return;
+    const activeBoard = artboards[index] || artboards[0];
+    if (!activeBoard) return;
+    const evalCurrent = evaluateArtboardResolution(activeBoard.resolutionRule, viewportW, viewportH);
+    if (!evalCurrent.matches) {
+      const restrictedMatch = artboards.find(
+        (a) =>
+          a.id !== activeBoard.id &&
+          a.resolutionRule?.enabled &&
+          evaluateArtboardResolution(a.resolutionRule, viewportW, viewportH).matches
+      );
+      const anyMatch = artboards.find((a) =>
+        evaluateArtboardResolution(a.resolutionRule, viewportW, viewportH).matches
+      );
+      const candidate = restrictedMatch || anyMatch;
+      if (candidate && candidate.id !== activeBoard.id) {
+        const nextIdx = artboards.findIndex((a) => a.id === candidate.id);
+        if (nextIdx !== -1) {
+          setIndex(nextIdx);
+          setToastMessage(`📐 해상도(${viewportW}×${viewportH}) 조건에 맞는 '${candidate.title}' 장표로 자동 전환됨`);
+          setTimeout(() => setToastMessage(null), 2500);
+        }
+      }
+    }
+  }, [isOpen, viewportW, viewportH, autoSwitchByResolution, artboards, index]);
+
   if (!isOpen || artboards.length === 0) return null;
 
   const current = artboards[index] || artboards[0];
@@ -186,21 +214,6 @@ export const PlayModal: React.FC<PlayModalProps> = ({
       a.resolutionRule?.enabled &&
       evaluateArtboardResolution(a.resolutionRule, viewportW, viewportH).matches
   );
-
-  // Auto-switch to a resolution-matching artboard if autoSwitchByResolution is enabled and current is hidden
-  useEffect(() => {
-    if (!autoSwitchByResolution) return;
-    if (!resEval.matches) {
-      const candidate = restrictedMatchingArtboard || matchingArtboards[0];
-      if (candidate && candidate.id !== current.id) {
-        const nextIdx = artboards.findIndex((a) => a.id === candidate.id);
-        if (nextIdx !== -1) {
-          setIndex(nextIdx);
-          showToast(`📐 해상도(${viewportW}×${viewportH}) 조건에 맞는 '${candidate.title}' 장표로 자동 전환됨`);
-        }
-      }
-    }
-  }, [viewportW, viewportH, autoSwitchByResolution]);
 
   const handlePresetChange = (presetId: string) => {
     setResolutionPreset(presetId);

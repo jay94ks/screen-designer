@@ -241,8 +241,29 @@ export default defineConfig({
           options.reload();
         },
         vite: {
+          plugins: [
+            {
+              name: 'force-cjs-preload',
+              configResolved(config) {
+                if (config.build?.lib && typeof config.build.lib === 'object') {
+                  (config.build.lib as any).formats = ['cjs'];
+                }
+              }
+            }
+          ],
           build: {
-            outDir: 'dist-electron'
+            outDir: 'dist-electron',
+            lib: {
+              entry: 'electron/preload.ts',
+              formats: ['cjs'],
+              fileName: () => 'preload.cjs'
+            },
+            rollupOptions: {
+              output: {
+                format: 'cjs',
+                entryFileNames: 'preload.cjs'
+              }
+            }
           }
         }
       }
