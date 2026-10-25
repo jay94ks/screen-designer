@@ -25,6 +25,21 @@ export function tweakEvent(tweakId, operation = 'toggle', value = undefined, des
   };
 }
 
+export function cond(tweakId, operator = 'equals', values = [true], matchType = 'and') {
+  return {
+    enabled: true,
+    matchType,
+    rules: [
+      {
+        id: `rule-${tweakId}-${Math.random().toString(36).substring(2, 6)}`,
+        tweakId,
+        operator,
+        values
+      }
+    ]
+  };
+}
+
 export function vnode(id, type, name, style = {}, props = {}, children = [], content = undefined, events = undefined, condition = undefined) {
   const node = { id, type, name, style };
   if (props && Object.keys(props).length > 0) node.props = props;
@@ -1084,9 +1099,10 @@ export function createCenterCanvasVNode(prefix = 'cv', options = {}) {
 
   const children = [nestedArtboard];
 
-  if (showRulers) {
+  // Always create rulers overlay, governed dynamically by showRulers condition
+  const rulerElements = [
     // Top Horizontal Ruler (24px)
-    const topRuler = vnode(`${prefix}-ruler-top`, 'container', 'Top Horizontal Ruler', {
+    vnode(`${prefix}-ruler-top`, 'container', 'Top Horizontal Ruler', {
       position: 'absolute',
       top: 0,
       left: 24,
@@ -1103,10 +1119,10 @@ export function createCenterCanvasVNode(prefix = 'cv', options = {}) {
       zIndex: 20
     }, {}, ['0', '100', '200', '300', '400', '500', '600', '700', '800', '900', '1000', '1100'].map((tk, i) =>
       vnode(`${prefix}-rt-${i}`, 'text', tk, { fontSize: 9, fontMono: true, color: '#64748b' }, {}, [], tk)
-    ));
+    )),
 
     // Left Vertical Ruler (24px)
-    const leftRuler = vnode(`${prefix}-ruler-left`, 'container', 'Left Vertical Ruler', {
+    vnode(`${prefix}-ruler-left`, 'container', 'Left Vertical Ruler', {
       position: 'absolute',
       top: 24,
       left: 0,
@@ -1123,10 +1139,10 @@ export function createCenterCanvasVNode(prefix = 'cv', options = {}) {
       zIndex: 20
     }, {}, ['0', '100', '200', '300', '400', '500', '600', '700'].map((tk, i) =>
       vnode(`${prefix}-rl-${i}`, 'text', tk, { fontSize: 8, fontMono: true, color: '#64748b' }, {}, [], tk)
-    ));
+    )),
 
     // Corner px Box
-    const cornerBox = vnode(`${prefix}-ruler-corner`, 'box', 'Ruler Corner px', {
+    vnode(`${prefix}-ruler-corner`, 'box', 'Ruler Corner px', {
       position: 'absolute',
       top: 0,
       left: 0,
@@ -1146,10 +1162,10 @@ export function createCenterCanvasVNode(prefix = 'cv', options = {}) {
       fontMono: true,
       color: '#64748b',
       zIndex: 25
-    }, {}, [], 'px');
+    }, {}, [], 'px'),
 
     // Cyan Vertical Guideline (X: 400px)
-    const vGuide = vnode(`${prefix}-guide-v`, 'box', 'Vertical Cyan Guide', {
+    vnode(`${prefix}-guide-v`, 'box', 'Vertical Cyan Guide', {
       position: 'absolute',
       top: 0,
       bottom: 0,
@@ -1157,10 +1173,10 @@ export function createCenterCanvasVNode(prefix = 'cv', options = {}) {
       width: 1,
       backgroundColor: '#06b6d4',
       zIndex: 15
-    });
+    }),
 
     // Cyan Horizontal Guideline (Y: 180px) + Badge
-    const hGuide = vnode(`${prefix}-guide-h`, 'container', 'Horizontal Cyan Guide', {
+    vnode(`${prefix}-guide-h`, 'container', 'Horizontal Cyan Guide', {
       position: 'absolute',
       left: 0,
       right: 0,
@@ -1184,10 +1200,22 @@ export function createCenterCanvasVNode(prefix = 'cv', options = {}) {
         fontMono: true,
         fontWeight: 700
       }, {}, [], 'Y: 180px')
-    ]);
+    ])
+  ];
 
-    children.push(topRuler, leftRuler, cornerBox, vGuide, hGuide);
-  }
+  const rulerOverlay = vnode(
+    `${prefix}-ruler-layer`,
+    'container',
+    'Rulers & Guides Overlay Layer',
+    { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', zIndex: 20 },
+    {},
+    rulerElements,
+    undefined,
+    undefined,
+    cond('showRulers', 'equals', [true])
+  );
+
+  children.push(rulerOverlay);
 
   return vnode(`${prefix}-canvas-main`, 'main', 'Infinite Dot Grid Canvas', {
     flex: 1,

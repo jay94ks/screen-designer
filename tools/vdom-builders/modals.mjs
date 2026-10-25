@@ -1,4 +1,4 @@
-import { vnode, navEvent, tweakEvent } from './common.mjs';
+import { vnode, navEvent, tweakEvent, cond } from './common.mjs';
 
 // Helper: Full-screen Dimmed Backdrop Overlay (z-100)
 export function wrapInBackdrop(prefix, modalNode, zIndex = 100) {
@@ -220,7 +220,7 @@ export function createPlayModalRootVNode(prefix = 'play') {
       position: 'absolute',
       right: 4,
       top: 328
-    }),
+    }, {}, [], undefined, undefined, cond('responsiveDragEnabled', 'equals', [true])),
     // Left Drag Handle Pill
     vnode(`${prefix}-handle-l`, 'box', 'Left Resize Handle (↔)', {
       width: 6,
@@ -230,7 +230,7 @@ export function createPlayModalRootVNode(prefix = 'play') {
       position: 'absolute',
       left: 4,
       top: 328
-    }),
+    }, {}, [], undefined, undefined, cond('responsiveDragEnabled', 'equals', [true])),
     // Bottom Drag Handle Pill
     vnode(`${prefix}-handle-b`, 'box', 'Bottom Resize Handle (↕)', {
       width: 64,
@@ -240,7 +240,7 @@ export function createPlayModalRootVNode(prefix = 'play') {
       position: 'absolute',
       bottom: 6,
       left: 528
-    }),
+    }, {}, [], undefined, undefined, cond('responsiveDragEnabled', 'equals', [true])),
     // Bottom-Right Corner Handle
     vnode(`${prefix}-handle-br`, 'box', 'Corner Resize Handle (↘)', {
       width: 16,
@@ -253,7 +253,23 @@ export function createPlayModalRootVNode(prefix = 'play') {
       position: 'absolute',
       right: 10,
       bottom: 10
-    })
+    }, {}, [], undefined, undefined, cond('responsiveDragEnabled', 'equals', [true])),
+    // Simulated Touch Cursor Effect
+    vnode(`${prefix}-touch-cursor`, 'box', 'Simulated Touch Ripple Cursor', {
+      width: 32,
+      height: 32,
+      borderRadius: 9999,
+      backgroundColor: 'rgba(56, 189, 248, 0.4)',
+      borderWidth: 2,
+      borderColor: '#38bdf8',
+      borderStyle: 'solid',
+      position: 'absolute',
+      top: 300,
+      left: 450,
+      pointerEvents: 'none',
+      boxShadow: '0 0 15px rgba(56, 189, 248, 0.7)',
+      zIndex: 40
+    }, {}, [], undefined, undefined, cond('showTouchCursor', 'equals', [true]))
   ]);
 
   const footerText = vnode(`${prefix}-footer`, 'text', 'Play Mode Legend', {

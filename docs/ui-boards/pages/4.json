@@ -264,7 +264,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-09-modal-design-system-w5nr",
+                            "id": "ev-nav-ab-sd-09-modal-design-system-fk8w",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -349,7 +349,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-12-modal-settings-wdv5",
+                            "id": "ev-nav-ab-sd-12-modal-settings-h7e8",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -487,7 +487,7 @@
                         "content": "파일",
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-14-header-menu-file-emmw",
+                            "id": "ev-nav-ab-sd-14-header-menu-file-cvez",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -624,7 +624,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-11-modal-command-palette-rutw",
+                            "id": "ev-nav-ab-sd-11-modal-command-palette-vorf",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -1089,7 +1089,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-twk-showWires-toggle-ou17",
+                            "id": "ev-twk-showWires-toggle-z5oq",
                             "trigger": "click",
                             "action": {
                               "type": "change_tweak",
@@ -1140,7 +1140,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-05-modal-play-k87m",
+                            "id": "ev-nav-ab-sd-05-modal-play-qrad",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -1344,7 +1344,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-10-modal-git-desktop-907e",
+                            "id": "ev-nav-ab-sd-10-modal-git-desktop-hulh",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -1394,7 +1394,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-10-modal-git-desktop-8kpr",
+                            "id": "ev-nav-ab-sd-10-modal-git-desktop-k6m1",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -1502,7 +1502,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-01-workspace-main-6kf3",
+                            "id": "ev-nav-ab-sd-01-workspace-main-erhh",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -1555,7 +1555,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-02-components-palette-244x",
+                            "id": "ev-nav-ab-sd-02-components-palette-zdpw",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -1608,7 +1608,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-03-templates-palette-j1cr",
+                            "id": "ev-nav-ab-sd-03-templates-palette-zwf3",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -3142,6 +3142,380 @@
                         ]
                       }
                     ]
+                  },
+                  {
+                    "id": "ab11-cv-ruler-layer",
+                    "type": "container",
+                    "name": "Rulers & Guides Overlay Layer",
+                    "style": {
+                      "position": "absolute",
+                      "top": 0,
+                      "left": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "pointerEvents": "none",
+                      "zIndex": 20
+                    },
+                    "children": [
+                      {
+                        "id": "ab11-cv-ruler-top",
+                        "type": "container",
+                        "name": "Top Horizontal Ruler",
+                        "style": {
+                          "position": "absolute",
+                          "top": 0,
+                          "left": 24,
+                          "right": 0,
+                          "height": 24,
+                          "backgroundColor": "#f8fafc",
+                          "borderBottomWidth": 1,
+                          "borderBottomColor": "#cbd5e1",
+                          "borderBottomStyle": "solid",
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "alignItems": "center",
+                          "justifyContent": "space-around",
+                          "zIndex": 20
+                        },
+                        "children": [
+                          {
+                            "id": "ab11-cv-rt-0",
+                            "type": "text",
+                            "name": "0",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "0"
+                          },
+                          {
+                            "id": "ab11-cv-rt-1",
+                            "type": "text",
+                            "name": "100",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "100"
+                          },
+                          {
+                            "id": "ab11-cv-rt-2",
+                            "type": "text",
+                            "name": "200",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "200"
+                          },
+                          {
+                            "id": "ab11-cv-rt-3",
+                            "type": "text",
+                            "name": "300",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "300"
+                          },
+                          {
+                            "id": "ab11-cv-rt-4",
+                            "type": "text",
+                            "name": "400",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "400"
+                          },
+                          {
+                            "id": "ab11-cv-rt-5",
+                            "type": "text",
+                            "name": "500",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "500"
+                          },
+                          {
+                            "id": "ab11-cv-rt-6",
+                            "type": "text",
+                            "name": "600",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "600"
+                          },
+                          {
+                            "id": "ab11-cv-rt-7",
+                            "type": "text",
+                            "name": "700",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "700"
+                          },
+                          {
+                            "id": "ab11-cv-rt-8",
+                            "type": "text",
+                            "name": "800",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "800"
+                          },
+                          {
+                            "id": "ab11-cv-rt-9",
+                            "type": "text",
+                            "name": "900",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "900"
+                          },
+                          {
+                            "id": "ab11-cv-rt-10",
+                            "type": "text",
+                            "name": "1000",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "1000"
+                          },
+                          {
+                            "id": "ab11-cv-rt-11",
+                            "type": "text",
+                            "name": "1100",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "1100"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "ab11-cv-ruler-left",
+                        "type": "container",
+                        "name": "Left Vertical Ruler",
+                        "style": {
+                          "position": "absolute",
+                          "top": 24,
+                          "left": 0,
+                          "bottom": 0,
+                          "width": 24,
+                          "backgroundColor": "#f8fafc",
+                          "borderRightWidth": 1,
+                          "borderRightColor": "#cbd5e1",
+                          "borderRightStyle": "solid",
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "alignItems": "center",
+                          "justifyContent": "space-around",
+                          "zIndex": 20
+                        },
+                        "children": [
+                          {
+                            "id": "ab11-cv-rl-0",
+                            "type": "text",
+                            "name": "0",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "0"
+                          },
+                          {
+                            "id": "ab11-cv-rl-1",
+                            "type": "text",
+                            "name": "100",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "100"
+                          },
+                          {
+                            "id": "ab11-cv-rl-2",
+                            "type": "text",
+                            "name": "200",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "200"
+                          },
+                          {
+                            "id": "ab11-cv-rl-3",
+                            "type": "text",
+                            "name": "300",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "300"
+                          },
+                          {
+                            "id": "ab11-cv-rl-4",
+                            "type": "text",
+                            "name": "400",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "400"
+                          },
+                          {
+                            "id": "ab11-cv-rl-5",
+                            "type": "text",
+                            "name": "500",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "500"
+                          },
+                          {
+                            "id": "ab11-cv-rl-6",
+                            "type": "text",
+                            "name": "600",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "600"
+                          },
+                          {
+                            "id": "ab11-cv-rl-7",
+                            "type": "text",
+                            "name": "700",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "700"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "ab11-cv-ruler-corner",
+                        "type": "box",
+                        "name": "Ruler Corner px",
+                        "style": {
+                          "position": "absolute",
+                          "top": 0,
+                          "left": 0,
+                          "width": 24,
+                          "height": 24,
+                          "backgroundColor": "#f1f5f9",
+                          "borderRightWidth": 1,
+                          "borderRightColor": "#cbd5e1",
+                          "borderRightStyle": "solid",
+                          "borderBottomWidth": 1,
+                          "borderBottomColor": "#cbd5e1",
+                          "borderBottomStyle": "solid",
+                          "display": "flex",
+                          "alignItems": "center",
+                          "justifyContent": "center",
+                          "fontSize": 8,
+                          "fontMono": true,
+                          "color": "#64748b",
+                          "zIndex": 25
+                        },
+                        "content": "px"
+                      },
+                      {
+                        "id": "ab11-cv-guide-v",
+                        "type": "box",
+                        "name": "Vertical Cyan Guide",
+                        "style": {
+                          "position": "absolute",
+                          "top": 0,
+                          "bottom": 0,
+                          "left": 260,
+                          "width": 1,
+                          "backgroundColor": "#06b6d4",
+                          "zIndex": 15
+                        }
+                      },
+                      {
+                        "id": "ab11-cv-guide-h",
+                        "type": "container",
+                        "name": "Horizontal Cyan Guide",
+                        "style": {
+                          "position": "absolute",
+                          "left": 0,
+                          "right": 0,
+                          "top": 180,
+                          "height": 1,
+                          "backgroundColor": "#06b6d4",
+                          "zIndex": 15
+                        },
+                        "children": [
+                          {
+                            "id": "ab11-cv-guide-h-bdg",
+                            "type": "badge",
+                            "name": "Y: 180px",
+                            "style": {
+                              "position": "absolute",
+                              "left": 32,
+                              "top": -18,
+                              "paddingLeft": 6,
+                              "paddingRight": 6,
+                              "paddingTop": 2,
+                              "paddingBottom": 2,
+                              "borderRadius": 4,
+                              "backgroundColor": "#0891b2",
+                              "color": "#ffffff",
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "fontWeight": 700
+                            },
+                            "content": "Y: 180px"
+                          }
+                        ]
+                      }
+                    ],
+                    "condition": {
+                      "enabled": true,
+                      "matchType": "and",
+                      "rules": [
+                        {
+                          "id": "rule-showRulers-c7vp",
+                          "tweakId": "showRulers",
+                          "operator": "equals",
+                          "values": [
+                            true
+                          ]
+                        }
+                      ]
+                    }
                   }
                 ]
               },
@@ -3222,7 +3596,7 @@
                             "content": "속성",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-01-workspace-main-7pu9",
+                                "id": "ev-nav-ab-sd-01-workspace-main-qmgj",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -3256,7 +3630,7 @@
                             "content": "⚡ 이벤트",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-06-inspector-events-rmf1",
+                                "id": "ev-nav-ab-sd-06-inspector-events-4nf5",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -3290,7 +3664,7 @@
                             "content": "코드",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-04-inspector-code-2f7h",
+                                "id": "ev-nav-ab-sd-04-inspector-code-8mde",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -3324,7 +3698,7 @@
                             "content": "트윅",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-08-inspector-tweaks-fh4o",
+                                "id": "ev-nav-ab-sd-08-inspector-tweaks-i8ni",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -3530,7 +3904,7 @@
                         "content": "ESC",
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-01-workspace-main-dmn7",
+                            "id": "ev-nav-ab-sd-01-workspace-main-cclq",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -3704,7 +4078,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-05-modal-play-f5pa",
+                            "id": "ev-nav-ab-sd-05-modal-play-k0io",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -3863,7 +4237,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-09-modal-design-system-vqa8",
+                            "id": "ev-nav-ab-sd-09-modal-design-system-w215",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -4022,7 +4396,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-10-modal-git-desktop-40w0",
+                            "id": "ev-nav-ab-sd-10-modal-git-desktop-sspy",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -4329,7 +4703,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-07-canvas-rulers-jczj",
+                            "id": "ev-nav-ab-sd-07-canvas-rulers-zm64",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -4683,7 +5057,7 @@
             ],
             "events": [
               {
-                "id": "ev-nav-ab-sd-01-workspace-main-p3dn",
+                "id": "ev-nav-ab-sd-01-workspace-main-ap7q",
                 "trigger": "click",
                 "action": {
                   "type": "navigate",
@@ -5006,7 +5380,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-09-modal-design-system-4tt1",
+                            "id": "ev-nav-ab-sd-09-modal-design-system-0aaj",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -5091,7 +5465,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-12-modal-settings-46tn",
+                            "id": "ev-nav-ab-sd-12-modal-settings-lnmb",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -5229,7 +5603,7 @@
                         "content": "파일",
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-14-header-menu-file-tboz",
+                            "id": "ev-nav-ab-sd-14-header-menu-file-p2ih",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -5366,7 +5740,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-11-modal-command-palette-va4w",
+                            "id": "ev-nav-ab-sd-11-modal-command-palette-lmfq",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -5831,7 +6205,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-twk-showWires-toggle-wkc5",
+                            "id": "ev-twk-showWires-toggle-6evt",
                             "trigger": "click",
                             "action": {
                               "type": "change_tweak",
@@ -5882,7 +6256,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-05-modal-play-yqyd",
+                            "id": "ev-nav-ab-sd-05-modal-play-g337",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -6086,7 +6460,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-10-modal-git-desktop-nef7",
+                            "id": "ev-nav-ab-sd-10-modal-git-desktop-i7m1",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -6136,7 +6510,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-10-modal-git-desktop-5le1",
+                            "id": "ev-nav-ab-sd-10-modal-git-desktop-35dm",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -6244,7 +6618,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-01-workspace-main-vtz0",
+                            "id": "ev-nav-ab-sd-01-workspace-main-4t1s",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -6297,7 +6671,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-02-components-palette-dqb9",
+                            "id": "ev-nav-ab-sd-02-components-palette-wsh3",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -6350,7 +6724,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-03-templates-palette-atsm",
+                            "id": "ev-nav-ab-sd-03-templates-palette-0xea",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -7884,6 +8258,380 @@
                         ]
                       }
                     ]
+                  },
+                  {
+                    "id": "ab12-cv-ruler-layer",
+                    "type": "container",
+                    "name": "Rulers & Guides Overlay Layer",
+                    "style": {
+                      "position": "absolute",
+                      "top": 0,
+                      "left": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "pointerEvents": "none",
+                      "zIndex": 20
+                    },
+                    "children": [
+                      {
+                        "id": "ab12-cv-ruler-top",
+                        "type": "container",
+                        "name": "Top Horizontal Ruler",
+                        "style": {
+                          "position": "absolute",
+                          "top": 0,
+                          "left": 24,
+                          "right": 0,
+                          "height": 24,
+                          "backgroundColor": "#f8fafc",
+                          "borderBottomWidth": 1,
+                          "borderBottomColor": "#cbd5e1",
+                          "borderBottomStyle": "solid",
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "alignItems": "center",
+                          "justifyContent": "space-around",
+                          "zIndex": 20
+                        },
+                        "children": [
+                          {
+                            "id": "ab12-cv-rt-0",
+                            "type": "text",
+                            "name": "0",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "0"
+                          },
+                          {
+                            "id": "ab12-cv-rt-1",
+                            "type": "text",
+                            "name": "100",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "100"
+                          },
+                          {
+                            "id": "ab12-cv-rt-2",
+                            "type": "text",
+                            "name": "200",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "200"
+                          },
+                          {
+                            "id": "ab12-cv-rt-3",
+                            "type": "text",
+                            "name": "300",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "300"
+                          },
+                          {
+                            "id": "ab12-cv-rt-4",
+                            "type": "text",
+                            "name": "400",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "400"
+                          },
+                          {
+                            "id": "ab12-cv-rt-5",
+                            "type": "text",
+                            "name": "500",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "500"
+                          },
+                          {
+                            "id": "ab12-cv-rt-6",
+                            "type": "text",
+                            "name": "600",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "600"
+                          },
+                          {
+                            "id": "ab12-cv-rt-7",
+                            "type": "text",
+                            "name": "700",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "700"
+                          },
+                          {
+                            "id": "ab12-cv-rt-8",
+                            "type": "text",
+                            "name": "800",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "800"
+                          },
+                          {
+                            "id": "ab12-cv-rt-9",
+                            "type": "text",
+                            "name": "900",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "900"
+                          },
+                          {
+                            "id": "ab12-cv-rt-10",
+                            "type": "text",
+                            "name": "1000",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "1000"
+                          },
+                          {
+                            "id": "ab12-cv-rt-11",
+                            "type": "text",
+                            "name": "1100",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "1100"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "ab12-cv-ruler-left",
+                        "type": "container",
+                        "name": "Left Vertical Ruler",
+                        "style": {
+                          "position": "absolute",
+                          "top": 24,
+                          "left": 0,
+                          "bottom": 0,
+                          "width": 24,
+                          "backgroundColor": "#f8fafc",
+                          "borderRightWidth": 1,
+                          "borderRightColor": "#cbd5e1",
+                          "borderRightStyle": "solid",
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "alignItems": "center",
+                          "justifyContent": "space-around",
+                          "zIndex": 20
+                        },
+                        "children": [
+                          {
+                            "id": "ab12-cv-rl-0",
+                            "type": "text",
+                            "name": "0",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "0"
+                          },
+                          {
+                            "id": "ab12-cv-rl-1",
+                            "type": "text",
+                            "name": "100",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "100"
+                          },
+                          {
+                            "id": "ab12-cv-rl-2",
+                            "type": "text",
+                            "name": "200",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "200"
+                          },
+                          {
+                            "id": "ab12-cv-rl-3",
+                            "type": "text",
+                            "name": "300",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "300"
+                          },
+                          {
+                            "id": "ab12-cv-rl-4",
+                            "type": "text",
+                            "name": "400",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "400"
+                          },
+                          {
+                            "id": "ab12-cv-rl-5",
+                            "type": "text",
+                            "name": "500",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "500"
+                          },
+                          {
+                            "id": "ab12-cv-rl-6",
+                            "type": "text",
+                            "name": "600",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "600"
+                          },
+                          {
+                            "id": "ab12-cv-rl-7",
+                            "type": "text",
+                            "name": "700",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "700"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "ab12-cv-ruler-corner",
+                        "type": "box",
+                        "name": "Ruler Corner px",
+                        "style": {
+                          "position": "absolute",
+                          "top": 0,
+                          "left": 0,
+                          "width": 24,
+                          "height": 24,
+                          "backgroundColor": "#f1f5f9",
+                          "borderRightWidth": 1,
+                          "borderRightColor": "#cbd5e1",
+                          "borderRightStyle": "solid",
+                          "borderBottomWidth": 1,
+                          "borderBottomColor": "#cbd5e1",
+                          "borderBottomStyle": "solid",
+                          "display": "flex",
+                          "alignItems": "center",
+                          "justifyContent": "center",
+                          "fontSize": 8,
+                          "fontMono": true,
+                          "color": "#64748b",
+                          "zIndex": 25
+                        },
+                        "content": "px"
+                      },
+                      {
+                        "id": "ab12-cv-guide-v",
+                        "type": "box",
+                        "name": "Vertical Cyan Guide",
+                        "style": {
+                          "position": "absolute",
+                          "top": 0,
+                          "bottom": 0,
+                          "left": 260,
+                          "width": 1,
+                          "backgroundColor": "#06b6d4",
+                          "zIndex": 15
+                        }
+                      },
+                      {
+                        "id": "ab12-cv-guide-h",
+                        "type": "container",
+                        "name": "Horizontal Cyan Guide",
+                        "style": {
+                          "position": "absolute",
+                          "left": 0,
+                          "right": 0,
+                          "top": 180,
+                          "height": 1,
+                          "backgroundColor": "#06b6d4",
+                          "zIndex": 15
+                        },
+                        "children": [
+                          {
+                            "id": "ab12-cv-guide-h-bdg",
+                            "type": "badge",
+                            "name": "Y: 180px",
+                            "style": {
+                              "position": "absolute",
+                              "left": 32,
+                              "top": -18,
+                              "paddingLeft": 6,
+                              "paddingRight": 6,
+                              "paddingTop": 2,
+                              "paddingBottom": 2,
+                              "borderRadius": 4,
+                              "backgroundColor": "#0891b2",
+                              "color": "#ffffff",
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "fontWeight": 700
+                            },
+                            "content": "Y: 180px"
+                          }
+                        ]
+                      }
+                    ],
+                    "condition": {
+                      "enabled": true,
+                      "matchType": "and",
+                      "rules": [
+                        {
+                          "id": "rule-showRulers-t9ij",
+                          "tweakId": "showRulers",
+                          "operator": "equals",
+                          "values": [
+                            true
+                          ]
+                        }
+                      ]
+                    }
                   }
                 ]
               },
@@ -7964,7 +8712,7 @@
                             "content": "속성",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-01-workspace-main-xbwf",
+                                "id": "ev-nav-ab-sd-01-workspace-main-36j3",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -7998,7 +8746,7 @@
                             "content": "⚡ 이벤트",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-06-inspector-events-l71x",
+                                "id": "ev-nav-ab-sd-06-inspector-events-rom6",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -8032,7 +8780,7 @@
                             "content": "코드",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-04-inspector-code-sywm",
+                                "id": "ev-nav-ab-sd-04-inspector-code-af01",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -8066,7 +8814,7 @@
                             "content": "트윅",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-08-inspector-tweaks-amht",
+                                "id": "ev-nav-ab-sd-08-inspector-tweaks-8d26",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -8377,7 +9125,7 @@
                             ],
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-01-workspace-main-060m",
+                                "id": "ev-nav-ab-sd-01-workspace-main-ymh0",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -9474,7 +10222,7 @@
                         "content": "적용 및 닫기",
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-01-workspace-main-4ntc",
+                            "id": "ev-nav-ab-sd-01-workspace-main-p9bf",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -9491,7 +10239,7 @@
             ],
             "events": [
               {
-                "id": "ev-nav-ab-sd-01-workspace-main-kbxo",
+                "id": "ev-nav-ab-sd-01-workspace-main-sstw",
                 "trigger": "click",
                 "action": {
                   "type": "navigate",
@@ -9808,7 +10556,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-09-modal-design-system-cyui",
+                            "id": "ev-nav-ab-sd-09-modal-design-system-lxpl",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -9893,7 +10641,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-12-modal-settings-45su",
+                            "id": "ev-nav-ab-sd-12-modal-settings-1mnv",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -10031,7 +10779,7 @@
                         "content": "파일",
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-14-header-menu-file-w9fy",
+                            "id": "ev-nav-ab-sd-14-header-menu-file-u5s0",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -10168,7 +10916,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-11-modal-command-palette-ufg0",
+                            "id": "ev-nav-ab-sd-11-modal-command-palette-w7eu",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -10633,7 +11381,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-twk-showWires-toggle-1evb",
+                            "id": "ev-twk-showWires-toggle-7f2s",
                             "trigger": "click",
                             "action": {
                               "type": "change_tweak",
@@ -10684,7 +11432,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-05-modal-play-mzw9",
+                            "id": "ev-nav-ab-sd-05-modal-play-yn0x",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -10888,7 +11636,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-10-modal-git-desktop-d367",
+                            "id": "ev-nav-ab-sd-10-modal-git-desktop-ugyk",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -10938,7 +11686,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-10-modal-git-desktop-l4y5",
+                            "id": "ev-nav-ab-sd-10-modal-git-desktop-auhf",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -11046,7 +11794,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-01-workspace-main-a8cf",
+                            "id": "ev-nav-ab-sd-01-workspace-main-pijt",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -11099,7 +11847,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-02-components-palette-zwms",
+                            "id": "ev-nav-ab-sd-02-components-palette-42an",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -11152,7 +11900,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-03-templates-palette-hngc",
+                            "id": "ev-nav-ab-sd-03-templates-palette-8gvf",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -12686,6 +13434,380 @@
                         ]
                       }
                     ]
+                  },
+                  {
+                    "id": "ab13-cv-ruler-layer",
+                    "type": "container",
+                    "name": "Rulers & Guides Overlay Layer",
+                    "style": {
+                      "position": "absolute",
+                      "top": 0,
+                      "left": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "pointerEvents": "none",
+                      "zIndex": 20
+                    },
+                    "children": [
+                      {
+                        "id": "ab13-cv-ruler-top",
+                        "type": "container",
+                        "name": "Top Horizontal Ruler",
+                        "style": {
+                          "position": "absolute",
+                          "top": 0,
+                          "left": 24,
+                          "right": 0,
+                          "height": 24,
+                          "backgroundColor": "#f8fafc",
+                          "borderBottomWidth": 1,
+                          "borderBottomColor": "#cbd5e1",
+                          "borderBottomStyle": "solid",
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "alignItems": "center",
+                          "justifyContent": "space-around",
+                          "zIndex": 20
+                        },
+                        "children": [
+                          {
+                            "id": "ab13-cv-rt-0",
+                            "type": "text",
+                            "name": "0",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "0"
+                          },
+                          {
+                            "id": "ab13-cv-rt-1",
+                            "type": "text",
+                            "name": "100",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "100"
+                          },
+                          {
+                            "id": "ab13-cv-rt-2",
+                            "type": "text",
+                            "name": "200",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "200"
+                          },
+                          {
+                            "id": "ab13-cv-rt-3",
+                            "type": "text",
+                            "name": "300",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "300"
+                          },
+                          {
+                            "id": "ab13-cv-rt-4",
+                            "type": "text",
+                            "name": "400",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "400"
+                          },
+                          {
+                            "id": "ab13-cv-rt-5",
+                            "type": "text",
+                            "name": "500",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "500"
+                          },
+                          {
+                            "id": "ab13-cv-rt-6",
+                            "type": "text",
+                            "name": "600",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "600"
+                          },
+                          {
+                            "id": "ab13-cv-rt-7",
+                            "type": "text",
+                            "name": "700",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "700"
+                          },
+                          {
+                            "id": "ab13-cv-rt-8",
+                            "type": "text",
+                            "name": "800",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "800"
+                          },
+                          {
+                            "id": "ab13-cv-rt-9",
+                            "type": "text",
+                            "name": "900",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "900"
+                          },
+                          {
+                            "id": "ab13-cv-rt-10",
+                            "type": "text",
+                            "name": "1000",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "1000"
+                          },
+                          {
+                            "id": "ab13-cv-rt-11",
+                            "type": "text",
+                            "name": "1100",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "1100"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "ab13-cv-ruler-left",
+                        "type": "container",
+                        "name": "Left Vertical Ruler",
+                        "style": {
+                          "position": "absolute",
+                          "top": 24,
+                          "left": 0,
+                          "bottom": 0,
+                          "width": 24,
+                          "backgroundColor": "#f8fafc",
+                          "borderRightWidth": 1,
+                          "borderRightColor": "#cbd5e1",
+                          "borderRightStyle": "solid",
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "alignItems": "center",
+                          "justifyContent": "space-around",
+                          "zIndex": 20
+                        },
+                        "children": [
+                          {
+                            "id": "ab13-cv-rl-0",
+                            "type": "text",
+                            "name": "0",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "0"
+                          },
+                          {
+                            "id": "ab13-cv-rl-1",
+                            "type": "text",
+                            "name": "100",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "100"
+                          },
+                          {
+                            "id": "ab13-cv-rl-2",
+                            "type": "text",
+                            "name": "200",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "200"
+                          },
+                          {
+                            "id": "ab13-cv-rl-3",
+                            "type": "text",
+                            "name": "300",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "300"
+                          },
+                          {
+                            "id": "ab13-cv-rl-4",
+                            "type": "text",
+                            "name": "400",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "400"
+                          },
+                          {
+                            "id": "ab13-cv-rl-5",
+                            "type": "text",
+                            "name": "500",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "500"
+                          },
+                          {
+                            "id": "ab13-cv-rl-6",
+                            "type": "text",
+                            "name": "600",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "600"
+                          },
+                          {
+                            "id": "ab13-cv-rl-7",
+                            "type": "text",
+                            "name": "700",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "700"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "ab13-cv-ruler-corner",
+                        "type": "box",
+                        "name": "Ruler Corner px",
+                        "style": {
+                          "position": "absolute",
+                          "top": 0,
+                          "left": 0,
+                          "width": 24,
+                          "height": 24,
+                          "backgroundColor": "#f1f5f9",
+                          "borderRightWidth": 1,
+                          "borderRightColor": "#cbd5e1",
+                          "borderRightStyle": "solid",
+                          "borderBottomWidth": 1,
+                          "borderBottomColor": "#cbd5e1",
+                          "borderBottomStyle": "solid",
+                          "display": "flex",
+                          "alignItems": "center",
+                          "justifyContent": "center",
+                          "fontSize": 8,
+                          "fontMono": true,
+                          "color": "#64748b",
+                          "zIndex": 25
+                        },
+                        "content": "px"
+                      },
+                      {
+                        "id": "ab13-cv-guide-v",
+                        "type": "box",
+                        "name": "Vertical Cyan Guide",
+                        "style": {
+                          "position": "absolute",
+                          "top": 0,
+                          "bottom": 0,
+                          "left": 260,
+                          "width": 1,
+                          "backgroundColor": "#06b6d4",
+                          "zIndex": 15
+                        }
+                      },
+                      {
+                        "id": "ab13-cv-guide-h",
+                        "type": "container",
+                        "name": "Horizontal Cyan Guide",
+                        "style": {
+                          "position": "absolute",
+                          "left": 0,
+                          "right": 0,
+                          "top": 180,
+                          "height": 1,
+                          "backgroundColor": "#06b6d4",
+                          "zIndex": 15
+                        },
+                        "children": [
+                          {
+                            "id": "ab13-cv-guide-h-bdg",
+                            "type": "badge",
+                            "name": "Y: 180px",
+                            "style": {
+                              "position": "absolute",
+                              "left": 32,
+                              "top": -18,
+                              "paddingLeft": 6,
+                              "paddingRight": 6,
+                              "paddingTop": 2,
+                              "paddingBottom": 2,
+                              "borderRadius": 4,
+                              "backgroundColor": "#0891b2",
+                              "color": "#ffffff",
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "fontWeight": 700
+                            },
+                            "content": "Y: 180px"
+                          }
+                        ]
+                      }
+                    ],
+                    "condition": {
+                      "enabled": true,
+                      "matchType": "and",
+                      "rules": [
+                        {
+                          "id": "rule-showRulers-33cb",
+                          "tweakId": "showRulers",
+                          "operator": "equals",
+                          "values": [
+                            true
+                          ]
+                        }
+                      ]
+                    }
                   }
                 ]
               },
@@ -12766,7 +13888,7 @@
                             "content": "속성",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-01-workspace-main-r3dy",
+                                "id": "ev-nav-ab-sd-01-workspace-main-zb6k",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -12800,7 +13922,7 @@
                             "content": "⚡ 이벤트",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-06-inspector-events-yvxh",
+                                "id": "ev-nav-ab-sd-06-inspector-events-7kcv",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -12834,7 +13956,7 @@
                             "content": "코드",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-04-inspector-code-l0kb",
+                                "id": "ev-nav-ab-sd-04-inspector-code-z3ch",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -12868,7 +13990,7 @@
                             "content": "트윅",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-08-inspector-tweaks-obpa",
+                                "id": "ev-nav-ab-sd-08-inspector-tweaks-aqve",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -13082,7 +14204,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-01-workspace-main-okvf",
+                            "id": "ev-nav-ab-sd-01-workspace-main-dc41",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -13618,7 +14740,7 @@
                         "content": "확인",
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-01-workspace-main-1vg1",
+                            "id": "ev-nav-ab-sd-01-workspace-main-8gep",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -13635,7 +14757,7 @@
             ],
             "events": [
               {
-                "id": "ev-nav-ab-sd-01-workspace-main-z0o2",
+                "id": "ev-nav-ab-sd-01-workspace-main-nm2h",
                 "trigger": "click",
                 "action": {
                   "type": "navigate",
@@ -13945,7 +15067,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-09-modal-design-system-61ym",
+                            "id": "ev-nav-ab-sd-09-modal-design-system-krsb",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -14030,7 +15152,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-12-modal-settings-z0c5",
+                            "id": "ev-nav-ab-sd-12-modal-settings-a90w",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -14168,7 +15290,7 @@
                         "content": "파일",
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-14-header-menu-file-1bvj",
+                            "id": "ev-nav-ab-sd-14-header-menu-file-pu24",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -14305,7 +15427,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-11-modal-command-palette-b45e",
+                            "id": "ev-nav-ab-sd-11-modal-command-palette-mw19",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -14770,7 +15892,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-twk-showWires-toggle-uid3",
+                            "id": "ev-twk-showWires-toggle-f6wh",
                             "trigger": "click",
                             "action": {
                               "type": "change_tweak",
@@ -14821,7 +15943,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-05-modal-play-yag1",
+                            "id": "ev-nav-ab-sd-05-modal-play-zrd3",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -15025,7 +16147,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-10-modal-git-desktop-zanz",
+                            "id": "ev-nav-ab-sd-10-modal-git-desktop-4ano",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -15075,7 +16197,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-10-modal-git-desktop-m7vl",
+                            "id": "ev-nav-ab-sd-10-modal-git-desktop-r96t",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -15183,7 +16305,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-01-workspace-main-gk9v",
+                            "id": "ev-nav-ab-sd-01-workspace-main-rcke",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -15236,7 +16358,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-02-components-palette-3717",
+                            "id": "ev-nav-ab-sd-02-components-palette-d3ww",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -15289,7 +16411,7 @@
                         ],
                         "events": [
                           {
-                            "id": "ev-nav-ab-sd-03-templates-palette-4jru",
+                            "id": "ev-nav-ab-sd-03-templates-palette-t3qv",
                             "trigger": "click",
                             "action": {
                               "type": "navigate",
@@ -16823,6 +17945,380 @@
                         ]
                       }
                     ]
+                  },
+                  {
+                    "id": "ab14-cv-ruler-layer",
+                    "type": "container",
+                    "name": "Rulers & Guides Overlay Layer",
+                    "style": {
+                      "position": "absolute",
+                      "top": 0,
+                      "left": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "pointerEvents": "none",
+                      "zIndex": 20
+                    },
+                    "children": [
+                      {
+                        "id": "ab14-cv-ruler-top",
+                        "type": "container",
+                        "name": "Top Horizontal Ruler",
+                        "style": {
+                          "position": "absolute",
+                          "top": 0,
+                          "left": 24,
+                          "right": 0,
+                          "height": 24,
+                          "backgroundColor": "#f8fafc",
+                          "borderBottomWidth": 1,
+                          "borderBottomColor": "#cbd5e1",
+                          "borderBottomStyle": "solid",
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "alignItems": "center",
+                          "justifyContent": "space-around",
+                          "zIndex": 20
+                        },
+                        "children": [
+                          {
+                            "id": "ab14-cv-rt-0",
+                            "type": "text",
+                            "name": "0",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "0"
+                          },
+                          {
+                            "id": "ab14-cv-rt-1",
+                            "type": "text",
+                            "name": "100",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "100"
+                          },
+                          {
+                            "id": "ab14-cv-rt-2",
+                            "type": "text",
+                            "name": "200",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "200"
+                          },
+                          {
+                            "id": "ab14-cv-rt-3",
+                            "type": "text",
+                            "name": "300",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "300"
+                          },
+                          {
+                            "id": "ab14-cv-rt-4",
+                            "type": "text",
+                            "name": "400",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "400"
+                          },
+                          {
+                            "id": "ab14-cv-rt-5",
+                            "type": "text",
+                            "name": "500",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "500"
+                          },
+                          {
+                            "id": "ab14-cv-rt-6",
+                            "type": "text",
+                            "name": "600",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "600"
+                          },
+                          {
+                            "id": "ab14-cv-rt-7",
+                            "type": "text",
+                            "name": "700",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "700"
+                          },
+                          {
+                            "id": "ab14-cv-rt-8",
+                            "type": "text",
+                            "name": "800",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "800"
+                          },
+                          {
+                            "id": "ab14-cv-rt-9",
+                            "type": "text",
+                            "name": "900",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "900"
+                          },
+                          {
+                            "id": "ab14-cv-rt-10",
+                            "type": "text",
+                            "name": "1000",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "1000"
+                          },
+                          {
+                            "id": "ab14-cv-rt-11",
+                            "type": "text",
+                            "name": "1100",
+                            "style": {
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "1100"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "ab14-cv-ruler-left",
+                        "type": "container",
+                        "name": "Left Vertical Ruler",
+                        "style": {
+                          "position": "absolute",
+                          "top": 24,
+                          "left": 0,
+                          "bottom": 0,
+                          "width": 24,
+                          "backgroundColor": "#f8fafc",
+                          "borderRightWidth": 1,
+                          "borderRightColor": "#cbd5e1",
+                          "borderRightStyle": "solid",
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "alignItems": "center",
+                          "justifyContent": "space-around",
+                          "zIndex": 20
+                        },
+                        "children": [
+                          {
+                            "id": "ab14-cv-rl-0",
+                            "type": "text",
+                            "name": "0",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "0"
+                          },
+                          {
+                            "id": "ab14-cv-rl-1",
+                            "type": "text",
+                            "name": "100",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "100"
+                          },
+                          {
+                            "id": "ab14-cv-rl-2",
+                            "type": "text",
+                            "name": "200",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "200"
+                          },
+                          {
+                            "id": "ab14-cv-rl-3",
+                            "type": "text",
+                            "name": "300",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "300"
+                          },
+                          {
+                            "id": "ab14-cv-rl-4",
+                            "type": "text",
+                            "name": "400",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "400"
+                          },
+                          {
+                            "id": "ab14-cv-rl-5",
+                            "type": "text",
+                            "name": "500",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "500"
+                          },
+                          {
+                            "id": "ab14-cv-rl-6",
+                            "type": "text",
+                            "name": "600",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "600"
+                          },
+                          {
+                            "id": "ab14-cv-rl-7",
+                            "type": "text",
+                            "name": "700",
+                            "style": {
+                              "fontSize": 8,
+                              "fontMono": true,
+                              "color": "#64748b"
+                            },
+                            "content": "700"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "ab14-cv-ruler-corner",
+                        "type": "box",
+                        "name": "Ruler Corner px",
+                        "style": {
+                          "position": "absolute",
+                          "top": 0,
+                          "left": 0,
+                          "width": 24,
+                          "height": 24,
+                          "backgroundColor": "#f1f5f9",
+                          "borderRightWidth": 1,
+                          "borderRightColor": "#cbd5e1",
+                          "borderRightStyle": "solid",
+                          "borderBottomWidth": 1,
+                          "borderBottomColor": "#cbd5e1",
+                          "borderBottomStyle": "solid",
+                          "display": "flex",
+                          "alignItems": "center",
+                          "justifyContent": "center",
+                          "fontSize": 8,
+                          "fontMono": true,
+                          "color": "#64748b",
+                          "zIndex": 25
+                        },
+                        "content": "px"
+                      },
+                      {
+                        "id": "ab14-cv-guide-v",
+                        "type": "box",
+                        "name": "Vertical Cyan Guide",
+                        "style": {
+                          "position": "absolute",
+                          "top": 0,
+                          "bottom": 0,
+                          "left": 260,
+                          "width": 1,
+                          "backgroundColor": "#06b6d4",
+                          "zIndex": 15
+                        }
+                      },
+                      {
+                        "id": "ab14-cv-guide-h",
+                        "type": "container",
+                        "name": "Horizontal Cyan Guide",
+                        "style": {
+                          "position": "absolute",
+                          "left": 0,
+                          "right": 0,
+                          "top": 180,
+                          "height": 1,
+                          "backgroundColor": "#06b6d4",
+                          "zIndex": 15
+                        },
+                        "children": [
+                          {
+                            "id": "ab14-cv-guide-h-bdg",
+                            "type": "badge",
+                            "name": "Y: 180px",
+                            "style": {
+                              "position": "absolute",
+                              "left": 32,
+                              "top": -18,
+                              "paddingLeft": 6,
+                              "paddingRight": 6,
+                              "paddingTop": 2,
+                              "paddingBottom": 2,
+                              "borderRadius": 4,
+                              "backgroundColor": "#0891b2",
+                              "color": "#ffffff",
+                              "fontSize": 9,
+                              "fontMono": true,
+                              "fontWeight": 700
+                            },
+                            "content": "Y: 180px"
+                          }
+                        ]
+                      }
+                    ],
+                    "condition": {
+                      "enabled": true,
+                      "matchType": "and",
+                      "rules": [
+                        {
+                          "id": "rule-showRulers-4j2w",
+                          "tweakId": "showRulers",
+                          "operator": "equals",
+                          "values": [
+                            true
+                          ]
+                        }
+                      ]
+                    }
                   }
                 ]
               },
@@ -16903,7 +18399,7 @@
                             "content": "속성",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-01-workspace-main-kzc4",
+                                "id": "ev-nav-ab-sd-01-workspace-main-jkb4",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -16937,7 +18433,7 @@
                             "content": "⚡ 이벤트",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-06-inspector-events-6d9o",
+                                "id": "ev-nav-ab-sd-06-inspector-events-5jlk",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -16971,7 +18467,7 @@
                             "content": "코드",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-04-inspector-code-2789",
+                                "id": "ev-nav-ab-sd-04-inspector-code-9mlf",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -17005,7 +18501,7 @@
                             "content": "트윅",
                             "events": [
                               {
-                                "id": "ev-nav-ab-sd-08-inspector-tweaks-3g2g",
+                                "id": "ev-nav-ab-sd-08-inspector-tweaks-i7pd",
                                 "trigger": "click",
                                 "action": {
                                   "type": "navigate",
@@ -17175,7 +18671,7 @@
                     ],
                     "events": [
                       {
-                        "id": "ev-nav-ab-sd-01-workspace-main-x3r8",
+                        "id": "ev-nav-ab-sd-01-workspace-main-k3q5",
                         "trigger": "click",
                         "action": {
                           "type": "navigate",
@@ -17224,7 +18720,7 @@
                     ],
                     "events": [
                       {
-                        "id": "ev-nav-ab-sd-01-workspace-main-l61y",
+                        "id": "ev-nav-ab-sd-01-workspace-main-1e9n",
                         "trigger": "click",
                         "action": {
                           "type": "navigate",
@@ -17287,7 +18783,7 @@
                     ],
                     "events": [
                       {
-                        "id": "ev-nav-ab-sd-09-modal-design-system-s871",
+                        "id": "ev-nav-ab-sd-09-modal-design-system-1g3q",
                         "trigger": "click",
                         "action": {
                           "type": "navigate",
@@ -17326,7 +18822,7 @@
                     ],
                     "events": [
                       {
-                        "id": "ev-nav-ab-sd-12-modal-settings-xs1d",
+                        "id": "ev-nav-ab-sd-12-modal-settings-1cnj",
                         "trigger": "click",
                         "action": {
                           "type": "navigate",
@@ -17341,7 +18837,7 @@
             ],
             "events": [
               {
-                "id": "ev-nav-ab-sd-01-workspace-main-8332",
+                "id": "ev-nav-ab-sd-01-workspace-main-tasj",
                 "trigger": "click",
                 "action": {
                   "type": "navigate",

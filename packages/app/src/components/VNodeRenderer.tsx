@@ -85,18 +85,295 @@ const VNodeRendererComponent: React.FC<VNodeRendererProps> = ({
     dynamicStyle.outline = '2px dashed #f59e0b';
   }
 
-  // Currency tweak
-  if (node.id === 'node-s1-balance-val') {
-    displayContent = tweakValues.currency?.includes('USD') ? '$ 26,480.00' : '₩ 34,820,000';
+  // A. Template Variable Interpolation (e.g. {{key}})
+  if (displayContent && typeof displayContent === 'string' && displayContent.includes('{{')) {
+    displayContent = displayContent.replace(/\{\{([a-zA-Z0-9_]+)\}\}/g, (_, key) =>
+      tweakValues[key] !== undefined ? String(tweakValues[key]) : _
+    );
   }
 
-  // Order type tweak
-  if (node.id === 'node-s2-badge') {
-    displayContent = tweakValues.orderType ? `${tweakValues.orderType} 주문` : '시장가 주문';
+  // B. Zoom Level Tweak (zoomLevel)
+  if (tweakValues.zoomLevel !== undefined) {
+    if (node.id?.includes('zoom') || (displayContent && /^\d+%\s*(\(.*\))?$/.test(displayContent.trim()))) {
+      displayContent = `${tweakValues.zoomLevel}%`;
+    }
   }
 
-  // Theme tweaks (Dark / Light / Cyber)
-  if (tweakValues.theme === 'light') {
+  // C. Background Grid Tweak (showGrid)
+  if (tweakValues.showGrid === false) {
+    if (dynamicStyle.backgroundImage && dynamicStyle.backgroundImage.includes('radial-gradient')) {
+      dynamicStyle.backgroundImage = 'none';
+      dynamicStyle.backgroundColor = '#cbd5e1';
+    }
+  }
+
+  // D. UI Density Tweak (uiDensity: 'Compact' | 'Default' | 'Comfortable')
+  if (tweakValues.uiDensity === 'Compact') {
+    if (typeof dynamicStyle.padding === 'number') dynamicStyle.padding = Math.max(4, Math.round(dynamicStyle.padding * 0.75));
+    if (typeof dynamicStyle.paddingLeft === 'number') dynamicStyle.paddingLeft = Math.max(4, Math.round(dynamicStyle.paddingLeft * 0.75));
+    if (typeof dynamicStyle.paddingRight === 'number') dynamicStyle.paddingRight = Math.max(4, Math.round(dynamicStyle.paddingRight * 0.75));
+    if (typeof dynamicStyle.paddingTop === 'number') dynamicStyle.paddingTop = Math.max(2, Math.round(dynamicStyle.paddingTop * 0.75));
+    if (typeof dynamicStyle.paddingBottom === 'number') dynamicStyle.paddingBottom = Math.max(2, Math.round(dynamicStyle.paddingBottom * 0.75));
+    if (typeof dynamicStyle.gap === 'number') dynamicStyle.gap = Math.max(2, Math.round(dynamicStyle.gap * 0.75));
+  } else if (tweakValues.uiDensity === 'Comfortable') {
+    if (typeof dynamicStyle.padding === 'number') dynamicStyle.padding = Math.round(dynamicStyle.padding * 1.3);
+    if (typeof dynamicStyle.paddingLeft === 'number') dynamicStyle.paddingLeft = Math.round(dynamicStyle.paddingLeft * 1.3);
+    if (typeof dynamicStyle.paddingRight === 'number') dynamicStyle.paddingRight = Math.round(dynamicStyle.paddingRight * 1.3);
+    if (typeof dynamicStyle.paddingTop === 'number') dynamicStyle.paddingTop = Math.round(dynamicStyle.paddingTop * 1.3);
+    if (typeof dynamicStyle.paddingBottom === 'number') dynamicStyle.paddingBottom = Math.round(dynamicStyle.paddingBottom * 1.3);
+    if (typeof dynamicStyle.gap === 'number') dynamicStyle.gap = Math.round(dynamicStyle.gap * 1.3);
+  }
+
+  // E. Balance & Currency Tweaks (balanceAmount & currency)
+  const isBalanceNode =
+    node.id === 'node-s1-balance-val' ||
+    node.id?.includes('bal') ||
+    node.id?.includes('amount') ||
+    node.name?.includes('잔고') ||
+    node.name?.includes('Balance') ||
+    (displayContent && /^[₩\$€¥]\s*[\d,]+(\.\d+)?$/.test(displayContent.trim()));
+
+  if (isBalanceNode && (tweakValues.balanceAmount !== undefined || tweakValues.currency !== undefined)) {
+    const rawAmt = Number(tweakValues.balanceAmount !== undefined ? tweakValues.balanceAmount : 12480000);
+    const currStr = String(tweakValues.currency || 'KRW (₩)');
+    if (currStr.includes('USD') || currStr.includes('$')) {
+      displayContent = `$ ${(rawAmt / 1350).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    } else if (currStr.includes('EUR') || currStr.includes('€')) {
+      displayContent = `€ ${(rawAmt / 1450).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    } else if (currStr.includes('JPY') || currStr.includes('¥')) {
+      displayContent = `¥ ${Math.round(rawAmt / 9.2).toLocaleString('ja-JP')}`;
+    } else {
+      displayContent = `₩ ${rawAmt.toLocaleString('ko-KR')}`;
+    }
+  }
+
+  // F. Play Simulator Viewport Resolution (playResolution & playbackSpeed)
+  if (tweakValues.playResolution) {
+    if (node.id?.includes('res-combo') || node.id?.includes('combo-btn') || node.name?.includes('Resolution Combobox')) {
+      displayContent = `📐 ${tweakValues.playResolution} ▾`;
+    }
+    if (node.id?.includes('sc-p') || node.name?.includes('RESPONSIVE PLAY')) {
+      displayContent = `PLAY: ${tweakValues.playResolution}`;
+    }
+    if (node.id?.includes('screen') && node.name?.includes('Interactive Prototype Screen')) {
+      const res = String(tweakValues.playResolution);
+      if (res.includes('390×844') || res.includes('iPhone') || res.includes('Mobile')) {
+        dynamicStyle.width = 390;
+        dynamicStyle.height = 700;
+      } else if (res.includes('768×1024') || res.includes('Tablet')) {
+        dynamicStyle.width = 680;
+        dynamicStyle.height = 720;
+      } else if (res.includes('1920×1080') || res.includes('FHD')) {
+        dynamicStyle.width = 1200;
+        dynamicStyle.height = 675;
+      } else if (res.includes('1440×900') || res.includes('HD')) {
+        dynamicStyle.width = 1080;
+        dynamicStyle.height = 675;
+      } else if (res.includes('반응형')) {
+        dynamicStyle.width = '92%';
+        dynamicStyle.height = 680;
+      }
+    }
+  }
+
+  if (tweakValues.playbackSpeed && (node.id?.includes('speed') || node.name?.includes('Speed'))) {
+    displayContent = `⚡ ${tweakValues.playbackSpeed}`;
+  }
+
+  // G. Ruler Unit & Snap Threshold (rulerUnit & snapThreshold)
+  if (tweakValues.rulerUnit) {
+    if (node.id?.includes('ruler-unit') || node.id?.includes('ruler-corner') || node.name?.includes('Unit Selector')) {
+      displayContent = String(tweakValues.rulerUnit).toUpperCase();
+    }
+    if (node.id?.includes('rt-') || node.id?.includes('rl-')) {
+      const u = String(tweakValues.rulerUnit).toUpperCase();
+      const n = parseInt(node.content || '0', 10);
+      if (!isNaN(n)) {
+        if (u === 'REM') displayContent = `${(n / 16).toFixed(1)}rem`;
+        else if (u === 'PT') displayContent = `${Math.round(n * 0.75)}pt`;
+        else displayContent = `${n}px`;
+      }
+    }
+  }
+
+  if (tweakValues.snapThreshold !== undefined && (node.id?.includes('snap') || node.name?.includes('Snap Threshold'))) {
+    displayContent = `${tweakValues.snapThreshold}px 스냅`;
+  }
+
+  // H. Code Generator Inspector (codeLanguage, includeTailwind, minifyCode, fontSize)
+  if (tweakValues.codeLanguage && (node.id?.includes('cd-lbl') || node.name?.includes('JSX / Tailwind Component'))) {
+    displayContent = `</> ${tweakValues.codeLanguage}`;
+  }
+
+  if (tweakValues.fontSize && (node.id?.includes('code-body') || node.id?.includes('cd-pre') || node.id?.includes('cl-') || node.name?.includes('Code Lines'))) {
+    dynamicStyle.fontSize = Number(tweakValues.fontSize);
+  }
+
+  if ((node.id?.startsWith('ab4-cl-') || node.id?.startsWith('cl-')) && (tweakValues.codeLanguage || tweakValues.includeTailwind !== undefined || tweakValues.minifyCode !== undefined)) {
+    const lang = tweakValues.codeLanguage || 'React TSX';
+    const isTailwind = tweakValues.includeTailwind !== false;
+    const lineIdx = parseInt(node.id.split('-').pop() || '0', 10);
+    const tsxLines = isTailwind
+      ? [
+          "import React from 'react';",
+          "",
+          "export const Screen_Workspace = () => {",
+          "  return (",
+          "    <div className=\"flex flex-col w-full min-h-screen bg-slate-900 text-white p-6\">",
+          "      <header className=\"flex items-center justify-between pb-4 border-b border-slate-800\">",
+          "        <h1 className=\"text-xl font-bold tracking-tight\">Screen Designer VDOM</h1>",
+          "        <span className=\"px-3 py-1 bg-indigo-600 rounded-full text-xs\">Live</span>",
+          "      </header>",
+          "      <main className=\"grid grid-cols-3 gap-4 mt-6\">",
+          "        <div className=\"p-5 rounded-2xl bg-slate-800/80 border border-slate-700 shadow-lg\">",
+          "          <p className=\"text-xs text-slate-400\">Total Asset Value</p>",
+          "          <h2 className=\"text-2xl font-black mt-2 text-indigo-400\">₩ 34,820,000</h2>",
+          "        </div>",
+          "      </main>",
+          "    </div>",
+          "  );",
+          "};"
+        ]
+      : [
+          "import React from 'react';",
+          "",
+          "export const Screen_Workspace = () => {",
+          "  return (",
+          "    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100vh', backgroundColor: '#0f172a', padding: 24 }}>",
+          "      <header style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #334155' }}>",
+          "        <h1 style={{ fontSize: 20, fontWeight: 700, color: '#ffffff' }}>Screen Designer VDOM</h1>",
+          "        <span style={{ padding: '4px 12px', backgroundColor: '#4f46e5', borderRadius: 9999, fontSize: 12 }}>Live</span>",
+          "      </header>",
+          "      <main style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginTop: 24 }}>",
+          "        <div style={{ padding: 20, borderRadius: 16, backgroundColor: '#1e293b', border: '1px solid #334155' }}>",
+          "          <p style={{ fontSize: 12, color: '#94a3b8' }}>Total Asset Value</p>",
+          "          <h2 style={{ fontSize: 24, fontWeight: 800, color: '#818cf8', marginTop: 8 }}>₩ 34,820,000</h2>",
+          "        </div>",
+          "      </main>",
+          "    </div>",
+          "  );",
+          "};"
+        ];
+
+    const htmlLines = [
+      "<!DOCTYPE html>",
+      "<html lang=\"ko\">",
+      "<head><title>Screen Designer</title></head>",
+      "<body class=\"theme-dark\">",
+      "  <header class=\"header-container\">",
+      "    <h1 class=\"title\">Screen Designer VDOM</h1>",
+      "    <span class=\"status-badge\">Live</span>",
+      "  </header>",
+      "  <main class=\"grid-view\">",
+      "    <div class=\"asset-card\">",
+      "      <p class=\"label\">Total Asset Value</p>",
+      "      <h2 class=\"amount\">₩ 34,820,000</h2>",
+      "    </div>",
+      "  </main>",
+      "</body>",
+      "</html>"
+    ];
+
+    const jsonLines = [
+      "{",
+      "  \"id\": \"node-sd-root\",",
+      "  \"type\": \"frame\",",
+      "  \"name\": \"Screen Designer VDOM\",",
+      "  \"style\": { \"backgroundColor\": \"#0f172a\" },",
+      "  \"children\": [",
+      "    { \"id\": \"hdr-1\", \"type\": \"header\", \"content\": \"Screen Designer\" },",
+      "    { \"id\": \"card-1\", \"type\": \"card\", \"content\": \"₩ 34,820,000\" }",
+      "  ]",
+      "}"
+    ];
+
+    const lines = lang === 'HTML/CSS' ? htmlLines : lang === 'JSON VDOM' ? jsonLines : tsxLines;
+    if (lineIdx < lines.length) {
+      displayContent = tweakValues.minifyCode ? lines.join(' ').replace(/\s+/g, ' ') : lines[lineIdx];
+    }
+  }
+
+  // I. Git Desktop Branch & Diff Mode (currentBranch & diffViewMode)
+  if (tweakValues.currentBranch && (node.id?.includes('branch') || (displayContent && displayContent.includes('🌿')))) {
+    displayContent = `🌿 ${tweakValues.currentBranch}`;
+  }
+
+  if (tweakValues.diffViewMode && (node.id?.includes('split') || node.id?.includes('unified'))) {
+    const isSplit = String(tweakValues.diffViewMode).includes('Split');
+    if (node.id?.includes('split')) {
+      dynamicStyle.backgroundColor = isSplit ? '#4f46e5' : '#ffffff';
+      dynamicStyle.color = isSplit ? '#ffffff' : '#64748b';
+    } else if (node.id?.includes('unified')) {
+      dynamicStyle.backgroundColor = !isSplit ? '#4f46e5' : '#ffffff';
+      dynamicStyle.color = !isSplit ? '#ffffff' : '#64748b';
+    }
+  }
+
+  // J. Key Symbols Tweak (osKeySymbols: 'macOS (⌘ Cmd)' vs 'Windows/Linux (Ctrl)')
+  if (tweakValues.osKeySymbols) {
+    const isMac = String(tweakValues.osKeySymbols).includes('macOS') || String(tweakValues.osKeySymbols).includes('⌘');
+    if (displayContent && typeof displayContent === 'string') {
+      if (isMac && displayContent.includes('Ctrl')) {
+        displayContent = displayContent.replace(/Ctrl/g, '⌘');
+      } else if (!isMac && displayContent.includes('⌘')) {
+        displayContent = displayContent.replace(/⌘/g, 'Ctrl');
+      }
+    }
+  }
+
+  // K. Category & Tab Highlighting
+  const activeCategoryFilter =
+    tweakValues.compCategory ||
+    tweakValues.templateCategory ||
+    tweakValues.tokenCategory ||
+    tweakValues.prefActiveTab ||
+    tweakValues.shortcutGroup ||
+    tweakValues.eventTriggerFilter;
+
+  if (
+    activeCategoryFilter &&
+    (node.type === 'badge' || node.type === 'button') &&
+    (displayContent === activeCategoryFilter || displayContent?.startsWith(activeCategoryFilter))
+  ) {
+    dynamicStyle.backgroundColor = '#4f46e5';
+    dynamicStyle.color = '#ffffff';
+    dynamicStyle.borderColor = '#4f46e5';
+  }
+
+  // L. Brand Accent Color & Primary Color (accentColor & primaryColor)
+  const brandAccent = tweakValues.accentColor || tweakValues.primaryColor;
+  if (brandAccent) {
+    if (node.type === 'button' || node.type === 'badge' || node.id?.includes('btn') || node.id?.includes('sel') || node.id?.includes('active')) {
+      if (dynamicStyle.backgroundColor === '#4f46e5' || dynamicStyle.backgroundColor === '#6366f1' || dynamicStyle.backgroundColor === '#312e81') {
+        dynamicStyle.backgroundColor = brandAccent;
+      }
+    }
+    if (dynamicStyle.color === '#4f46e5' || dynamicStyle.color === '#6366f1') {
+      dynamicStyle.color = brandAccent;
+    }
+    if (dynamicStyle.borderColor === '#4f46e5' || dynamicStyle.borderColor === '#6366f1') {
+      dynamicStyle.borderColor = brandAccent;
+    }
+  }
+
+  // M. Base Radius (baseRadius)
+  if (tweakValues.baseRadius !== undefined) {
+    const r = Number(tweakValues.baseRadius);
+    if (node.type === 'button' || node.type === 'badge' || node.type === 'card' || node.id?.includes('btn') || node.id?.includes('card') || node.id?.includes('bdg')) {
+      if (dynamicStyle.borderRadius && typeof dynamicStyle.borderRadius === 'number' && dynamicStyle.borderRadius > 0 && dynamicStyle.borderRadius < 100) {
+        dynamicStyle.borderRadius = r;
+      }
+    }
+  }
+
+  // N. Font Family (fontFamily)
+  if (tweakValues.fontFamily) {
+    dynamicStyle.fontFamily = tweakValues.fontFamily;
+  }
+
+  // O. Theme tweaks (themeMode: 'Light' | 'Dark' | 'System' or theme: 'dark' | 'light' | 'cyber')
+  const themeMode = String(tweakValues.themeMode || tweakValues.theme || '').toLowerCase();
+  if (themeMode === 'light') {
     if (node.type === 'frame') {
       dynamicStyle.backgroundColor = '#f8fafc';
       dynamicStyle.color = '#0f172a';
@@ -111,7 +388,29 @@ const VNodeRendererComponent: React.FC<VNodeRendererProps> = ({
     } else if (node.id === 'node-s1-asset1-title' || node.id === 'node-s1-asset2-title') {
       dynamicStyle.color = '#1e293b';
     }
-  } else if (tweakValues.theme === 'cyber') {
+  } else if (themeMode === 'dark') {
+    if (node.type === 'frame') {
+      dynamicStyle.backgroundColor = '#0b0f19';
+      dynamicStyle.color = '#f8fafc';
+    } else if (node.type === 'card' && !node.id?.includes('hero') && !node.id?.includes('sc-card')) {
+      dynamicStyle.backgroundColor = '#1e293b';
+      dynamicStyle.borderColor = '#334155';
+      dynamicStyle.color = '#f1f5f9';
+    } else if (node.type === 'header' || node.type === 'sidebar') {
+      if (dynamicStyle.backgroundColor === '#ffffff' || dynamicStyle.backgroundColor === '#f8fafc') {
+        dynamicStyle.backgroundColor = '#0f172a';
+        dynamicStyle.borderBottomColor = '#1e293b';
+        dynamicStyle.borderRightColor = '#1e293b';
+        dynamicStyle.borderLeftColor = '#1e293b';
+        dynamicStyle.color = '#f8fafc';
+      }
+    }
+    if (dynamicStyle.color === '#0f172a' || dynamicStyle.color === '#1e293b') {
+      dynamicStyle.color = '#f1f5f9';
+    } else if (dynamicStyle.color === '#64748b' || dynamicStyle.color === '#475569') {
+      dynamicStyle.color = '#94a3b8';
+    }
+  } else if (themeMode === 'cyber') {
     if (node.type === 'frame') {
       dynamicStyle.backgroundColor = '#070514';
       dynamicStyle.color = '#38bdf8';
@@ -123,6 +422,11 @@ const VNodeRendererComponent: React.FC<VNodeRendererProps> = ({
       dynamicStyle.backgroundColor = '#06b6d4';
       dynamicStyle.boxShadow = '0 0 20px rgba(6, 182, 212, 0.4)';
     }
+  }
+
+  // Order type tweak (legacy demo)
+  if (node.id === 'node-s2-badge') {
+    displayContent = tweakValues.orderType ? `${tweakValues.orderType} 주문` : '시장가 주문';
   }
 
   // Ensure scroll-container has auto overflow and height boundary if not set
