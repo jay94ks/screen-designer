@@ -138,6 +138,14 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
     if (api?.isMaximized) {
       api.isMaximized().then((val: boolean) => setIsMaximized(val));
     }
+
+    const handleFullscreenChange = () => {
+      if (!(window as any).electronAPI) {
+        setIsMaximized(!!document.fullscreenElement);
+      }
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
   const handleMinimize = () => {
@@ -151,8 +159,16 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
     const api = (window as any).electronAPI;
     if (api?.maximizeWindow) {
       api.maximizeWindow();
-    } else {
-      setIsMaximized(!isMaximized);
+    } else if (typeof document !== 'undefined') {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+        setIsMaximized(true);
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        }
+        setIsMaximized(false);
+      }
     }
   };
 
@@ -374,27 +390,40 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
           </button>
 
           {/* Native Electron Window Caption Controls */}
-          <div className="flex items-center h-9 ml-2 border-l border-slate-200 -mr-3 pl-1">
+          <div
+            className="flex items-center h-9 ml-2 border-l border-slate-200 -mr-3 pl-1 app-region-no-drag"
+            style={{ WebkitAppRegion: 'no-drag' } as any}
+          >
             <button
+              type="button"
               onClick={handleMinimize}
-              className="w-9 h-9 flex items-center justify-center text-slate-500 hover:bg-slate-200/80 hover:text-slate-800 transition"
+              style={{ WebkitAppRegion: 'no-drag' } as any}
+              className="w-9 h-9 flex items-center justify-center text-slate-500 hover:bg-slate-200/80 hover:text-slate-800 transition app-region-no-drag cursor-pointer select-none"
               title={t('header.minimize')}
             >
-              <Minus size={12} />
+              <Minus size={12} className="pointer-events-none" />
             </button>
             <button
+              type="button"
               onClick={handleMaximize}
-              className="w-9 h-9 flex items-center justify-center text-slate-500 hover:bg-slate-200/80 hover:text-slate-800 transition"
+              style={{ WebkitAppRegion: 'no-drag' } as any}
+              className="w-9 h-9 flex items-center justify-center text-slate-500 hover:bg-slate-200/80 hover:text-slate-800 transition app-region-no-drag cursor-pointer select-none"
               title={isMaximized ? t('header.restore') : t('header.maximize')}
             >
-              {isMaximized ? <Copy size={11} className="rotate-180" /> : <Square size={11} />}
+              {isMaximized ? (
+                <Copy size={11} className="rotate-180 pointer-events-none" />
+              ) : (
+                <Square size={11} className="pointer-events-none" />
+              )}
             </button>
             <button
+              type="button"
               onClick={handleClose}
-              className="w-10 h-9 flex items-center justify-center text-slate-500 hover:bg-rose-600 hover:text-white transition"
+              style={{ WebkitAppRegion: 'no-drag' } as any}
+              className="w-10 h-9 flex items-center justify-center text-slate-500 hover:bg-rose-600 hover:text-white transition app-region-no-drag cursor-pointer select-none"
               title={t('header.close')}
             >
-              <X size={13} />
+              <X size={13} className="pointer-events-none" />
             </button>
           </div>
         </div>

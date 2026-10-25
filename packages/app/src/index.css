@@ -15,8 +15,16 @@ html, body, #root {
   -webkit-app-region: drag !important;
 }
 
-.app-region-no-drag {
+.app-region-no-drag,
+.app-region-no-drag * {
   -webkit-app-region: no-drag !important;
+}
+
+button.app-region-no-drag,
+button.app-region-no-drag svg,
+button.app-region-no-drag span {
+  -webkit-app-region: no-drag !important;
+  pointer-events: auto !important;
 }
 ::-webkit-scrollbar {
   width: 6px;

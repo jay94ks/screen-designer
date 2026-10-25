@@ -46,6 +46,9 @@ function createWindow() {
     height: 900,
     minWidth: 1024,
     minHeight: 700,
+    resizable: true,
+    maximizable: true,
+    minimizable: true,
     frame: false, // Hide native OS window caption / titlebar
     title: 'Screen Designer - Live Storyboard Canvas',
     backgroundColor: '#020617',
@@ -61,6 +64,10 @@ function createWindow() {
   });
 
   win.on('unmaximize', () => {
+    win?.webContents.send('window:maximized-change', false);
+  });
+
+  win.on('restore', () => {
     win?.webContents.send('window:maximized-change', false);
   });
 
@@ -139,30 +146,41 @@ ipcMain.on('renderer-to-bridge', (_, payload) => {
 });
 
 // Window Control IPC Handlers (Custom Caption)
-ipcMain.on('window:minimize', () => {
-  win?.minimize();
+ipcMain.on('window:minimize', (event) => {
+  const targetWin = BrowserWindow.fromWebContents(event.sender) || win;
+  if (targetWin) {
+    targetWin.minimize();
+  }
 });
 
-ipcMain.on('window:maximize', () => {
-  if (win) {
-    if (win.isMaximized()) {
-      win.unmaximize();
+ipcMain.on('window:maximize', (event) => {
+  const targetWin = BrowserWindow.fromWebContents(event.sender) || win;
+  if (targetWin) {
+    if (targetWin.isMaximized()) {
+      targetWin.unmaximize();
+      // On Windows frameless window, fallback to restore if unmaximize did not reset
+      if (targetWin.isMaximized()) {
+        targetWin.restore();
+      }
     } else {
-      win.maximize();
+      targetWin.maximize();
     }
   }
 });
 
-ipcMain.on('window:close', () => {
-  win?.close();
+ipcMain.on('window:close', (event) => {
+  const targetWin = BrowserWindow.fromWebContents(event.sender) || win;
+  targetWin?.close();
 });
 
-ipcMain.on('window:toggle-devtools', () => {
-  win?.webContents.toggleDevTools();
+ipcMain.on('window:toggle-devtools', (event) => {
+  const targetWin = BrowserWindow.fromWebContents(event.sender) || win;
+  targetWin?.webContents.toggleDevTools();
 });
 
-ipcMain.handle('window:isMaximized', () => {
-  return win ? win.isMaximized() : false;
+ipcMain.handle('window:isMaximized', (event) => {
+  const targetWin = BrowserWindow.fromWebContents(event.sender) || win;
+  return targetWin ? targetWin.isMaximized() : false;
 });
 
 ipcMain.on('window:drag-by', (_, { dx, dy }) => {
