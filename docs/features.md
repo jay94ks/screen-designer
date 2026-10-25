@@ -18,6 +18,7 @@
 11. [내보내기 및 코드 변환 (Export & Code Generation)](#11-내보내기-및-코드-변환)
 12. [커맨드 팔레트 및 단축키 (Command Palette & Shortcuts)](#12-커맨드-팔레트-및-단축키)
 13. [다국어 지원 (i18n & Localization)](#13-다국어-지원)
+14. [도메인 중심 MCP 툴 및 CLI 제어 (MCP Tools & Headless CLI)](#14-도메인-중심-mcp-툴-및-cli-제어)
 
 ---
 
@@ -216,3 +217,28 @@
   - **환경 설정 (SettingsModal) 언어 탭**: 캔버스 설정 화면에서 언어 선택 카드 제공.
 - **영속 저장 및 프로젝트 연동**:
   - `localStorage` 및 `project.json`의 `settings.language`에 양방향 동기화되어 페이지를 새로고침하거나 프로젝트를 재오픈해도 사용자 언어 설정이 유지됨.
+
+---
+
+## 14. 도메인 중심 MCP 툴 및 CLI 제어
+
+- **17종 도메인 중심 MCP 툴 (`screen_designer_*`)**:
+  - **프로젝트 & 워크스페이스**: `screen_designer_get_project`
+  - **페이지 관리**: `screen_designer_list_pages`, `screen_designer_get_page`, `screen_designer_create_page`, `screen_designer_save_page`, `screen_designer_delete_page`
+  - **아트보드 조작**: `screen_designer_add_artboard`, `screen_designer_update_artboard`, `screen_designer_delete_artboard`
+  - **디자인 시스템 & 토큰**: `screen_designer_get_design_system`, `screen_designer_save_design_system`
+  - **실시간 캔버스 연동**: `screen_designer_get_live_selection`, `screen_designer_sync_canvas`
+  - **비주얼 검증 & 코드 변환**: `screen_designer_render_image` (Chrome Headless 기반 실시간 캡처), `screen_designer_export_code`
+  - **네이티브 Git 통합**: `screen_designer_git_status`, `screen_designer_git_commit`
+- **강력한 터미널 CLI 도구 (`screen-designer`)**:
+  - `screen-designer init [path]`: 프로젝트 대상 설정 및 초기화
+  - `screen-designer serve` / `mcp`: 표준 I/O 기반 MCP 서버 실행
+  - `screen-designer ui`: 대화형 웹/데스크톱 UI 실행
+  - `screen-designer page (list|create)`: 터미널에서 페이지 목록 조회 및 신규 생성
+  - `screen-designer artboard (list|add|update|delete)`: 장표 추가/수정/삭제
+  - `screen-designer tokens (get|set)`: 디자인 시스템 토큰 조회 및 속성 일괄 수정
+  - `screen-designer export`: React 19 + Tailwind CSS 컴포넌트 코드 추출
+  - `screen-designer render-image`: 헤드리스 화면 캡처 및 이미지 생성
+  - `screen-designer commit -m "..."`: `es-git`을 활용한 UI 변경 내역 자동 스테이징 및 안전 커밋
+  - `screen-designer doctor`: 개발 환경 종속성 및 캔버스 설정 상태 자가 진단
+
