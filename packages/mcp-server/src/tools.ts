@@ -18,6 +18,422 @@ export interface ToolDefinition {
   }>;
 }
 
+// --- Common Helper Functions for Page & Artboard Management ---
+
+async function resolvePageDocs(ws: string) {
+  let pageDocsPath = 'docs/ui-boards';
+  const dotDir = path.join(ws, '.screen-designer');
+  const cacheDir = path.join(dotDir, 'cache');
+  await fs.mkdir(dotDir, { recursive: true });
+  await fs.mkdir(cacheDir, { recursive: true });
+
+  try {
+    const raw = await fs.readFile(path.join(dotDir, 'config.json'), 'utf-8');
+    const cfg = JSON.parse(raw);
+    if (cfg.pageDocsPath) pageDocsPath = cfg.pageDocsPath;
+  } catch {}
+
+  const fullDocsDir = path.resolve(ws, pageDocsPath);
+  const pagesDir = path.join(fullDocsDir, 'pages');
+  await fs.mkdir(pagesDir, { recursive: true });
+
+  return { pageDocsPath, fullDocsDir, pagesDir, cacheDir };
+}
+
+async function findPageDoc(fullDocsDir: string, pageId: string): Promise<{ fullPath: string; page: any } | null> {
+  const cleanId = String(pageId).replace(/\.json$/, '');
+  const isPrefixed = cleanId.startsWith('page-');
+  const numericOrStripped = isPrefixed ? cleanId.slice(5) : cleanId;
+
+  const candidates = [
+    path.join(fullDocsDir, 'pages', `${cleanId}.json`),
+    path.join(fullDocsDir, 'pages', `${numericOrStripped}.json`),
+    path.join(fullDocsDir, 'pages', `page-${numericOrStripped}.json`),
+    path.join(fullDocsDir, `${cleanId}.json`),
+    path.join(fullDocsDir, `${numericOrStripped}.json`),
+    path.join(fullDocsDir, `page-${numericOrStripped}.json`)
+  ];
+
+  for (const p of candidates) {
+    try {
+      const raw = await fs.readFile(p, 'utf-8');
+      const doc = JSON.parse(raw);
+      doc.file = path.relative(fullDocsDir, p).replace(/\\/g, '/');
+      return { fullPath: p, page: doc };
+    } catch {}
+  }
+
+  const pagesDir = path.join(fullDocsDir, 'pages');
+  try {
+    const files = await fs.readdir(pagesDir);
+    for (const f of files.filter(f => f.endsWith('.json'))) {
+      const p = path.join(pagesDir, f);
+      try {
+        const raw = await fs.readFile(p, 'utf-8');
+        const doc = JSON.parse(raw);
+        if (
+          String(doc.id) === cleanId ||
+          String(doc.id) === numericOrStripped ||
+          String(doc.number) === numericOrStripped ||
+          String(doc.name) === cleanId
+        ) {
+          doc.file = path.relative(fullDocsDir, p).replace(/\\/g, '/');
+          return { fullPath: p, page: doc };
+        }
+      } catch {}
+    }
+  } catch {}
+
+  return null;
+}
+
+async function persistPageDoc(ws: string, fullDocsDir: string, pagesDir: string, cacheDir: string, pageDoc: any, targetFilePath?: string): Promise<string> {
+  let pagePath = targetFilePath;
+  if (!pagePath) {
+    if (pageDoc.file) {
+      pagePath = path.resolve(fullDocsDir, pageDoc.file);
+    } else if (pageDoc.fileName) {
+      pagePath = path.resolve(fullDocsDir, pageDoc.fileName);
+    } else {
+      pagePath = path.join(pagesDir, `${pageDoc.id}.json`);
+    }
+  }
+  pageDoc.updatedAt = new Date().toISOString();
+  await fs.writeFile(pagePath, JSON.stringify(pageDoc, null, 2), 'utf-8');
+
+  const relativeFile = path.relative(fullDocsDir, pagePath).replace(/\\/g, '/');
+
+  // Update project.json
+  const projectPath = path.join(fullDocsDir, 'project.json');
+  try {
+    let project: any = { name: 'Screen Designer Project', pages: [] };
+    try {
+      project = JSON.parse(await fs.readFile(projectPath, 'utf-8'));
+    } catch {}
+    project.pages = project.pages || [];
+    const existingIdx = project.pages.findIndex((p: any) =>
+      String(p.id) === String(pageDoc.id) ||
+      p.file === relativeFile ||
+      p.fileName === relativeFile ||
+      p.file === `pages/${pageDoc.id}.json` ||
+      p.fileName === `pages/${pageDoc.id}.json`
+    );
+    const pageEntry = { id: pageDoc.id, name: pageDoc.name, file: relativeFile, updatedAt: pageDoc.updatedAt };
+    if (existingIdx !== -1) {
+      project.pages[existingIdx] = { ...project.pages[existingIdx], ...pageEntry };
+    } else {
+      project.pages.push(pageEntry);
+    }
+    await fs.writeFile(projectPath, JSON.stringify(project, null, 2), 'utf-8');
+  } catch {}
+
+  // Update manifest cache
+  const manifestPath = path.join(cacheDir, 'manifest.json');
+  try {
+    let manifest: any = { pages: {}, lastUpdated: pageDoc.updatedAt };
+    try {
+      manifest = JSON.parse(await fs.readFile(manifestPath, 'utf-8'));
+    } catch {}
+    manifest.pages = manifest.pages || {};
+    manifest.pages[pageDoc.id] = {
+      name: pageDoc.name,
+      file: relativeFile,
+      artboardCount: (pageDoc.artboards || []).length,
+      updatedAt: pageDoc.updatedAt
+    };
+    manifest.lastUpdated = pageDoc.updatedAt;
+    await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2), 'utf-8');
+  } catch {}
+
+  return pagePath;
+}
+
+function buildTemplateArtboard(title: string, viewport: 'mobile' | 'tablet' | 'desktop' | 'custom' = 'mobile', template?: string, customWidth?: number, customHeight?: number): any {
+  const ts = Date.now();
+  const width = customWidth || (viewport === 'desktop' ? 1280 : viewport === 'tablet' ? 768 : 375);
+  const height = customHeight || (viewport === 'desktop' ? 800 : viewport === 'tablet' ? 1024 : 812);
+
+  let rootNode: any;
+
+  if (template === 'login') {
+    rootNode = {
+      id: `node-${ts}-root`,
+      type: 'frame',
+      name: '로그인 화면 루트',
+      style: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#f8fafc',
+        padding: 24,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'stretch',
+        gap: 20
+      },
+      children: [
+        {
+          id: `node-header-${ts}`,
+          type: 'box',
+          name: '헤더 영역',
+          style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, marginBottom: 8 },
+          children: [
+            {
+              id: `node-logo-${ts}`,
+              type: 'circle',
+              name: '로고 심볼',
+              content: '',
+              style: { width: 56, height: 56, backgroundColor: '#4f46e5', display: 'flex', alignItems: 'center', justifyContent: 'center' }
+            },
+            {
+              id: `node-title-${ts}`,
+              type: 'heading',
+              name: '로그인 타이틀',
+              content: '환영합니다',
+              style: { fontSize: 24, fontWeight: 'bold', color: '#0f172a' }
+            },
+            {
+              id: `node-sub-${ts}`,
+              type: 'text',
+              name: '서브텍스트',
+              content: '계정에 로그인하여 서비스를 이용하세요.',
+              style: { fontSize: 13, color: '#64748b' }
+            }
+          ]
+        },
+        {
+          id: `node-form-${ts}`,
+          type: 'form',
+          name: '로그인 폼',
+          style: { display: 'flex', flexDirection: 'column', gap: 12 },
+          children: [
+            {
+              id: `node-email-${ts}`,
+              type: 'input',
+              name: '이메일 입력창',
+              content: '',
+              props: { type: 'email', placeholder: 'name@example.com' },
+              style: { width: '100%', padding: 12, borderRadius: 10, borderWidth: 1, borderColor: '#cbd5e1', backgroundColor: '#ffffff', fontSize: 13 }
+            },
+            {
+              id: `node-pwd-${ts}`,
+              type: 'input',
+              name: '비밀번호 입력창',
+              content: '',
+              props: { type: 'password', placeholder: '비밀번호를 입력하세요' },
+              style: { width: '100%', padding: 12, borderRadius: 10, borderWidth: 1, borderColor: '#cbd5e1', backgroundColor: '#ffffff', fontSize: 13 }
+            },
+            {
+              id: `node-btn-${ts}`,
+              type: 'button',
+              name: '로그인 버튼',
+              content: '로그인',
+              style: { width: '100%', padding: 12, borderRadius: 10, backgroundColor: '#4f46e5', color: '#ffffff', fontWeight: 'bold', fontSize: 14, textAlign: 'center' }
+            }
+          ]
+        },
+        {
+          id: `node-footer-${ts}`,
+          type: 'text',
+          name: '하단 링크',
+          content: '비밀번호 찾기 | 회원가입',
+          style: { fontSize: 12, color: '#64748b', textAlign: 'center', marginTop: 12 }
+        }
+      ]
+    };
+  } else if (template === 'dashboard') {
+    rootNode = {
+      id: `node-${ts}-root`,
+      type: 'frame',
+      name: '대시보드 루트',
+      style: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#0f172a',
+        padding: 24,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16,
+        color: '#ffffff'
+      },
+      children: [
+        {
+          id: `node-title-${ts}`,
+          type: 'heading',
+          name: '대시보드 타이틀',
+          content: '대시보드 요약',
+          style: { fontSize: 22, fontWeight: 'bold', color: '#f8fafc' }
+        },
+        {
+          id: `node-kpis-${ts}`,
+          type: 'box',
+          name: 'KPI 카드 행',
+          style: { display: 'flex', flexDirection: 'row', gap: 12, width: '100%' },
+          children: [
+            {
+              id: `node-card1-${ts}`,
+              type: 'card',
+              name: '수익 카드',
+              style: { flex: 1, backgroundColor: '#1e293b', padding: 14, borderRadius: 12, borderWidth: 1, borderColor: '#334155' },
+              children: [
+                { id: `node-c1-t-${ts}`, type: 'text', name: '라벨', content: '총 매출', style: { fontSize: 11, color: '#94a3b8' } },
+                { id: `node-c1-v-${ts}`, type: 'text', name: '금액', content: '₩24,500,000', style: { fontSize: 16, fontWeight: 'bold', color: '#38bdf8', marginTop: 4 } }
+              ]
+            },
+            {
+              id: `node-card2-${ts}`,
+              type: 'card',
+              name: '사용자 카드',
+              style: { flex: 1, backgroundColor: '#1e293b', padding: 14, borderRadius: 12, borderWidth: 1, borderColor: '#334155' },
+              children: [
+                { id: `node-c2-t-${ts}`, type: 'text', name: '라벨', content: '신규 가입', style: { fontSize: 11, color: '#94a3b8' } },
+                { id: `node-c2-v-${ts}`, type: 'text', name: '수치', content: '+1,280명', style: { fontSize: 16, fontWeight: 'bold', color: '#4ade80', marginTop: 4 } }
+              ]
+            }
+          ]
+        },
+        {
+          id: `node-chart-${ts}`,
+          type: 'card',
+          name: '차트 영역',
+          style: { flex: 1, backgroundColor: '#1e293b', padding: 16, borderRadius: 12, borderWidth: 1, borderColor: '#334155', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' },
+          children: [
+            { id: `node-chart-lbl-${ts}`, type: 'text', name: '플레이스홀더', content: '📊 실시간 통계 차트 영역', style: { fontSize: 13, color: '#64748b' } }
+          ]
+        }
+      ]
+    };
+  } else if (template === 'hero') {
+    rootNode = {
+      id: `node-${ts}-root`,
+      type: 'frame',
+      name: '히어로 섹션 루트',
+      style: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#ffffff',
+        padding: 24,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        gap: 16
+      },
+      children: [
+        {
+          id: `node-badge-${ts}`,
+          type: 'badge',
+          name: '알림 배지',
+          content: '🚀 신규 버전 v2.0 릴리즈',
+          style: { fontSize: 11, fontWeight: 600, color: '#4f46e5', backgroundColor: '#eef2ff', padding: 6, borderRadius: 999 }
+        },
+        {
+          id: `node-headline-${ts}`,
+          type: 'heading',
+          name: '메인 헤드라인',
+          content: '최고의 화면 디자인을\n단 몇 분 만에 완성하세요',
+          style: { fontSize: 24, fontWeight: 'bold', color: '#0f172a', lineHeight: 1.3 }
+        },
+        {
+          id: `node-desc-${ts}`,
+          type: 'text',
+          name: '보조 설명',
+          content: '개발자와 디자이너가 실시간으로 소통하는 인터랙티브 가상 DOM 프로토타이핑 도구',
+          style: { fontSize: 13, color: '#64748b', lineHeight: 1.5 }
+        },
+        {
+          id: `node-btn-${ts}`,
+          type: 'button',
+          name: 'CTA 버튼',
+          content: '무료로 시작하기',
+          style: { padding: 12, borderRadius: 10, backgroundColor: '#4f46e5', color: '#ffffff', fontWeight: 'bold', fontSize: 14 }
+        }
+      ]
+    };
+  } else {
+    // Blank
+    rootNode = {
+      id: `node-${ts}-root`,
+      type: 'frame',
+      name: 'Frame Root',
+      style: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#ffffff',
+        padding: 24,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 12
+      },
+      children: [
+        {
+          id: `node-title-${ts}`,
+          type: 'text',
+          name: 'Title Text',
+          content: title,
+          style: { fontSize: 20, fontWeight: 'bold', color: '#0f172a' }
+        },
+        {
+          id: `node-desc-${ts}`,
+          type: 'text',
+          name: 'Subtitle Text',
+          content: '새로 생성된 가상 DOM 캔버스',
+          style: { fontSize: 12, color: '#64748b' }
+        }
+      ]
+    };
+  }
+
+  return {
+    id: `artboard-${ts}`,
+    title,
+    viewport,
+    x: 0,
+    y: 0,
+    width,
+    height,
+    rootNode,
+    tweaksSchema: [],
+    tweakValues: {}
+  };
+}
+
+function updateVNodesRecursively(root: any, updates: Array<{ nodeId: string; name?: string; content?: string; style?: any; className?: string; props?: any }>): number {
+  let count = 0;
+  const updateMap = new Map<string, any>();
+  for (const u of updates) {
+    updateMap.set(u.nodeId, u);
+  }
+
+  function traverse(node: any) {
+    if (!node) return;
+    if (updateMap.has(node.id)) {
+      const u = updateMap.get(node.id);
+      if (u.name !== undefined) node.name = u.name;
+      if (u.content !== undefined) node.content = u.content;
+      if (u.className !== undefined) node.className = u.className;
+      if (u.style) {
+        node.style = { ...(node.style || {}), ...u.style };
+      }
+      if (u.props) {
+        node.props = { ...(node.props || {}), ...u.props };
+      }
+      count++;
+    }
+    if (Array.isArray(node.children)) {
+      for (const child of node.children) {
+        traverse(child);
+      }
+    }
+  }
+
+  traverse(root);
+  return count;
+}
+
 export const TOOLS: ToolDefinition[] = [
   // 1. Project: screen_designer_get_project
   {
@@ -196,26 +612,16 @@ export const TOOLS: ToolDefinition[] = [
       } catch {}
 
       const fullDocsDir = path.resolve(ws, pageDocsPath);
-      const candidates = [
-        path.join(fullDocsDir, 'pages', `${pageId}.json`),
-        path.join(fullDocsDir, `${pageId}.json`),
-        path.join(fullDocsDir, 'pages', `page-${pageId}.json`),
-        path.join(fullDocsDir, `page-${pageId}.json`)
-      ];
-
-      for (const p of candidates) {
-        try {
-          const raw = await fs.readFile(p, 'utf-8');
-          const data = JSON.parse(raw);
-          return {
-            content: [
-              {
-                type: 'text',
-                text: JSON.stringify({ status: 'ok', file: path.relative(ws, p), page: data }, null, 2)
-              }
-            ]
-          };
-        } catch {}
+      const found = await findPageDoc(fullDocsDir, pageId);
+      if (found) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({ status: 'ok', file: path.relative(ws, found.fullPath), page: found.page }, null, 2)
+            }
+          ]
+        };
       }
 
       return {
@@ -225,7 +631,63 @@ export const TOOLS: ToolDefinition[] = [
     }
   },
 
-  // 4. Page: screen_designer_save_page
+  // 4. Page: screen_designer_create_page
+  {
+    name: 'screen_designer_create_page',
+    aliases: ['create_page', 'page_create'],
+    category: 'page',
+    description: 'Create a new screen page document in the project with an ID, title/name, and optional initial artboard or template.',
+    parameters: z.object({
+      name: z.string().describe('Display name or title of the new page (e.g. "온보딩 화면", "마이페이지")'),
+      pageId: z.string().optional().describe('Unique page ID (e.g. "onboarding" or "page-2"). Auto-generated if omitted.'),
+      initialArtboardTitle: z.string().optional().describe('Title of an initial artboard to create in this page'),
+      viewport: z.enum(['mobile', 'tablet', 'desktop', 'custom']).optional().default('mobile').describe('Viewport device type for initial artboard'),
+      template: z.enum(['blank', 'login', 'dashboard', 'hero']).optional().default('blank').describe('Template preset for initial artboard'),
+      workspacePath: z.string().optional().describe('Project workspace directory')
+    }),
+    execute: async ({ name, pageId, initialArtboardTitle, viewport, template, workspacePath }, bridge) => {
+      const state = bridge.getState();
+      const ws = workspacePath || state.workspacePath || process.cwd();
+      const { fullDocsDir, pagesDir, cacheDir } = await resolvePageDocs(ws);
+
+      const actualPageId = pageId ? String(pageId).replace(/\.json$/, '') : `page-${Date.now()}`;
+      const artboards: any[] = [];
+
+      if (initialArtboardTitle || (template && template !== 'blank')) {
+        const board = buildTemplateArtboard(initialArtboardTitle || name, viewport || 'mobile', template || 'blank');
+        artboards.push(board);
+      }
+
+      const pageDoc = {
+        id: actualPageId,
+        name,
+        artboards,
+        version: '1.0',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      const savedPath = await persistPageDoc(ws, fullDocsDir, pagesDir, cacheDir, pageDoc);
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              status: 'ok',
+              message: `Page "${name}" successfully created`,
+              pageId: actualPageId,
+              file: path.relative(ws, savedPath),
+              artboardCount: artboards.length,
+              artboards: artboards.map(a => ({ id: a.id, title: a.title, viewport: a.viewport, width: a.width, height: a.height }))
+            }, null, 2)
+          }
+        ]
+      };
+    }
+  },
+
+  // 5. Page: screen_designer_save_page
   {
     name: 'screen_designer_save_page',
     aliases: ['storyboard_save_page'],
@@ -381,7 +843,260 @@ export const TOOLS: ToolDefinition[] = [
     }
   },
 
-  // 6. Design System: screen_designer_get_design_system
+  // 7. Artboard: screen_designer_add_artboard
+  {
+    name: 'screen_designer_add_artboard',
+    aliases: ['add_artboard', 'create_artboard', 'artboard_create'],
+    category: 'page',
+    description: 'Add a new artboard (screen canvas) to a page with title, dimensions, viewport, and optional template or custom VDOM rootNode.',
+    parameters: z.object({
+      pageId: z.string().optional().describe('Target page ID to add the artboard to. If omitted, adds to the first available page.'),
+      title: z.string().describe('Title of the new artboard (e.g. "로그인 화면", "회원가입", "결제 완료")'),
+      viewport: z.enum(['mobile', 'tablet', 'desktop', 'custom']).optional().default('mobile').describe('Device viewport type'),
+      width: z.number().optional().describe('Canvas width in pixels (defaults: mobile=375, tablet=768, desktop=1280)'),
+      height: z.number().optional().describe('Canvas height in pixels (defaults: mobile=812, tablet=1024, desktop=800)'),
+      template: z.enum(['blank', 'login', 'dashboard', 'hero']).optional().describe('Prebuilt template for rootNode'),
+      rootNode: z.any().optional().describe('Custom Virtual DOM root VNode (overrides template if provided)'),
+      tweaksSchema: z.array(z.any()).optional().describe('Optional dynamic tweaks schema definitions'),
+      workspacePath: z.string().optional().describe('Project workspace directory')
+    }),
+    execute: async ({ pageId, title, viewport, width, height, template, rootNode, tweaksSchema, workspacePath }, bridge) => {
+      const state = bridge.getState();
+      const ws = workspacePath || state.workspacePath || process.cwd();
+      const { fullDocsDir, pagesDir, cacheDir } = await resolvePageDocs(ws);
+
+      let targetPageId = pageId;
+      if (!targetPageId) {
+        try {
+          const files = await fs.readdir(pagesDir);
+          const first = files.find(f => f.endsWith('.json'));
+          if (first) targetPageId = path.basename(first, '.json');
+        } catch {}
+      }
+      if (!targetPageId) targetPageId = '1';
+
+      const found = await findPageDoc(fullDocsDir, targetPageId);
+      let pageDoc: any;
+      if (!found) {
+        pageDoc = {
+          id: targetPageId,
+          name: `Page ${targetPageId}`,
+          artboards: [],
+          version: '1.0'
+        };
+      } else {
+        pageDoc = found.page;
+      }
+
+      pageDoc.artboards = pageDoc.artboards || [];
+
+      const newBoard = buildTemplateArtboard(title, viewport || 'mobile', template || 'blank', width, height);
+      if (rootNode) {
+        newBoard.rootNode = rootNode;
+      }
+      if (tweaksSchema) {
+        newBoard.tweaksSchema = tweaksSchema;
+      }
+
+      pageDoc.artboards.push(newBoard);
+      const savedPath = await persistPageDoc(ws, fullDocsDir, pagesDir, cacheDir, pageDoc, found?.fullPath);
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              status: 'ok',
+              message: `Artboard "${title}" successfully added to page "${pageDoc.name || pageDoc.id}"`,
+              pageId: pageDoc.id,
+              artboard: {
+                id: newBoard.id,
+                title: newBoard.title,
+                viewport: newBoard.viewport,
+                width: newBoard.width,
+                height: newBoard.height
+              },
+              file: path.relative(ws, savedPath),
+              totalArtboardsInPage: pageDoc.artboards.length
+            }, null, 2)
+          }
+        ]
+      };
+    }
+  },
+
+  // 8. Artboard: screen_designer_update_artboard
+  {
+    name: 'screen_designer_update_artboard',
+    aliases: ['update_artboard', 'edit_artboard', 'artboard_update', 'artboard_edit'],
+    category: 'page',
+    description: 'Update and modify an existing artboard on a page. Supports editing metadata (title, dimensions, viewport), replacing rootNode, or targeting specific nodes by ID to update text/styles/props without rewriting the whole tree.',
+    parameters: z.object({
+      pageId: z.string().describe('Target page ID containing the artboard'),
+      artboardId: z.string().describe('Target artboard ID or title to modify'),
+      title: z.string().optional().describe('New title for the artboard'),
+      viewport: z.enum(['mobile', 'tablet', 'desktop', 'custom']).optional().describe('Updated viewport device type'),
+      width: z.number().optional().describe('Updated width in pixels'),
+      height: z.number().optional().describe('Updated height in pixels'),
+      x: z.number().optional().describe('Canvas X position'),
+      y: z.number().optional().describe('Canvas Y position'),
+      rootNode: z.any().optional().describe('Complete replacement Virtual DOM rootNode'),
+      nodeUpdates: z.array(z.object({
+        nodeId: z.string().describe('ID of the VNode to update inside the artboard'),
+        name: z.string().optional(),
+        content: z.string().optional().describe('Updated text or content'),
+        style: z.record(z.any()).optional().describe('Style updates (e.g. { backgroundColor: "#10b981", color: "#fff" })'),
+        className: z.string().optional().describe('Tailwind CSS classes'),
+        props: z.record(z.any()).optional().describe('HTML/component props')
+      })).optional().describe('Targeted updates to specific VNodes inside this artboard by nodeId'),
+      tweaksSchema: z.array(z.any()).optional().describe('Updated dynamic tweaks schema'),
+      tweakValues: z.record(z.any()).optional().describe('Updated tweak values'),
+      workspacePath: z.string().optional().describe('Project workspace directory')
+    }),
+    execute: async ({ pageId, artboardId, title, viewport, width, height, x, y, rootNode, nodeUpdates, tweaksSchema, tweakValues, workspacePath }, bridge) => {
+      const state = bridge.getState();
+      const ws = workspacePath || state.workspacePath || process.cwd();
+      const { fullDocsDir, pagesDir, cacheDir } = await resolvePageDocs(ws);
+
+      const found = await findPageDoc(fullDocsDir, pageId);
+      if (!found) {
+        return {
+          isError: true,
+          content: [{ type: 'text', text: `Page "${pageId}" not found in ${fullDocsDir}` }]
+        };
+      }
+
+      const pageDoc = found.page;
+      const artboards: any[] = pageDoc.artboards || [];
+      const boardIndex = artboards.findIndex((a: any) =>
+        String(a.id) === String(artboardId) ||
+        String(a.title).toLowerCase() === String(artboardId).toLowerCase()
+      );
+
+      if (boardIndex === -1) {
+        return {
+          isError: true,
+          content: [{
+            type: 'text',
+            text: `Artboard "${artboardId}" not found in page "${pageDoc.name || pageId}". Available artboards: ${artboards.map(a => `"${a.title}" (${a.id})`).join(', ')}`
+          }]
+        };
+      }
+
+      const board = artboards[boardIndex];
+      const updatedFields: string[] = [];
+
+      if (title !== undefined) { board.title = title; updatedFields.push('title'); }
+      if (viewport !== undefined) { board.viewport = viewport; updatedFields.push('viewport'); }
+      if (width !== undefined) { board.width = width; updatedFields.push('width'); }
+      if (height !== undefined) { board.height = height; updatedFields.push('height'); }
+      if (x !== undefined) { board.x = x; updatedFields.push('x'); }
+      if (y !== undefined) { board.y = y; updatedFields.push('y'); }
+      if (tweaksSchema !== undefined) { board.tweaksSchema = tweaksSchema; updatedFields.push('tweaksSchema'); }
+      if (tweakValues !== undefined) { board.tweakValues = { ...(board.tweakValues || {}), ...tweakValues }; updatedFields.push('tweakValues'); }
+
+      if (rootNode !== undefined) {
+        board.rootNode = rootNode;
+        updatedFields.push('rootNode');
+      } else if (nodeUpdates && nodeUpdates.length > 0 && board.rootNode) {
+        const updatedCount = updateVNodesRecursively(board.rootNode, nodeUpdates);
+        updatedFields.push(`nodeUpdates (${updatedCount} nodes modified)`);
+      }
+
+      artboards[boardIndex] = board;
+      pageDoc.artboards = artboards;
+
+      const savedPath = await persistPageDoc(ws, fullDocsDir, pagesDir, cacheDir, pageDoc);
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              status: 'ok',
+              message: `Artboard "${board.title}" (${board.id}) in page "${pageDoc.name || pageId}" successfully updated`,
+              pageId: pageDoc.id,
+              artboardId: board.id,
+              updatedFields,
+              file: path.relative(ws, savedPath),
+              artboard: {
+                id: board.id,
+                title: board.title,
+                viewport: board.viewport,
+                width: board.width,
+                height: board.height
+              }
+            }, null, 2)
+          }
+        ]
+      };
+    }
+  },
+
+  // 9. Artboard: screen_designer_delete_artboard
+  {
+    name: 'screen_designer_delete_artboard',
+    aliases: ['delete_artboard', 'remove_artboard', 'artboard_delete'],
+    category: 'page',
+    description: 'Delete an artboard (screen canvas) from a page by artboard ID or title.',
+    parameters: z.object({
+      pageId: z.string().describe('Target page ID containing the artboard'),
+      artboardId: z.string().describe('ID or title of the artboard to delete'),
+      workspacePath: z.string().optional().describe('Project workspace directory')
+    }),
+    execute: async ({ pageId, artboardId, workspacePath }, bridge) => {
+      const state = bridge.getState();
+      const ws = workspacePath || state.workspacePath || process.cwd();
+      const { fullDocsDir, pagesDir, cacheDir } = await resolvePageDocs(ws);
+
+      const found = await findPageDoc(fullDocsDir, pageId);
+      if (!found) {
+        return {
+          isError: true,
+          content: [{ type: 'text', text: `Page "${pageId}" not found in ${fullDocsDir}` }]
+        };
+      }
+
+      const pageDoc = found.page;
+      const artboards: any[] = pageDoc.artboards || [];
+      const initialCount = artboards.length;
+
+      pageDoc.artboards = artboards.filter((a: any) =>
+        String(a.id) !== String(artboardId) &&
+        String(a.title).toLowerCase() !== String(artboardId).toLowerCase()
+      );
+
+      if (pageDoc.artboards.length === initialCount) {
+        return {
+          isError: true,
+          content: [{
+            type: 'text',
+            text: `Artboard "${artboardId}" not found in page "${pageDoc.name || pageId}". Available artboards: ${artboards.map(a => `"${a.title}" (${a.id})`).join(', ')}`
+          }]
+        };
+      }
+
+      const savedPath = await persistPageDoc(ws, fullDocsDir, pagesDir, cacheDir, pageDoc);
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              status: 'ok',
+              message: `Artboard "${artboardId}" successfully deleted from page "${pageDoc.name || pageId}"`,
+              pageId: pageDoc.id,
+              deletedArtboardId: artboardId,
+              remainingArtboardCount: pageDoc.artboards.length,
+              file: path.relative(ws, savedPath)
+            }, null, 2)
+          }
+        ]
+      };
+    }
+  },
+
+  // 10. Design System: screen_designer_get_design_system
   {
     name: 'screen_designer_get_design_system',
     aliases: ['storyboard_get_design_system'],

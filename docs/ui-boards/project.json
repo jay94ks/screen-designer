@@ -15,9 +15,8 @@
     {
       "id": "page-2",
       "name": "Page 2 (새로운 작업 공간)",
-      "number": 2,
-      "fileName": "pages/2.json",
-      "artboardsCount": 0
+      "file": "pages/2.json",
+      "updatedAt": "2026-10-25T03:04:04.474Z"
     }
   ],
   "assets": [

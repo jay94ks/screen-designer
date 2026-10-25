@@ -50,7 +50,7 @@ export async function runServer(): Promise<void> {
   const server = createMcpServer(bridge);
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error('[ScreenDesigner MCP] Stdio transport connected and ready with 13 tools.');
+  console.error(`[ScreenDesigner MCP] Stdio transport connected and ready with ${TOOLS.length} tools.`);
 }
 
 // Auto-run only if executed directly as entrypoint

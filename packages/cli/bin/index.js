@@ -741,6 +741,40 @@ async function handlePageCommand(subArgs) {
   const action = subArgs[0] || 'list';
   const cwd = process.cwd();
 
+  if (action === 'create' || action === 'new' || action === 'add') {
+    const name = subArgs[1];
+    if (!name) {
+      console.error('❌ Error: page name required. Example: screen-designer page create "온보딩 화면" [--id=onboarding] [--template=login]');
+      process.exit(1);
+    }
+    let pageId = undefined;
+    let template = 'blank';
+    let viewport = 'mobile';
+    let targetDir = cwd;
+
+    for (const a of subArgs.slice(2)) {
+      if (a.startsWith('--id=')) pageId = a.split('=')[1];
+      else if (a.startsWith('--template=')) template = a.split('=')[1];
+      else if (a.startsWith('--viewport=')) viewport = a.split('=')[1];
+      else if (!a.startsWith('--')) targetDir = a;
+    }
+
+    const res = await mod.executeTool('screen_designer_create_page', {
+      name,
+      pageId,
+      template,
+      viewport,
+      workspacePath: targetDir
+    });
+    if (res.isError) {
+      console.error(res.content[0].text);
+      process.exit(1);
+    }
+    const data = JSON.parse(res.content[0].text);
+    console.log(`✔ ${data.message} (${data.file})`);
+    return;
+  }
+
   if (action === 'list' || action === 'ls') {
     const targetDir = subArgs[1] || cwd;
     const res = await mod.executeTool('screen_designer_list_pages', { workspacePath: targetDir });
@@ -806,7 +840,134 @@ async function handlePageCommand(subArgs) {
     return;
   }
 
-  console.error(`Unknown page subcommand "${action}". Available: list, get, save, delete`);
+  console.error(`Unknown page subcommand "${action}". Available: create, list, get, save, delete`);
+  process.exit(1);
+}
+
+async function handleArtboardCommand(subArgs) {
+  const mod = await getMcpModule();
+  const action = subArgs[0] || 'list';
+  const cwd = process.cwd();
+
+  if (action === 'list' || action === 'ls') {
+    const pageId = subArgs[1] || '1';
+    const targetDir = subArgs[2] || cwd;
+    const res = await mod.executeTool('screen_designer_get_page', { pageId, workspacePath: targetDir });
+    if (res.isError) {
+      console.error(res.content[0].text);
+      process.exit(1);
+    }
+    const data = JSON.parse(res.content[0].text);
+    const page = data.page;
+    console.log(`\n🎨 Artboards in Page "${page.name || page.id}" (Total: ${(page.artboards || []).length}):`);
+    for (const ab of page.artboards || []) {
+      console.log(`  • [${ab.id}] "${ab.title}" (${ab.viewport || 'mobile'}, ${ab.width}x${ab.height})`);
+    }
+    console.log('');
+    return;
+  }
+
+  if (action === 'add' || action === 'create' || action === 'new') {
+    const pageId = subArgs[1];
+    const title = subArgs[2];
+    if (!pageId || !title) {
+      console.error('❌ Error: pageId and title required. Example: screen-designer artboard add 1 "회원가입" [--viewport=mobile] [--template=login]');
+      process.exit(1);
+    }
+    let viewport = 'mobile';
+    let template = 'blank';
+    let width = undefined;
+    let height = undefined;
+    let targetDir = cwd;
+
+    for (const a of subArgs.slice(3)) {
+      if (a.startsWith('--viewport=')) viewport = a.split('=')[1];
+      else if (a.startsWith('--template=')) template = a.split('=')[1];
+      else if (a.startsWith('--width=')) width = parseInt(a.split('=')[1], 10);
+      else if (a.startsWith('--height=')) height = parseInt(a.split('=')[1], 10);
+      else if (!a.startsWith('--')) targetDir = a;
+    }
+
+    const res = await mod.executeTool('screen_designer_add_artboard', {
+      pageId,
+      title,
+      viewport,
+      template,
+      width,
+      height,
+      workspacePath: targetDir
+    });
+    if (res.isError) {
+      console.error(res.content[0].text);
+      process.exit(1);
+    }
+    const data = JSON.parse(res.content[0].text);
+    console.log(`✔ ${data.message} (ID: ${data.artboard.id})`);
+    return;
+  }
+
+  if (action === 'update' || action === 'edit' || action === 'modify') {
+    const pageId = subArgs[1];
+    const artboardId = subArgs[2];
+    if (!pageId || !artboardId) {
+      console.error('❌ Error: pageId and artboardId required. Example: screen-designer artboard update 1 artboard-123 --title="로그인 v2"');
+      process.exit(1);
+    }
+    let title = undefined;
+    let width = undefined;
+    let height = undefined;
+    let viewport = undefined;
+    let targetDir = cwd;
+
+    for (const a of subArgs.slice(3)) {
+      if (a.startsWith('--title=')) title = a.split('=')[1];
+      else if (a.startsWith('--width=')) width = parseInt(a.split('=')[1], 10);
+      else if (a.startsWith('--height=')) height = parseInt(a.split('=')[1], 10);
+      else if (a.startsWith('--viewport=')) viewport = a.split('=')[1];
+      else if (!a.startsWith('--')) targetDir = a;
+    }
+
+    const res = await mod.executeTool('screen_designer_update_artboard', {
+      pageId,
+      artboardId,
+      title,
+      width,
+      height,
+      viewport,
+      workspacePath: targetDir
+    });
+    if (res.isError) {
+      console.error(res.content[0].text);
+      process.exit(1);
+    }
+    const data = JSON.parse(res.content[0].text);
+    console.log(`✔ ${data.message}`);
+    return;
+  }
+
+  if (action === 'delete' || action === 'rm' || action === 'remove') {
+    const pageId = subArgs[1];
+    const artboardId = subArgs[2];
+    if (!pageId || !artboardId) {
+      console.error('❌ Error: pageId and artboardId required. Example: screen-designer artboard delete 1 artboard-123');
+      process.exit(1);
+    }
+    const targetDir = subArgs[3] || cwd;
+    const res = await mod.executeTool('screen_designer_delete_artboard', {
+      pageId,
+      artboardId,
+      workspacePath: targetDir
+    });
+    if (res.isError) {
+      console.error(res.content[0].text);
+      process.exit(1);
+    }
+    const data = JSON.parse(res.content[0].text);
+    console.log(`✔ ${data.message}`);
+    return;
+  }
+
+  console.error(`Unknown artboard subcommand "${action}". Available: list, add, update, delete`);
   process.exit(1);
 }
 
@@ -1364,13 +1525,20 @@ Usage:
 
 Screen Pages (VDOM) Operations:
   screen-designer page list [target-path]                       List all screen pages in project
+  screen-designer page create <name> [options]                  Create a new screen page (with template)
   screen-designer page show <pageId> [target-path]              Display full JSON of a screen page
   screen-designer page save <pageFile.json> [target-path]       Save/import a page from JSON file
   screen-designer page delete <pageId> [target-path]            Delete a screen page from project
 
+Artboard (Screen Canvas) Operations:
+  screen-designer artboard list <pageId>                        List all artboards in a page
+  screen-designer artboard add <pageId> <title> [options]       Add an artboard to a page (with template)
+  screen-designer artboard update <pageId> <artboardId> [opts]  Update/edit an existing artboard
+  screen-designer artboard delete <pageId> <artboardId>         Delete an artboard from a page
+
 MCP Server & Cross-Agent Operations:
   screen-designer mcp [serve]                                   Start MCP Server on Stdio (for Claude/Cursor/Codex)
-  screen-designer mcp list                                      List all 13 registered MCP tools & parameters
+  screen-designer mcp list                                      List all registered MCP tools & parameters
   screen-designer mcp call <tool-name> [args...]                Execute any MCP tool directly from CLI
 
 Launch Options:
@@ -1413,7 +1581,7 @@ const port = portArg ? parseInt(portArg.split('=')[1], 10) : 5173;
 
 const SUB_COMMANDS = [
   'init', 'export', 'status', 'render-image', 'render', 'screenshot', 'image',
-  'mcp', 'page', 'tokens', 'commit',
+  'mcp', 'page', 'artboard', 'tokens', 'commit',
   'help', '--help', '-h', 'version', '--version', '-v'
 ];
 
@@ -1446,6 +1614,9 @@ if (!firstArg || (!firstArg.startsWith('-') && !SUB_COMMANDS.includes(firstArg))
       break;
     case 'page':
       handlePageCommand(args.slice(1)).catch(console.error);
+      break;
+    case 'artboard':
+      handleArtboardCommand(args.slice(1)).catch(console.error);
       break;
     case 'tokens':
       handleTokensCommand(args.slice(1)).catch(console.error);

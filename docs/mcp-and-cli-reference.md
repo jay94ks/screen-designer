@@ -4,13 +4,13 @@ Screen Designer는 AI 에이전트(Claude, Cursor, Codex, Gemini 등)가 UI를 �
 
 ---
 
-## 1. 재설계된 MCP 툴 목록 (13종)
+## 1. 재설계된 MCP 툴 목록 (17종)
 
 기존 레거시 `storyboard_*` 네이밍을 탈피하고, 명확한 도메인 기반의 **`screen_designer_*`** 표준 네임스페이스로 개편되었습니다.  
-*(기존 프롬프트 및 호환성을 위해 `storyboard_*` 별칭(Alias)도 100% 동일하게 지원됩니다)*
+*(기존 프롬프트 및 호환성을 위해 `storyboard_*` 별칭(Alias) 및 자연어 단축 별칭(`create_page`, `add_artboard`, `edit_artboard` 등)도 100% 동일하게 지원됩니다)*
 
 ```
-🛠️ Screen Designer MCP Tools (13 tools registered)
+🛠️ Screen Designer MCP Tools (17 tools registered)
 
 📁 Project & Workspace:
   • screen_designer_get_project (alias: storyboard_init, storyboard_get_project)
@@ -26,6 +26,10 @@ Screen Designer는 AI 에이전트(Claude, Cursor, Codex, Gemini 등)가 UI를 �
     Get full details of a specific UI page document (all artboards, elements, coordinates, styling, layers, interactive flow wires, and tweaks).
     Parameters: <pageId> [workspacePath]
 
+  • screen_designer_create_page (alias: create_page, page_create)
+    Create a new screen page document in the project with an ID, title/name, and optional initial artboard or template.
+    Parameters: <name> [pageId] [initialArtboardTitle] [viewport] [template] [workspacePath]
+
   • screen_designer_save_page (alias: storyboard_save_page)
     Create, save, or update a Virtual DOM page document in docs/ui-boards/pages/<pageId>.json and update project manifest.
     Parameters: <page> [workspacePath]
@@ -33,6 +37,18 @@ Screen Designer는 AI 에이전트(Claude, Cursor, Codex, Gemini 등)가 UI를 �
   • screen_designer_delete_page (alias: storyboard_delete_page)
     Delete a Virtual DOM page document from the project and update project manifest.
     Parameters: <pageId> [workspacePath]
+
+  • screen_designer_add_artboard (alias: add_artboard, create_artboard, artboard_create)
+    Add a new artboard (screen canvas) to a page with title, dimensions, viewport, and optional template or custom VDOM rootNode.
+    Parameters: [pageId] <title> [viewport] [width] [height] [template] [rootNode] [tweaksSchema] [workspacePath]
+
+  • screen_designer_update_artboard (alias: update_artboard, edit_artboard, artboard_update, artboard_edit)
+    Update and modify an existing artboard on a page. Supports editing metadata (title, dimensions, viewport), replacing rootNode, or targeting specific nodes by ID to update text/styles/props without rewriting the whole tree.
+    Parameters: <pageId> <artboardId> [title] [viewport] [width] [height] [x] [y] [rootNode] [nodeUpdates] [tweaksSchema] [tweakValues] [workspacePath]
+
+  • screen_designer_delete_artboard (alias: delete_artboard, remove_artboard, artboard_delete)
+    Delete an artboard (screen canvas) from a page by artboard ID or title.
+    Parameters: <pageId> <artboardId> [workspacePath]
 
 🎨 Design System & Tokens:
   • screen_designer_get_design_system (alias: storyboard_get_design_system)
@@ -131,9 +147,14 @@ Claude Desktop, Cursor, Antigravity 등의 `claude_desktop_config.json`에 `scre
 | 명령어 | 설명 | 예시 |
 |---|---|---|
 | `screen-designer page list [경로]` | 프로젝트 내 전체 페이지 및 아트보드 목록 출력 | `screen-designer page list` |
+| `screen-designer page create <이름> [옵션]` | 새 페이지 생성 (템플릿 지정 가능) | `screen-designer page create "온보딩" --template=login` |
 | `screen-designer page show <pageId> [경로]` | 지정된 페이지의 상세 VDOM JSON 출력 | `screen-designer page show 1` |
 | `screen-designer page save <파일.json> [경로]` | 외부 JSON 파일을 프로젝트 페이지로 저장/가져오기 | `screen-designer page save new-page.json` |
 | `screen-designer page delete <pageId> [경로]` | 지정된 페이지 삭제 및 프로젝트 매니페스트 동기화 | `screen-designer page delete 2` |
+| `screen-designer artboard list <pageId>` | 특정 페이지 내 모든 아트보드(시안) 목록 출력 | `screen-designer artboard list 1` |
+| `screen-designer artboard add <pageId> <제목> [옵션]` | 페이지에 새 아트보드 생성 (템플릿/뷰포트 지정) | `screen-designer artboard add 1 "회원가입" --template=login` |
+| `screen-designer artboard update <pageId> <id> [옵션]` | 기존 아트보드 속성/크기/제목/노드 수정 | `screen-designer artboard update 1 artboard-123 --title="로그인 v2"` |
+| `screen-designer artboard delete <pageId> <id>` | 페이지에서 특정 아트보드 삭제 | `screen-designer artboard delete 1 artboard-123` |
 | `screen-designer tokens [경로]` | 디자인 시스템 컬러, 반경, 타이포그래피, 기본 스타일 출력 | `screen-designer tokens` |
 | `screen-designer commit -m "<메시지>" [경로]` | `es-git`을 통해 변경된 UI 디자인 문서만 스마트 자동 커밋 | `screen-designer commit -m "feat: 홈 화면 개선"` |
 | `screen-designer status [경로]` | 브랜치 및 UI 디자인 문서의 Git 상태 확인 | `screen-designer status` |

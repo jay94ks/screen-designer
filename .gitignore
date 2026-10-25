@@ -9,3 +9,4 @@ release
 *.log
 *.tsbuildinfo
 .DS_Store
+.screen-designer/cache/
