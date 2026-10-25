@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Universal Cross-Agent Visual Storyboard Canvas, MCP Suite & Headless CLI</strong><br>
-  Next-generation real-time UI design & visual prototyping system for Claude Code, Cursor, OpenAI Codex/GPT, and Google Gemini (Antigravity).
+  Real-time UI design & visual prototyping tool for Claude Code, Cursor, OpenAI Codex/GPT, and Google Gemini (Antigravity).
 </p>
 
 <p align="center">
@@ -28,23 +28,23 @@
 
 ## 🌟 Key Features
 
-1. **⚡ Zero-Delay Live Canvas & Infinite Canvas**:
-   - The interactive VDOM UI renders on the canvas in **0.1 seconds** the moment an AI agent delivers code.
-   - Powered by a 92% lightweight layer tree DOM optimization and a window-level rAF 60 FPS smooth pan & zoom engine.
+1. **Live Canvas & Infinite Canvas**:
+   - The interactive VDOM UI renders on the canvas as soon as an AI agent delivers code.
+   - Built with layer tree DOM optimizations and a window-level rAF 60 FPS pan & zoom engine.
 2. **📐 Canvas Roles & Responsive Resolution System**:
    - Frames are designed around screen purposes and roles (`main-page`, `sub-page`, `modal`, `bottom-sheet`, `widget`, `responsive-viewport`) rather than rigid device presets.
    - Supports direct width×height entry, one-click orientation toggle, live runtime preview presets, and conditional resolution rules.
 3. **⚡ Interactive Prototyping & Dynamic Tweaks**:
-   - Figma-style bezier curves (Wires), device mockup play presentation mode (`▶ PLAY`), and hotspot click guides.
-   - Real-time tweak adjustments (Theme, Currency ₩/$/€/¥, Language, UI Density) instantly reformat live VDOM mockups.
+   - Figma-style bezier curves (Wires), device mockup presentation mode (`▶ PLAY`), and hotspot click guides.
+   - Real-time tweak adjustments (Theme, Currency ₩/$/€/¥, Language, UI Density) reformat live VDOM mockups dynamically.
 4. **🛠️ 17 Domain-Centric MCP Tools (`screen_designer_*`)**:
-   - From project inspection to page/artboard generation, fine-grained node style updates, design system token manipulation, and Chrome Headless visual validation, all exposed via standard Model Context Protocol.
-5. **💻 Powerful CLI Interface (`screen-designer`)**:
-   - Control projects directly from the terminal without a GUI: `screen-designer page create`, `screen-designer artboard add/update/delete`, `screen-designer commit`, and more.
+   - Project inspection, page/artboard management, node style updates, design system tokens, and Chrome Headless visual validation via standard Model Context Protocol.
+5. **💻 CLI Control Interface (`screen-designer`)**:
+   - Control projects from the terminal without a GUI: `screen-designer page create`, `screen-designer artboard add/update/delete`, `screen-designer commit`, and more.
 6. **📦 Native Git Engine (`es-git`) Integration**:
-   - Zero external Git binary dependency. High-performance native `es-git` engine automatically tracks working changes with side-by-side diff view and one-click commit/push.
-7. **🌐 Full Trilingual Localization (i18n)**:
-   - Instant one-click language switching between Korean (`ko`), English (`en`), and Japanese (`ja`) with persistent per-project settings.
+   - No external Git binary required. Integrated `es-git` engine tracks working changes with side-by-side diff view and one-click commit/push.
+7. **🌐 Trilingual Localization (i18n)**:
+   - Language switching between Korean (`ko`), English (`en`), and Japanese (`ja`) with persistent per-project settings.
 
 ---
 
@@ -89,7 +89,7 @@ screen-designer ui
 
 ## ⌨️ CLI Reference
 
-Screen Designer provides a rich suite of command-line tools:
+Screen Designer provides the following command-line interface tools:
 
 ```bash
 # Status & Diagnostics
@@ -137,7 +137,7 @@ The Screen Designer MCP server supports both the standardized `screen_designer_*
 | | `screen_designer_save_design_system` | Batch update tokens and default styles, and sync with live canvas |
 | **Live Canvas**| `screen_designer_get_live_selection` | Get element ID clicked on canvas and real-time slider tweak values |
 | | `screen_designer_sync_canvas` | Zoom/pan canvas viewport and focus camera onto specific artboard/element |
-| **Visual & Code**| `screen_designer_render_image` | Ultra high-res headless capture via Chrome Headless (visual verification) |
+| **Visual & Code**| `screen_designer_render_image` | Artboard screenshot capture via Chrome Headless (visual verification) |
 | | `screen_designer_export_code` | Compile VDOM structure into production-ready React 19 + Tailwind CSS components |
 | **Git** | `screen_designer_git_status` | View staged UI files and git diffs powered by `es-git` |
 | | `screen_designer_git_commit` | Auto-stage UI modifications and create git commit powered by `es-git` |
@@ -200,4 +200,4 @@ npm run dev:mcp
 
 ## 📄 License
 
-MIT License © 2026 Screen Designer Team.
+MIT License © 2026 jay94ks@gmail.com

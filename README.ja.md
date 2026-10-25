@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Universal Cross-Agent Visual Storyboard Canvas, MCP Suite & Headless CLI</strong><br>
-  Claude Code、Cursor、OpenAI Codex/GPT、Google Gemini (Antigravity) のための次世代リアルタイムUIデザイン＆ビジュアルプロトタイピングシステム
+  Claude Code、Cursor、OpenAI Codex/GPT、Google Gemini (Antigravity) のためのリアルタイムUIデザイン＆ビジュアルプロトタイピングツール
 </p>
 
 <p align="center">
@@ -28,23 +28,23 @@
 
 ## 🌟 主な特徴 (Key Features)
 
-1. **⚡ 超高速リアルタイムレンダリング＆無限キャンバス (Zero-Delay Live Canvas)**:
-   - AIエージェントからコードを受信した瞬間、わずか **0.1秒** でインタラクティブなVDOM UIがキャンバスへ即時レンダリングされます。
-   - レイヤーツリーDOMの92%軽量化最適化と、window-level rAFによる60FPSのスムーズなパン＆ズームエンジンを搭載。
+1. **リアルタイムレンダリング＆無限キャンバス (Live Canvas)**:
+   - AIエージェントからコードを受信すると、インタラクティブなVDOM UIがキャンバスへ即時レンダリングされます。
+   - レイヤーツリーDOM最適化と、window-level rAFによる60FPSのパン＆ズームエンジンを搭載。
 2. **📐 キャンバス役割(Role)＆レスポンシブ解像度システム**:
    - 固定のデバイス規格ではなく、画面の目的や役割（`main-page`、`sub-page`、`modal`、`bottom-sheet`、`widget`、`responsive-viewport`）に基づいてフレームを設計します。
    - 幅×高さの直接入力、ワンクリック向き切り替え、編集中リアルタイム稼働プリセットプレビュー、解像度別の条件付き表示ルール(Resolution Rules)に対応。
 3. **⚡ インタラクティブプロトタイピング＆動的調整 (Events & Tweaks)**:
    - Figmaスタイルのベジェ曲線フローライン(Wires)、実機モックアップ再生モード(`▶ PLAY`)、クリックホットスポットガイド。
-   - テーマ(Dark/Light/Cyber)、通貨・金額(₩/$/€/¥)、言語、UI密度などをリアルタイムに調整すると、VDOMモックアップが即座に動的更新されます。
+   - テーマ(Dark/Light/Cyber)、通貨・金額(₩/$/€/¥)、言語、UI密度などを調整すると、VDOMモックアップが動的に更新されます。
 4. **🛠️ 17種のドメイン指向MCPツール (`screen_designer_*`)**:
-   - プロジェクト参照からページ・アートボード生成、精密なノードスタイル変更、デザインシステムトークン管理、Chrome Headlessによるビジュアル検証まで、すべて標準MCPプロトコルで提供。
-5. **💻 強力なCLI制御インターフェース (`screen-designer`)**:
-   - GUIなしでもターミナルから `screen-designer page create`、`screen-designer artboard add/update/delete`、`screen-designer commit` などのサブコマンドでプロジェクトを自由に操作可能。
+   - プロジェクト参照からページ・アートボード生成、ノードスタイル変更、デザインシステムトークン管理、Chrome Headlessによるビジュアル検証ツールを標準MCPプロトコルで提供。
+5. **💻 CLI制御インターフェース (`screen-designer`)**:
+   - ターミナルから `screen-designer page create`、`screen-designer artboard add/update/delete`、`screen-designer commit` などのサブコマンドでプロジェクトを操作可能。
 6. **📦 ネイティブGitエンジン (`es-git`) 統合**:
-   - 外部Gitバイナリ不要。純粋な高性能 `es-git` エンジンが変更を自動検知し、差分(diff)確認からワンクリックコミット／プッシュまでを統合サポート。
-7. **🌐 完全な3言語多言語対応 (i18n)**:
-   - 日本語(`ja`)、韓国語(`ko`)、英語(`en`)のリアルタイムワンクリック言語切り替え、およびプロジェクト単位の永続保存に対応。
+   - 外部Gitバイナリ不要。組み込みの `es-git` エンジンが変更を検知し、差分(diff)確認からコミット／プッシュまでをサポート。
+7. **🌐 3言語多言語対応 (i18n)**:
+   - 日本語(`ja`)、韓国語(`ko`)、英語(`en`)の言語切り替え、およびプロジェクト単位の永続保存に対応。
 
 ---
 
@@ -89,7 +89,7 @@ screen-designer ui
 
 ## ⌨️ CLIコマンドリファレンス (CLI Reference)
 
-Screen Designerは多彩なターミナルコマンドを標準提供しています:
+Screen Designerが提供する主なCLIコマンドです:
 
 ```bash
 # 状態確認＆診断
@@ -137,7 +137,7 @@ Screen Designer MCPサーバーは、`screen_designer_*` 標準名前空間お�
 | | `screen_designer_save_design_system` | デザイントークン・初期スタイルの一括更新およびキャンバス同期 |
 | **Live Canvas**| `screen_designer_get_live_selection` | キャンバス上で選択中の要素IDおよびスライダー調整値の取得 |
 | | `screen_designer_sync_canvas` | キャンバスのズーム/パン移動、特定アートボード/要素へのカメラフォーカス |
-| **Visual & Code**| `screen_designer_render_image` | Chrome Headlessによる超高解像度画像キャプチャ（ビジュアル検証用） |
+| **Visual & Code**| `screen_designer_render_image` | Chrome Headlessによる高解像度画像キャプチャ（ビジュアル検証用） |
 | | `screen_designer_export_code` | VDOM構造から本番対応React 19 + Tailwind CSSコードを自動生成 |
 | **Git** | `screen_designer_git_status` | `es-git` によるUI変更ファイルのステージング状態およびdiff取得 |
 | | `screen_designer_git_commit` | `es-git` によるUI変更履歴の自動ステージングおよびコミット作成 |
@@ -200,4 +200,4 @@ npm run dev:mcp
 
 ## 📄 ライセンス (License)
 
-MIT License © 2026 Screen Designer Team.
+MIT License © 2026 jay94ks@gmail.com

@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Universal Cross-Agent Visual Storyboard Canvas, MCP Suite & Headless CLI</strong><br>
-  Claude Code, Cursor, OpenAI Codex/GPT, Google Gemini(Antigravity)를 위한 차세대 실시간 UI 디자인 & 비주얼 프로토타이핑 시스템
+  Claude Code, Cursor, OpenAI Codex/GPT, Google Gemini(Antigravity)를 위한 실시간 UI 디자인 & 비주얼 프로토타이핑 도구
 </p>
 
 <p align="center">
@@ -28,23 +28,23 @@
 
 ## 🌟 핵심 특징 (Key Features)
 
-1. **⚡ 초고속 실시간 렌더링 & 무한 캔버스 (Zero-Delay Live Canvas)**:
-   - AI 에이전트가 코드를 전달하는 즉시 **0.1초** 만에 캔버스에 인터랙티브 VDOM UI가 즉각 렌더링됩니다.
-   - 레이어 트리 DOM 최적화(-92% 경량화) 및 window-level rAF 기반 60FPS 부드러운 패닝/줌 엔진을 탑재했습니다.
+1. **실시간 렌더링 & 무한 캔버스 (Live Canvas)**:
+   - AI 에이전트가 코드를 전달하면 캔버스에 인터랙티브 VDOM UI가 즉시 렌더링됩니다.
+   - 레이어 트리 DOM 최적화 및 window-level rAF 기반 60FPS 패닝/줌 엔진을 탑재했습니다.
 2. **📐 캔버스 역할(Role) & 반응형 해상도 시스템**:
    - 단순 기기 규격이 아닌 화면의 목적과 역할(`main-page`, `sub-page`, `modal`, `bottom-sheet`, `widget`, `responsive-viewport`)을 기준으로 프레임을 설계합니다.
-   - 설계 가로×세로 직접 입력 및 원클릭 회전, 편집 중 실시간 구동 해상도 프리셋 미리보기, 해상도별 조건부 노출 규칙(Resolution Rules)을 완벽 지원합니다.
+   - 설계 가로×세로 직접 입력 및 원클릭 회전, 편집 중 실시간 구동 해상도 프리셋 미리보기, 해상도별 조건부 노출 규칙(Resolution Rules)을 지원합니다.
 3. **⚡ 인터랙티브 프로토타이핑 & 동적 트윅 (Events & Tweaks)**:
    - Figma 스타일 베지어 곡선 인터랙션 연결선(Wires), 디바이스 목업 플레이 모드(`▶ PLAY`), 핫스팟 가이드 지원.
-   - 화면별 테마(Dark/Light/Cyber), 통화 및 금액(₩/$/€/¥), 언어, UI 밀도 등을 실시간 조절하면 VDOM 시안이 즉시 반응하여 서식을 동적으로 변환합니다.
+   - 화면별 테마(Dark/Light/Cyber), 통화 및 금액(₩/$/€/¥), 언어, UI 밀도 등을 조절하면 VDOM 시안에 서식이 동적으로 반영됩니다.
 4. **🛠️ 17종 도메인 기반 MCP 도구 (`screen_designer_*`)**:
-   - 프로젝트 조회부터 페이지/장표(Artboard) 생성, 정밀 노드 스타일 수정, 디자인 시스템 토큰 관리, Chrome Headless 기반 비주얼 스크린샷 검증까지 모든 도구를 표준 MCP 프로토콜로 제공합니다.
-5. **💻 강력한 CLI 제어 인터페이스 (`screen-designer`)**:
-   - GUI 없이도 터미널 환경에서 `screen-designer page create`, `screen-designer artboard add/update/delete`, `screen-designer commit` 등의 서브커맨드로 프로젝트를 자유자재로 제어할 수 있습니다.
+   - 프로젝트 조회부터 페이지/장표(Artboard) 생성, 노드 스타일 수정, 디자인 시스템 토큰 관리, Chrome Headless 기반 비주얼 스크린샷 검증 도구를 표준 MCP 프로토콜로 제공합니다.
+5. **💻 CLI 제어 인터페이스 (`screen-designer`)**:
+   - 터미널 환경에서 `screen-designer page create`, `screen-designer artboard add/update/delete`, `screen-designer commit` 등의 서브커맨드로 프로젝트를 제어할 수 있습니다.
 6. **📦 네이티브 Git 엔진 (`es-git`) 통합**:
-   - 외부 Git 바이너리 종속 없이 순수 고성능 `es-git` 엔진으로 작업 내역을 자동 감지하고 다이얼로그에서 변경점 diff 확인 및 원클릭 커밋/푸시를 지원합니다.
-7. **🌐 완전한 3개 국어 다국어 지원 (i18n)**:
-   - 한국어(`ko`), 영어(`en`), 일본어(`ja`) 실시간 원클릭 언어 전환 및 프로젝트 단위 영속 저장.
+   - 외부 Git 바이너리 설치 없이 내장된 `es-git` 엔진으로 작업 내역을 감지하고 변경점 diff 확인 및 커밋/푸시를 지원합니다.
+7. **🌐 3개 국어 다국어 지원 (i18n)**:
+   - 한국어(`ko`), 영어(`en`), 일본어(`ja`) 언어 전환 및 프로젝트 단위 영속 저장을 지원합니다.
 
 ---
 
@@ -89,7 +89,7 @@ screen-designer ui
 
 ## ⌨️ CLI 명령어 레퍼런스 (CLI Reference)
 
-Screen Designer는 풍부한 터미널 명령어를 기본 제공합니다:
+Screen Designer가 제공하는 터미널 명령어 목록입니다:
 
 ```bash
 # 상태 및 진단
@@ -137,7 +137,7 @@ Screen Designer MCP 서버는 `screen_designer_*` 표준 네임스페이스와 �
 | | `screen_designer_save_design_system` | 디자인 토큰 및 컴포넌트 기본 스타일 일괄 갱신 및 캔버스 동기화 |
 | **Live Canvas**| `screen_designer_get_live_selection` | 사용자가 캔버스에서 클릭한 요소 ID 및 슬라이더 조절값 획득 |
 | | `screen_designer_sync_canvas` | 캔버스 뷰포트 확대/이동 및 특정 장표/요소로 카메라 포커스 이동 |
-| **Visual & Code**| `screen_designer_render_image` | Chrome Headless 기반 무헤드리스 초고화질 장표 캡처 (비주얼 검증) |
+| **Visual & Code**| `screen_designer_render_image` | Chrome Headless 기반 장표 이미지 캡처 (비주얼 검증) |
 | | `screen_designer_export_code` | VDOM 구조를 React 19 + Tailwind CSS 컴포넌트 코드로 컴파일 |
 | **Git** | `screen_designer_git_status` | `es-git` 기반 UI 변경 파일 스테이징 상태 및 diff 조회 |
 | | `screen_designer_git_commit` | `es-git` 기반 UI 변경 내역 자동 스테이징 및 커밋 생성 |
@@ -200,4 +200,4 @@ npm run dev:mcp
 
 ## 📄 라이선스 (License)
 
-MIT License © 2026 Screen Designer Team.
+MIT License © 2026 jay94ks@gmail.com

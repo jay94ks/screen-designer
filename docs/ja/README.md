@@ -69,10 +69,10 @@ npm run dev:mcp
 | **Frontend Core** | React 19, TypeScript, Vite 6 | 高速バンドリングおよび最新React仮想DOM操作 |
 | **Desktop App** | Electron 35 | クロスプラットフォームデスクトップネイティブウィンドウ |
 | **Styling** | Tailwind CSS 4, Lucide Icons | ユーティリティファーストスタイリングおよび統一アイコンシステム |
-| **Version Control** | es-git (Toss libgit2 binding) | 外部Git不要の純粋ネイティブGitステージング、diff、コミット |
+| **Version Control** | es-git (Toss libgit2 binding) | 外部Git不要、組み込み `es-git` によるステージング、diff、コミット |
 | **Cross-Agent MCP** | Model Context Protocol (SDK 1.6) | Claude/Cursor/Codex/Gemini連携 17種のドメイン指向制御ツール |
-| **Visual Headless** | Chrome Headless | エージェント向けビジュアル検証用ヘッドレス高速画像レンダラー |
-| **Localization** | i18n Core (TypeScript Dictionaries) | 日本語(`ja`)、韓国語(`ko`)、英語(`en`)のリアルタイム言語切り替え |
+| **Visual Headless** | Chrome Headless | エージェント向けビジュアル検証用ヘッドレス画像レンダラー |
+| **Localization** | i18n Core (TypeScript Dictionaries) | 日本語(`ja`)、韓国語(`ko`)、英語(`en`)の言語切り替え対応 |
 | **CLI & Automation** | Commander.js, Chalk | ターミナルベースのヘッドレス操作および環境診断ツール |
 
 ---

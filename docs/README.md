@@ -4,8 +4,8 @@
   <a href="en/README.md">English</a> • <a href="README.md">한국어</a> • <a href="ja/README.md">日本語</a>
 </p>
 
-> **React 19 + TypeScript + Electron + MCP + Headless CLI** 기반의 크로스 플랫폼 화면 설계 및 프로토타이핑 시스템입니다.  
-> 기획자, UI 디자이너, 프론트엔드 개발자 및 AI 에이전트(Claude, Gemini, GPT 등)가 가상 DOM(VDOM) 기반으로 모바일 및 웹 화면을 시각적으로 설계하고, 피그마 스타일 프로토타이핑, 디자인 시스템 관리, React/Tailwind 코드 자동 추출, Headless CLI 자동화까지 원스톱으로 수행할 수 있습니다.
+> **React 19 + TypeScript + Electron + MCP + Headless CLI** 기반의 크로스 플랫폼 화면 설계 및 프로토타이핑 도구입니다.  
+> 기획자, UI 디자이너, 프론트엔드 개발자 및 AI 에이전트(Claude, Gemini, GPT 등)가 가상 DOM(VDOM) 기반으로 모바일 및 웹 화면을 시각적으로 설계하고, 피그마 스타일 프로토타이핑, 디자인 시스템 관리, React/Tailwind 코드 추출, Headless CLI 자동화를 수행할 수 있습니다.
 
 ---
 
@@ -73,10 +73,10 @@ npm run dev:mcp
 | **Frontend Core** | React 19, TypeScript, Vite 6 | 고속 번들링 및 최신 React 가상 DOM 조작 |
 | **Desktop App** | Electron 35 | 크로스 플랫폼 데스크톱 네이티브 윈도우 지원 |
 | **Styling** | Tailwind CSS 4, Lucide Icons | 유틸리티 퍼스트 스타일링 및 일관된 아이콘 시스템 |
-| **Version Control** | es-git (Toss libgit2 binding) | 외부 Git 종속 없는 순수 네이티브 고성능 Git 스테이징, Diff, 커밋 |
+| **Version Control** | es-git (Toss libgit2 binding) | 외부 Git 설치 불필요, 내장 `es-git` 기반 스테이징, Diff, 커밋 지원 |
 | **Cross-Agent MCP** | Model Context Protocol (SDK 1.6) | Claude/Cursor/Codex/Gemini 연동 17종 도메인 기반 제어 도구 |
-| **Visual Headless** | Chrome Headless | 에이전트 비주얼 검증을 위한 무헤드리스 실시간 화면 캡처 |
-| **Localization** | i18n Core (TypeScript Dictionaries) | 한국어(`ko`), 영어(`en`), 일본어(`ja`) 3개 국어 실시간 전환 |
+| **Visual Headless** | Chrome Headless | 에이전트 비주얼 검증을 위한 헤드리스 화면 캡처 |
+| **Localization** | i18n Core (TypeScript Dictionaries) | 한국어(`ko`), 영어(`en`), 일본어(`ja`) 3개 국어 전환 지원 |
 | **CLI & Automation** | Commander.js, Chalk | 터미널 기반 헤드리스 프로젝트 조작 및 진단 도구 |
 
 ---

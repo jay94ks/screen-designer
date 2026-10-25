@@ -69,10 +69,10 @@ npm run dev:mcp
 | **Frontend Core** | React 19, TypeScript, Vite 6 | High-speed bundling and reactive Virtual DOM manipulation |
 | **Desktop App** | Electron 35 | Native cross-platform desktop application container |
 | **Styling** | Tailwind CSS 4, Lucide Icons | Utility-first styling with consistent iconography |
-| **Version Control** | es-git (Toss libgit2 binding) | Zero external Git dependency, high-performance staging, diffing, and commits |
+| **Version Control** | es-git (Toss libgit2 binding) | Built-in native Git engine for staging, diffing, and commits without external Git |
 | **Cross-Agent MCP** | Model Context Protocol (SDK 1.6) | 17 domain tools for Claude, Cursor, Codex, and Gemini |
-| **Visual Headless** | Chrome Headless | High-speed headless screenshot rendering for vision models |
-| **Localization** | i18n Core (TypeScript Dictionaries) | Instant runtime switching for English (`en`), Korean (`ko`), and Japanese (`ja`) |
+| **Visual Headless** | Chrome Headless | Headless screenshot capture for vision models |
+| **Localization** | i18n Core (TypeScript Dictionaries) | Runtime language switching for English (`en`), Korean (`ko`), and Japanese (`ja`) |
 | **CLI & Automation** | Commander.js, Chalk | Headless automation and project health diagnostics |
 
 ---
