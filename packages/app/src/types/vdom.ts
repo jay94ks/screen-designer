@@ -266,10 +266,51 @@ export interface VNode {
   visible?: boolean;
 }
 
+export type CanvasRole =
+  | 'main-page'    // 메인 페이지 / 전체 화면
+  | 'workspace'    // 워크스페이스 / 관리 대시보드
+  | 'sub-view'     // 서브 화면 / 단일 플로우 뷰
+  | 'modal'        // 모달 / 다이얼로그 팝업
+  | 'drawer'       // 사이드 드로어 / 슬라이드 패널
+  | 'bottom-sheet' // 바텀 시트 / 액션 시트
+  | 'popover'      // 팝오버 / 드롭다운 메뉴 / 커맨드 팔레트
+  | 'section'      // 부분 섹션 / 임베드 위젯
+  | 'custom';      // 자유 역할 캔버스
+
+export type ResolutionRulePreset =
+  | 'all'          // 모든 해상도에서 표시
+  | 'wide-only'    // 와이드 화면 전용 (W >= 1280)
+  | 'desktop-only' // 대화면 / 데스크톱 전용 (W >= 1024)
+  | 'tablet-only'  // 중형 / 분할 화면 전용 (768 <= W <= 1023)
+  | 'mobile-only'  // 소형 / 컴팩트 화면 전용 (W <= 767)
+  | 'landscape'    // 가로 방향 전용 (W >= H)
+  | 'portrait'     // 세로 방향 전용 (W < H)
+  | 'custom';      // 사용자 직접 범위 설정
+
+export interface ArtboardResolutionRule {
+  enabled: boolean;
+  preset: ResolutionRulePreset;
+  minWidth?: number;
+  maxWidth?: number;
+  minHeight?: number;
+  maxHeight?: number;
+  orientation?: 'any' | 'landscape' | 'portrait';
+}
+
+export interface ArtboardPreviewResolution {
+  enabled: boolean;
+  width: number;
+  height: number;
+  presetId?: string;
+}
+
 export interface VDomArtboard {
   id: string;
   title: string;
   viewport: 'mobile' | 'tablet' | 'desktop' | 'custom';
+  canvasRole?: CanvasRole;
+  resolutionRule?: ArtboardResolutionRule;
+  previewResolution?: ArtboardPreviewResolution;
   x: number;
   y: number;
   width: number;

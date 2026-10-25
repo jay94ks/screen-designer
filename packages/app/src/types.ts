@@ -1,4 +1,4 @@
-import type { NodeType } from './types/vdom';
+import type { NodeType, CanvasRole, ArtboardResolutionRule } from './types/vdom';
 
 export type ViewportType = 'mobile' | 'tablet' | 'desktop' | 'custom';
 
@@ -50,6 +50,8 @@ export interface Artboard {
   id: string;
   title: string;
   viewport: ViewportType;
+  canvasRole?: CanvasRole;
+  resolutionRule?: ArtboardResolutionRule;
   x: number;
   y: number;
   width: number;

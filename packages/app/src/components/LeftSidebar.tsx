@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { VDomArtboard, VNode, NodeType } from '../types/vdom';
 import {
+  inferCanvasRoleFromArtboard,
+  evaluateArtboardResolution
+} from '../utils/canvasRolesAndResolution';
+import {
   Layers,
   FileText,
   Plus,
@@ -616,6 +620,19 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             ) : (
               artboards.map((artboard) => {
                 const isSelected = artboard.id === selectedArtboardId;
+                const roleMeta = inferCanvasRoleFromArtboard(artboard);
+                const isPreviewActive = Boolean(artboard.previewResolution?.enabled);
+                const activeW = isPreviewActive
+                  ? artboard.previewResolution!.width
+                  : artboard.width;
+                const activeH = isPreviewActive
+                  ? artboard.previewResolution!.height
+                  : artboard.height;
+                const resEval = evaluateArtboardResolution(
+                  artboard.resolutionRule,
+                  activeW,
+                  activeH
+                );
                 const Icon =
                   artboard.viewport === 'mobile'
                     ? Smartphone
@@ -628,19 +645,42 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                     {/* Artboard Root Header */}
                     <div
                       onClick={() => onSelectArtboard(artboard.id)}
-                      className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition ${
+                      className={`flex flex-col gap-1 p-2 rounded-lg cursor-pointer transition ${
                         isSelected
                           ? 'bg-indigo-50 border border-indigo-200 font-bold text-indigo-900 shadow-2xs'
                           : 'hover:bg-slate-50 text-slate-800'
                       }`}
                     >
-                      <div className="flex items-center gap-2 truncate">
-                        <Icon size={13} className="text-indigo-600 shrink-0" />
-                        <span className="truncate">{artboard.title}</span>
+                      <div className="flex items-center justify-between gap-1 min-w-0">
+                        <div className="flex items-center gap-1.5 truncate min-w-0">
+                          <Icon size={12} className="text-indigo-600 shrink-0" />
+                          <span className="truncate">{artboard.title}</span>
+                        </div>
+                        <span
+                          className={`text-[9px] font-mono shrink-0 ${
+                            isPreviewActive ? 'text-cyan-700 font-bold' : 'text-slate-400'
+                          }`}
+                        >
+                          {activeW}×{activeH}
+                        </span>
                       </div>
-                      <span className="text-[9px] font-mono text-slate-400">
-                        {artboard.width}×{artboard.height}
-                      </span>
+
+                      <div className="flex items-center justify-between gap-1 pl-4">
+                        <span className={`px-1.5 py-0 rounded border text-[9px] font-bold ${roleMeta.badgeClass}`}>
+                          {roleMeta.shortLabel}
+                        </span>
+                        {resEval.isRestricted && (
+                          <span
+                            className={`px-1.5 py-0 rounded text-[9px] font-semibold ${
+                              resEval.matches
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : 'bg-rose-50 text-rose-700 border border-rose-200'
+                            }`}
+                          >
+                            {resEval.matches ? resEval.badgeText : `숨김(${resEval.badgeText})`}
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     {/* Recursive Virtual DOM Node Tree */}

@@ -1,33 +1,38 @@
 {
-  "name": "Screen Designer Storyboard",
-  "version": "1.0.0",
-  "updatedAt": "2026-10-25T10:10:35.097Z",
+  "id": "proj-screen-designer-self-ui",
+  "title": "Screen Designer - Visual Storyboard Canvas",
+  "name": "Screen Designer - Visual Storyboard Canvas",
+  "version": "2.0.0",
   "activePageId": "page-1",
-  "pageDocsPath": "docs/ui-boards",
+  "updatedAt": "2026-10-25T10:46:24.956Z",
   "pages": [
     {
       "id": "page-1",
-      "name": "Page 1 (핀테크 가상 DOM)",
       "number": 1,
-      "fileName": "pages/1.json",
-      "artboardsCount": 3
+      "name": "1. 핵심 작업 공간 & 인스펙터",
+      "file": "pages/1.json",
+      "artboardCount": 4
     },
     {
       "id": "page-2",
-      "name": "Page 2 (새로운 작업 공간)",
       "number": 2,
-      "fileName": "pages/2.json",
-      "artboardsCount": 0
+      "name": "2. 프로토타이핑 & 동적 트윅",
+      "file": "pages/2.json",
+      "artboardCount": 4
+    },
+    {
+      "id": "page-3",
+      "number": 3,
+      "name": "3. 디자인 시스템 & Git 데스크톱",
+      "file": "pages/3.json",
+      "artboardCount": 2
+    },
+    {
+      "id": "page-4",
+      "number": 4,
+      "name": "4. 커맨드 팔레트 & 환경설정",
+      "file": "pages/4.json",
+      "artboardCount": 4
     }
-  ],
-  "assets": [
-    "assets/preset-avatar.svg",
-    "assets/preset-chart.svg",
-    "assets/preset-gradient.svg",
-    "assets/preset-minimal.svg",
-    "assets/preset-nature.svg",
-    "assets/preset-tech.svg",
-    "assets/screenshots"
-  ],
-  "settings": {}
+  ]
 }

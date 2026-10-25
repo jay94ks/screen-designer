@@ -1,9 +1,7 @@
 {
   "id": "page-4",
-  "name": "4. 커맨드 팔레트 & 환경설정",
   "number": 4,
-  "version": "1.0.0",
-  "updatedAt": "2026-10-25T10:08:33.861Z",
+  "name": "4. 커맨드 팔레트 & 환경설정",
   "artboards": [
     {
       "id": "ab-sd-11-modal-command-palette",

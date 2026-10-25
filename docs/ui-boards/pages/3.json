@@ -1,9 +1,7 @@
 {
   "id": "page-3",
-  "name": "3. 디자인 시스템 & Git 데스크톱",
   "number": 3,
-  "version": "1.0.0",
-  "updatedAt": "2026-10-25T10:08:33.805Z",
+  "name": "3. 디자인 시스템 & Git 데스크톱",
   "artboards": [
     {
       "id": "ab-sd-09-modal-design-system",

@@ -638,6 +638,12 @@ export const INITIAL_VDOM_ARTBOARDS: VDomArtboard[] = [
     id: 'artboard-1',
     title: '1. AI 자산 관리 홈 (Home)',
     viewport: 'mobile',
+    canvasRole: 'main-page',
+    resolutionRule: {
+      enabled: false,
+      preset: 'all',
+      orientation: 'any'
+    },
     x: 0,
     y: 0,
     width: 390,
@@ -653,6 +659,13 @@ export const INITIAL_VDOM_ARTBOARDS: VDomArtboard[] = [
     id: 'artboard-2',
     title: '2. 간편 주문 모달 (Order)',
     viewport: 'mobile',
+    canvasRole: 'bottom-sheet',
+    resolutionRule: {
+      enabled: true,
+      preset: 'mobile-only',
+      maxWidth: 767,
+      orientation: 'any'
+    },
     x: 440,
     y: 0,
     width: 390,
@@ -667,6 +680,12 @@ export const INITIAL_VDOM_ARTBOARDS: VDomArtboard[] = [
     id: 'artboard-3',
     title: '3. 체결 완료 & 영수증 (Success)',
     viewport: 'mobile',
+    canvasRole: 'modal',
+    resolutionRule: {
+      enabled: false,
+      preset: 'all',
+      orientation: 'any'
+    },
     x: 880,
     y: 0,
     width: 390,

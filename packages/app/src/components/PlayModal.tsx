@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { VDomArtboard, VNode, EventTrigger, ChangeTweakAction, NavigateAction } from '../types/vdom';
+import {
+  inferCanvasRoleFromArtboard,
+  evaluateArtboardResolution
+} from '../utils/canvasRolesAndResolution';
 import { VNodeRenderer } from './VNodeRenderer';
 import {
   X,
@@ -9,7 +13,9 @@ import {
   RotateCw,
   Sparkles,
   MoveDiagonal2,
-  SlidersHorizontal
+  SlidersHorizontal,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 
 export const MIN_PLAY_VIEWPORT_WIDTH = 240;
@@ -25,22 +31,22 @@ export interface ResolutionPresetItem {
 
 export const PLAY_RESOLUTION_PRESETS: ResolutionPresetItem[] = [
   { id: 'responsive', label: '↔ 반응형 (외곽 드래그 자유 조절)', group: '반응형 / 원본' },
-  { id: 'original', label: '아트보드 원본 크기', group: '반응형 / 원본' },
-  // 데스크톱 / 노트북
-  { id: '2560x1440', label: 'QHD 모니터 (2560 × 1440)', w: 2560, h: 1440, group: '데스크톱 / 노트북' },
-  { id: '1920x1080', label: 'FHD 데스크톱 (1920 × 1080)', w: 1920, h: 1080, group: '데스크톱 / 노트북' },
-  { id: '1600x1000', label: '스튜디오 와이드 (1600 × 1000)', w: 1600, h: 1000, group: '데스크톱 / 노트북' },
-  { id: '1440x900', label: '표준 노트북 / MacBook (1440 × 900)', w: 1440, h: 900, group: '데스크톱 / 노트북' },
-  { id: '1280x800', label: 'HD 노트북 (1280 × 800)', w: 1280, h: 800, group: '데스크톱 / 노트북' },
-  // 태블릿
-  { id: '1024x1366', label: 'iPad Pro 12.9" (1024 × 1366)', w: 1024, h: 1366, group: '태블릿' },
-  { id: '834x1194', label: 'iPad Air / Pro 11" (834 × 1194)', w: 834, h: 1194, group: '태블릿' },
-  { id: '768x1024', label: 'iPad Mini / 태블릿 (768 × 1024)', w: 768, h: 1024, group: '태블릿' },
-  // 모바일
-  { id: '430x932', label: 'iPhone 16 Pro Max (430 × 932)', w: 430, h: 932, group: '모바일' },
-  { id: '393x852', label: 'iPhone 16 / 15 Pro (393 × 852)', w: 393, h: 852, group: '모바일' },
-  { id: '412x915', label: 'Galaxy S24 Ultra (412 × 915)', w: 412, h: 915, group: '모바일' },
-  { id: '375x667', label: '모바일 컴팩트 / SE (375 × 667)', w: 375, h: 667, group: '모바일' }
+  { id: 'original', label: '장표 설계 원본 크기', group: '반응형 / 원본' },
+  // 대화면 / 와이드
+  { id: '2560x1440', label: '2560 × 1440 (QHD 울트라 와이드)', w: 2560, h: 1440, group: '대화면 / 와이드' },
+  { id: '1920x1080', label: '1920 × 1080 (FHD 와이드 화면)', w: 1920, h: 1080, group: '대화면 / 와이드' },
+  { id: '1600x1000', label: '1600 × 1000 (워크스페이스 16:10)', w: 1600, h: 1000, group: '대화면 / 와이드' },
+  { id: '1440x900', label: '1440 × 900 (표준 메인 페이지)', w: 1440, h: 900, group: '대화면 / 와이드' },
+  { id: '1280x800', label: '1280 × 800 (컴팩트 웹 화면)', w: 1280, h: 800, group: '대화면 / 와이드' },
+  // 중형 / 분할 화면
+  { id: '1024x768', label: '1024 × 768 (중형 가로 화면)', w: 1024, h: 768, group: '중형 / 분할 화면' },
+  { id: '834x1194', label: '834 × 1194 (중형 세로 화면)', w: 834, h: 1194, group: '중형 / 분할 화면' },
+  { id: '768x1024', label: '768 × 1024 (표준 분할 세로 뷰)', w: 768, h: 1024, group: '중형 / 분할 화면' },
+  // 오버레이 / 소형 뷰
+  { id: '640x480', label: '640 × 480 (모달 / 다이얼로그 뷰)', w: 640, h: 480, group: '오버레이 / 소형 뷰' },
+  { id: '430x932', label: '430 × 932 (소형 와이드 세로 뷰)', w: 430, h: 932, group: '오버레이 / 소형 뷰' },
+  { id: '390x844', label: '390 × 844 (소형 표준 세로 뷰)', w: 390, h: 844, group: '오버레이 / 소형 뷰' },
+  { id: '360x640', label: '360 × 640 (소형 최소 세로 뷰)', w: 360, h: 640, group: '오버레이 / 소형 뷰' }
 ];
 
 type ResizeDirection = 'e' | 'w' | 's' | 'se' | 'sw' | null;
@@ -63,6 +69,7 @@ export const PlayModal: React.FC<PlayModalProps> = ({
   const [viewportW, setViewportW] = useState<number>(1280);
   const [viewportH, setViewportH] = useState<number>(800);
   const [showHotspots, setShowHotspots] = useState(false);
+  const [autoSwitchByResolution, setAutoSwitchByResolution] = useState(true);
   const [playTweakMap, setPlayTweakMap] = useState<Record<string, Record<string, any>>>({});
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [resizingDir, setResizingDir] = useState<ResizeDirection>(null);
@@ -166,6 +173,34 @@ export const PlayModal: React.FC<PlayModalProps> = ({
   const current = artboards[index] || artboards[0];
   const currentTweakValues = playTweakMap[current.id] || current.tweakValues || {};
   const isResponsive = resolutionPreset === 'responsive';
+  const roleMeta = inferCanvasRoleFromArtboard(current);
+  const resEval = evaluateArtboardResolution(current.resolutionRule, viewportW, viewportH);
+
+  // Find alternative artboard that matches the current viewportW x viewportH if current doesn't match
+  const matchingArtboards = artboards.filter((a) =>
+    evaluateArtboardResolution(a.resolutionRule, viewportW, viewportH).matches
+  );
+  const restrictedMatchingArtboard = artboards.find(
+    (a) =>
+      a.id !== current.id &&
+      a.resolutionRule?.enabled &&
+      evaluateArtboardResolution(a.resolutionRule, viewportW, viewportH).matches
+  );
+
+  // Auto-switch to a resolution-matching artboard if autoSwitchByResolution is enabled and current is hidden
+  useEffect(() => {
+    if (!autoSwitchByResolution) return;
+    if (!resEval.matches) {
+      const candidate = restrictedMatchingArtboard || matchingArtboards[0];
+      if (candidate && candidate.id !== current.id) {
+        const nextIdx = artboards.findIndex((a) => a.id === candidate.id);
+        if (nextIdx !== -1) {
+          setIndex(nextIdx);
+          showToast(`📐 해상도(${viewportW}×${viewportH}) 조건에 맞는 '${candidate.title}' 장표로 자동 전환됨`);
+        }
+      }
+    }
+  }, [viewportW, viewportH, autoSwitchByResolution]);
 
   const handlePresetChange = (presetId: string) => {
     setResolutionPreset(presetId);
@@ -279,16 +314,19 @@ export const PlayModal: React.FC<PlayModalProps> = ({
   };
 
   // Group presets for clean <optgroup> rendering
-  const groups = ['반응형 / 원본', '데스크톱 / 노트북', '태블릿', '모바일'];
+  const groups = ['반응형 / 원본', '대화면 / 와이드', '중형 / 분할 화면', '오버레이 / 소형 뷰'];
 
   return (
     <div className="fixed inset-0 z-[110] bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-between p-4 select-none animate-in fade-in duration-150">
       {/* Top Floating Control Bar: Resolution Combobox + Direct W×H Inputs + Hotspots + Navigation */}
-      <header className="min-h-12 bg-slate-900/95 border border-slate-700/80 rounded-2xl px-4 py-1.5 flex flex-wrap items-center gap-3 shadow-2xl z-[110] text-white max-w-full">
-        {/* Active Artboard Title */}
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-          <span className="text-xs font-bold tracking-wide truncate max-w-[180px]" title={current.title}>
+      <header className="min-h-12 bg-slate-900/95 border border-slate-700/80 rounded-2xl px-4 py-1.5 flex flex-wrap items-center gap-2.5 shadow-2xl z-[110] text-white max-w-full">
+        {/* Active Artboard Title + Role Badge */}
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+          <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 border border-indigo-400/40 text-indigo-300 text-[10px] font-bold shrink-0">
+            {roleMeta.shortLabel}
+          </span>
+          <span className="text-xs font-bold tracking-wide truncate max-w-[160px]" title={current.title}>
             {current.title}
           </span>
           <span className="text-xs text-slate-400 font-mono shrink-0">
@@ -384,6 +422,29 @@ export const PlayModal: React.FC<PlayModalProps> = ({
           </span>
         )}
 
+        {/* Resolution Condition Match Status & Auto-Switch Toggle */}
+        <button
+          type="button"
+          onClick={() => setAutoSwitchByResolution((prev) => !prev)}
+          className={`px-2 py-1 rounded-lg border text-[10px] font-bold flex items-center gap-1 whitespace-nowrap transition ${
+            !resEval.matches
+              ? 'bg-rose-500/20 border-rose-500/50 text-rose-300'
+              : resEval.isRestricted
+              ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+              : 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
+          }`}
+          title={`${resEval.reasonText} (클릭하여 해상도 조건별 장표 자동 전환 ${autoSwitchByResolution ? '끄기' : '켜기'})`}
+        >
+          {resEval.matches ? <Eye size={11} /> : <EyeOff size={11} />}
+          <span>
+            {resEval.isRestricted
+              ? resEval.matches
+                ? `조건 충족 (${resEval.badgeText})`
+                : `조건 불일치 (${resEval.badgeText})`
+              : `해상도 연동 ${autoSwitchByResolution ? 'ON' : 'OFF'}`}
+          </span>
+        </button>
+
         {/* Hotspot Hint Toggle */}
         <button
           onClick={() => setShowHotspots(!showHotspots)}
@@ -447,15 +508,55 @@ export const PlayModal: React.FC<PlayModalProps> = ({
         >
           {/* Viewport Content Container */}
           <div
-            className={`w-full h-full bg-slate-950 rounded-2xl overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85)] border transition-colors ${
-              resizingDir
+            className={`w-full h-full bg-slate-950 rounded-2xl overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85)] border transition-colors flex flex-col ${
+              !resEval.matches
+                ? 'border-rose-500 ring-2 ring-rose-500/40'
+                : resizingDir
                 ? 'border-indigo-400 ring-2 ring-indigo-500/50'
                 : isResponsive
                 ? 'border-indigo-500/60'
                 : 'border-slate-700'
             }`}
           >
-            <div className="w-full h-full overflow-auto">
+            {/* Resolution Rule Hidden Warning Banner in Play Mode */}
+            {!resEval.matches && (
+              <div className="bg-rose-600/95 text-white px-4 py-2 text-xs font-bold flex items-center justify-between gap-3 shrink-0 z-30">
+                <div className="flex items-center gap-2 truncate">
+                  <EyeOff size={14} className="shrink-0" />
+                  <span className="truncate">
+                    이 장표는 [{resEval.summaryText}] 해상도 조건에서만 표시되도록 설정되어 현재({viewportW}×{viewportH}px)에서는 숨김 대상입니다.
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {matchingArtboards.length > 0 && matchingArtboards[0].id !== current.id && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const targetIdx = artboards.findIndex((a) => a.id === matchingArtboards[0].id);
+                        if (targetIdx !== -1) setIndex(targetIdx);
+                      }}
+                      className="px-2.5 py-1 rounded bg-white text-rose-700 hover:bg-rose-50 text-[11px] font-bold"
+                    >
+                      조건 충족 장표로 이동
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const nextW = current.resolutionRule?.minWidth || current.resolutionRule?.maxWidth || current.width;
+                      const nextH = current.resolutionRule?.minHeight || current.resolutionRule?.maxHeight || current.height;
+                      setViewportW(nextW);
+                      setViewportH(nextH);
+                    }}
+                    className="px-2.5 py-1 rounded bg-rose-900/60 hover:bg-rose-900 text-white border border-rose-300/40 text-[11px] font-bold"
+                  >
+                    허용 해상도로 맞춤 ({current.resolutionRule?.minWidth || current.resolutionRule?.maxWidth || current.width}px)
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="w-full flex-1 overflow-auto">
               <VNodeRenderer
                 node={current.rootNode}
                 selectedNodeId={null}

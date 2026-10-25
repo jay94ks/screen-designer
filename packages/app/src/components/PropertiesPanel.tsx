@@ -20,9 +20,27 @@ import {
   Monitor,
   Smartphone,
   Tablet,
-  WrapText
+  WrapText,
+  Eye,
+  EyeOff,
+  Check,
+  Layers
 } from 'lucide-react';
-import { VDomArtboard, VNode, VNodeStyle } from '../types/vdom';
+import {
+  VDomArtboard,
+  VNode,
+  VNodeStyle,
+  CanvasRole,
+  ResolutionRulePreset
+} from '../types/vdom';
+import {
+  CANVAS_ROLE_OPTIONS,
+  RESOLUTION_RULE_PRESETS,
+  EDITOR_PREVIEW_RESOLUTIONS,
+  buildResolutionRuleFromPreset,
+  evaluateArtboardResolution,
+  inferCanvasRoleFromArtboard
+} from '../utils/canvasRolesAndResolution';
 import { VisibilityConditionSection } from './VisibilityConditionSection';
 import {
   chooseAndCopyImageFile,
@@ -86,102 +104,441 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     );
   }
 
-  // Artboard Frame Dimension Controls (shown when no child node is selected OR when frame root is selected)
+  const roleMeta = inferCanvasRoleFromArtboard(artboard);
+  const isPreviewActive = Boolean(artboard.previewResolution?.enabled);
+  const activeW = isPreviewActive
+    ? artboard.previewResolution!.width
+    : artboard.width;
+  const activeH = isPreviewActive
+    ? artboard.previewResolution!.height
+    : artboard.height;
+  const currentRule = artboard.resolutionRule || {
+    enabled: false,
+    preset: 'all' as ResolutionRulePreset,
+    orientation: 'any' as const
+  };
+  const resEval = evaluateArtboardResolution(currentRule, activeW, activeH);
+
+  // Artboard Role, Live Resolution Preview & Resolution Visibility Rule Controls
   const renderArtboardFrameControls = () => (
-    <div className="bg-slate-50/90 border border-slate-200 rounded-xl p-3 space-y-2.5 shadow-2xs">
-      <div className="flex items-center justify-between min-w-0">
-        <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-800 truncate">
-          <Monitor size={13} className="text-indigo-600 shrink-0" />
-          <span className="truncate">프레임(아트보드) 해상도 & 최소 크기</span>
-        </div>
-        <span className="text-[10px] font-mono text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded font-bold shrink-0">
-          {artboard.width} × {artboard.height}
-        </span>
-      </div>
-
-      {/* Artboard Title */}
-      <div className="space-y-1">
-        <label className="text-[10px] text-slate-500 font-semibold block">아트보드 제목</label>
-        <input
-          type="text"
-          value={artboard.title}
-          onChange={(e) => onUpdateArtboard?.({ title: e.target.value })}
-          className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-        />
-      </div>
-
-      {/* Direct Width x Height Inputs with Swap & Min Size Policy (min 200x200) */}
-      <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-1.5">
-        <div className="space-y-1 min-w-0">
-          <label className="text-[10px] text-slate-500 font-semibold block truncate">가로 너비 (W, px)</label>
-          <input
-            type="number"
-            min={MIN_ARTBOARD_WIDTH}
-            max={7680}
-            value={artboard.width}
-            onChange={(e) => {
-              const val = Math.max(MIN_ARTBOARD_WIDTH, Number(e.target.value) || MIN_ARTBOARD_WIDTH);
-              onUpdateArtboard?.({ width: val });
-            }}
-            className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-          />
+    <div className="bg-slate-50/90 border border-slate-200 rounded-xl p-3 space-y-3 shadow-2xs">
+      {/* 1. Artboard Role & Base Design Resolution */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between min-w-0 gap-1">
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-800 truncate">
+            <Layers size={13} className="text-indigo-600 shrink-0" />
+            <span className="truncate">캔버스 역할 & 설계 해상도</span>
+          </div>
+          <span className={`px-1.5 py-0.5 rounded border text-[9px] font-bold shrink-0 ${roleMeta.badgeClass}`}>
+            {roleMeta.shortLabel}
+          </span>
         </div>
 
-        <button
-          type="button"
-          onClick={() => onUpdateArtboard?.({ width: artboard.height, height: artboard.width })}
-          className="p-1.5 mb-0.5 rounded-lg bg-white hover:bg-indigo-50 border border-slate-200 text-slate-500 hover:text-indigo-600 transition shrink-0"
-          title="가로 ↔ 세로 해상도 맞바꾸기 (회전)"
+        <div className="grid grid-cols-2 gap-1.5">
+          <div className="space-y-0.5 min-w-0">
+            <label className="text-[9px] text-slate-500 font-semibold block truncate">장표 명칭</label>
+            <input
+              type="text"
+              value={artboard.title}
+              onChange={(e) => onUpdateArtboard?.({ title: e.target.value })}
+              className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-[11px] font-semibold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+          </div>
+          <div className="space-y-0.5 min-w-0">
+            <label className="text-[9px] text-slate-500 font-semibold block truncate">캔버스 역할 (Role)</label>
+            <select
+              value={artboard.canvasRole || roleMeta.id}
+              onChange={(e) => onUpdateArtboard?.({ canvasRole: e.target.value as CanvasRole })}
+              className="w-full bg-white border border-slate-200 rounded-lg px-1.5 py-1 text-[11px] font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 truncate"
+            >
+              {CANVAS_ROLE_OPTIONS.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Direct Design Width x Height Inputs with Swap & Min Size Policy (min 200x200) */}
+        <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-1.5">
+          <div className="space-y-0.5 min-w-0">
+            <label className="text-[9px] text-slate-500 font-semibold block truncate">설계 가로 (W, px)</label>
+            <input
+              type="number"
+              min={MIN_ARTBOARD_WIDTH}
+              max={7680}
+              value={artboard.width}
+              onChange={(e) => {
+                const val = Math.max(MIN_ARTBOARD_WIDTH, Number(e.target.value) || MIN_ARTBOARD_WIDTH);
+                onUpdateArtboard?.({ width: val });
+              }}
+              className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-[11px] font-mono font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => onUpdateArtboard?.({ width: artboard.height, height: artboard.width })}
+            className="p-1.5 mb-0.5 rounded-lg bg-white hover:bg-indigo-50 border border-slate-200 text-slate-500 hover:text-indigo-600 transition shrink-0"
+            title="설계 가로 ↔ 세로 맞바꾸기 (회전)"
+          >
+            <RotateCw size={11} />
+          </button>
+
+          <div className="space-y-0.5 min-w-0">
+            <label className="text-[9px] text-slate-500 font-semibold block truncate">설계 세로 (H, px)</label>
+            <input
+              type="number"
+              min={MIN_ARTBOARD_HEIGHT}
+              max={7680}
+              value={artboard.height}
+              onChange={(e) => {
+                const val = Math.max(MIN_ARTBOARD_HEIGHT, Number(e.target.value) || MIN_ARTBOARD_HEIGHT);
+                onUpdateArtboard?.({ height: val });
+              }}
+              className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-[11px] font-mono font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* 2. In-Editor Live Driving Resolution Preview (편집 중 구동 해상도 미리보기) */}
+      <div className="pt-2.5 border-t border-slate-200/80 space-y-2">
+        <div className="flex items-center justify-between min-w-0 gap-1">
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-cyan-900 truncate">
+            <Monitor size={12} className="text-cyan-600 shrink-0" />
+            <span className="truncate">편집 중 구동 해상도 미리보기</span>
+          </div>
+          {isPreviewActive ? (
+            <button
+              type="button"
+              onClick={() =>
+                onUpdateArtboard?.({
+                  previewResolution: {
+                    enabled: false,
+                    width: artboard.width,
+                    height: artboard.height
+                  }
+                })
+              }
+              className="px-1.5 py-0.5 rounded bg-cyan-600 hover:bg-cyan-700 text-white text-[9px] font-bold shrink-0 transition"
+            >
+              원본({artboard.width}×{artboard.height}) 복원
+            </button>
+          ) : (
+            <span className="text-[9px] font-mono text-slate-400 shrink-0">원본 크기 편집 중</span>
+          )}
+        </div>
+
+        {/* Driving Resolution Combo Box */}
+        <select
+          value={
+            !isPreviewActive
+              ? 'original'
+              : EDITOR_PREVIEW_RESOLUTIONS.find(
+                  (r) => r.width === activeW && r.height === activeH
+                )?.id || 'custom'
+          }
+          onChange={(e) => {
+            const val = e.target.value;
+            if (val === 'original') {
+              onUpdateArtboard?.({
+                previewResolution: {
+                  enabled: false,
+                  width: artboard.width,
+                  height: artboard.height
+                }
+              });
+              return;
+            }
+            const found = EDITOR_PREVIEW_RESOLUTIONS.find((r) => r.id === val);
+            if (found) {
+              onUpdateArtboard?.({
+                previewResolution: {
+                  enabled: true,
+                  width: found.width,
+                  height: found.height,
+                  presetId: found.id
+                }
+              });
+            } else {
+              onUpdateArtboard?.({
+                previewResolution: {
+                  enabled: true,
+                  width: activeW,
+                  height: activeH,
+                  presetId: 'custom'
+                }
+              });
+            }
+          }}
+          className={`w-full rounded-lg px-2 py-1.5 text-[11px] font-bold border focus:outline-none focus:ring-1 focus:ring-cyan-500 ${
+            isPreviewActive
+              ? 'bg-cyan-50/90 border-cyan-300 text-cyan-950'
+              : 'bg-white border-slate-200 text-slate-700'
+          }`}
         >
-          <RotateCw size={12} />
-        </button>
+          <option value="original">
+            📐 설계 원본 해상도 ({artboard.width} × {artboard.height} px)
+          </option>
+          <option value="custom">
+            ↔ 구동 해상도 직접 입력 / 드래그 ({activeW} × {activeH} px)
+          </option>
+          {EDITOR_PREVIEW_RESOLUTIONS.map((opt) => (
+            <option key={opt.id} value={opt.id}>
+              🔍 프리뷰: {opt.label}
+            </option>
+          ))}
+        </select>
 
-        <div className="space-y-1 min-w-0">
-          <label className="text-[10px] text-slate-500 font-semibold block truncate">세로 높이 (H, px)</label>
-          <input
-            type="number"
-            min={MIN_ARTBOARD_HEIGHT}
-            max={7680}
-            value={artboard.height}
-            onChange={(e) => {
-              const val = Math.max(MIN_ARTBOARD_HEIGHT, Number(e.target.value) || MIN_ARTBOARD_HEIGHT);
-              onUpdateArtboard?.({ height: val });
-            }}
-            className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-          />
+        {/* Direct Preview W x H Inputs */}
+        <div className="grid grid-cols-[1fr_auto_1fr_auto] items-center gap-1">
+          <div className="flex items-center bg-white border border-slate-200 rounded-lg px-2 py-1 gap-1 min-w-0">
+            <span className="text-[9px] text-slate-400 font-bold">W</span>
+            <input
+              type="number"
+              min={MIN_ARTBOARD_WIDTH}
+              max={7680}
+              value={activeW}
+              onChange={(e) => {
+                const w = Math.max(MIN_ARTBOARD_WIDTH, Number(e.target.value) || MIN_ARTBOARD_WIDTH);
+                onUpdateArtboard?.({
+                  previewResolution: {
+                    enabled: true,
+                    width: w,
+                    height: activeH,
+                    presetId: 'custom'
+                  }
+                });
+              }}
+              className="w-full text-[11px] font-mono font-bold text-slate-800 focus:outline-none min-w-0"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() =>
+              onUpdateArtboard?.({
+                previewResolution: {
+                  enabled: true,
+                  width: activeH,
+                  height: activeW,
+                  presetId: 'custom'
+                }
+              })
+            }
+            className="p-1 rounded bg-white hover:bg-cyan-50 border border-slate-200 text-slate-500 hover:text-cyan-700"
+            title="구동 프리뷰 가로 ↔ 세로 회전"
+          >
+            <RotateCw size={11} />
+          </button>
+          <div className="flex items-center bg-white border border-slate-200 rounded-lg px-2 py-1 gap-1 min-w-0">
+            <span className="text-[9px] text-slate-400 font-bold">H</span>
+            <input
+              type="number"
+              min={MIN_ARTBOARD_HEIGHT}
+              max={7680}
+              value={activeH}
+              onChange={(e) => {
+                const h = Math.max(MIN_ARTBOARD_HEIGHT, Number(e.target.value) || MIN_ARTBOARD_HEIGHT);
+                onUpdateArtboard?.({
+                  previewResolution: {
+                    enabled: true,
+                    width: activeW,
+                    height: h,
+                    presetId: 'custom'
+                  }
+                });
+              }}
+              className="w-full text-[11px] font-mono font-bold text-slate-800 focus:outline-none min-w-0"
+            />
+          </div>
+          {isPreviewActive && (
+            <button
+              type="button"
+              onClick={() =>
+                onUpdateArtboard?.({
+                  width: activeW,
+                  height: activeH,
+                  previewResolution: {
+                    enabled: false,
+                    width: activeW,
+                    height: activeH
+                  }
+                })
+              }
+              className="px-2 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-[9px] font-bold whitespace-nowrap shrink-0"
+              title="현재 프리뷰 크기를 설계 원본 해상도로 확정"
+            >
+              설계로 확정
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Quick Frame Resolution Presets */}
-      <div className="space-y-1">
-        <span className="text-[9px] text-slate-400 font-semibold block">표준 해상도 빠른 적용 (최소 크기: 200×200px)</span>
-        <div className="grid grid-cols-3 gap-1">
-          {[
-            { label: '모바일 393×852', w: 393, h: 852, vp: 'mobile' as const },
-            { label: '태블릿 834×1194', w: 834, h: 1194, vp: 'tablet' as const },
-            { label: '랩톱 1440×900', w: 1440, h: 900, vp: 'desktop' as const },
-            { label: '스튜디오 1600×1000', w: 1600, h: 1000, vp: 'desktop' as const },
-            { label: 'FHD 1920×1080', w: 1920, h: 1080, vp: 'desktop' as const },
-            { label: '컴팩트 375×667', w: 375, h: 667, vp: 'mobile' as const }
-          ].map((preset) => {
-            const isCurr = artboard.width === preset.w && artboard.height === preset.h;
+      {/* 3. Artboard Resolution Visibility Condition (특정 해상도에 해당하는 경우에만 표시 설정) */}
+      <div className="pt-2.5 border-t border-slate-200/80 space-y-2">
+        <div className="flex items-center justify-between min-w-0 gap-1">
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-950 truncate">
+            <Eye size={12} className="text-emerald-600 shrink-0" />
+            <span className="truncate">장표 표시 해상도 조건 (Resolution Rule)</span>
+          </div>
+
+          <label className="relative inline-flex items-center cursor-pointer shrink-0">
+            <input
+              type="checkbox"
+              checked={Boolean(currentRule.enabled && currentRule.preset !== 'all')}
+              onChange={(e) => {
+                const checked = e.target.checked;
+                onUpdateArtboard?.({
+                  resolutionRule: checked
+                    ? buildResolutionRuleFromPreset(
+                        currentRule.preset === 'all' ? 'desktop-only' : currentRule.preset,
+                        currentRule
+                      )
+                    : buildResolutionRuleFromPreset('all')
+                });
+              }}
+              className="sr-only peer"
+            />
+            <div className="w-7 h-4 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-600" />
+          </label>
+        </div>
+
+        {/* Live Resolution Evaluation Banner */}
+        <div
+          className={`px-2 py-1.5 rounded-lg border text-[10px] flex items-center justify-between gap-1.5 ${
+            resEval.matches
+              ? 'bg-emerald-50/90 border-emerald-200 text-emerald-900'
+              : 'bg-rose-50/90 border-rose-200 text-rose-900'
+          }`}
+        >
+          <div className="flex items-center gap-1 min-w-0">
+            {resEval.matches ? (
+              <Check size={11} className="text-emerald-600 shrink-0" />
+            ) : (
+              <EyeOff size={11} className="text-rose-600 shrink-0" />
+            )}
+            <span className="font-bold truncate">
+              {resEval.matches
+                ? `${activeW}×${activeH} 구동 시 표시됨`
+                : `${activeW}×${activeH} 구동 시 숨김 처리`}
+            </span>
+          </div>
+          <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/80 shrink-0">
+            {resEval.badgeText}
+          </span>
+        </div>
+
+        {/* Quick Breakpoint Rule Presets */}
+        <div className="grid grid-cols-2 gap-1">
+          {RESOLUTION_RULE_PRESETS.map((preset) => {
+            const isSel =
+              (!currentRule.enabled && preset.id === 'all') ||
+              (currentRule.enabled && currentRule.preset === preset.id);
             return (
               <button
-                key={preset.label}
+                key={preset.id}
                 type="button"
-                onClick={() => onUpdateArtboard?.({ width: preset.w, height: preset.h, viewport: preset.vp })}
-                className={`px-1.5 py-1 rounded text-[10px] font-medium truncate whitespace-nowrap transition border ${
-                  isCurr
-                    ? 'bg-indigo-600 text-white border-indigo-600 font-bold'
-                    : 'bg-white text-slate-600 border-slate-200 hover:bg-indigo-50 hover:text-indigo-700'
+                onClick={() =>
+                  onUpdateArtboard?.({
+                    resolutionRule: buildResolutionRuleFromPreset(preset.id, currentRule)
+                  })
+                }
+                className={`px-2 py-1 rounded-md border text-[10px] font-medium text-left truncate transition ${
+                  isSel
+                    ? 'bg-emerald-600 text-white border-emerald-600 font-bold'
+                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
                 }`}
-                title={`${preset.w} × ${preset.h} px`}
+                title={preset.description}
               >
-                {preset.label}
+                {preset.shortBadge}
               </button>
             );
           })}
         </div>
+
+        {/* Custom Min/Max W & H Range Inputs when enabled */}
+        {currentRule.enabled && currentRule.preset !== 'all' && (
+          <div className="grid grid-cols-2 gap-1.5 pt-1 bg-white p-2 rounded-lg border border-slate-200">
+            <div>
+              <label className="text-[9px] text-slate-400 font-semibold block">최소 가로 (minW px)</label>
+              <input
+                type="number"
+                placeholder="제한 없음"
+                value={currentRule.minWidth ?? ''}
+                onChange={(e) =>
+                  onUpdateArtboard?.({
+                    resolutionRule: {
+                      ...currentRule,
+                      enabled: true,
+                      preset: 'custom',
+                      minWidth: e.target.value ? Number(e.target.value) : undefined
+                    }
+                  })
+                }
+                className="w-full bg-slate-50 border border-slate-200 rounded px-1.5 py-1 text-[10px] font-mono text-slate-800"
+              />
+            </div>
+            <div>
+              <label className="text-[9px] text-slate-400 font-semibold block">최대 가로 (maxW px)</label>
+              <input
+                type="number"
+                placeholder="제한 없음"
+                value={currentRule.maxWidth ?? ''}
+                onChange={(e) =>
+                  onUpdateArtboard?.({
+                    resolutionRule: {
+                      ...currentRule,
+                      enabled: true,
+                      preset: 'custom',
+                      maxWidth: e.target.value ? Number(e.target.value) : undefined
+                    }
+                  })
+                }
+                className="w-full bg-slate-50 border border-slate-200 rounded px-1.5 py-1 text-[10px] font-mono text-slate-800"
+              />
+            </div>
+            <div>
+              <label className="text-[9px] text-slate-400 font-semibold block">최소 세로 (minH px)</label>
+              <input
+                type="number"
+                placeholder="제한 없음"
+                value={currentRule.minHeight ?? ''}
+                onChange={(e) =>
+                  onUpdateArtboard?.({
+                    resolutionRule: {
+                      ...currentRule,
+                      enabled: true,
+                      preset: 'custom',
+                      minHeight: e.target.value ? Number(e.target.value) : undefined
+                    }
+                  })
+                }
+                className="w-full bg-slate-50 border border-slate-200 rounded px-1.5 py-1 text-[10px] font-mono text-slate-800"
+              />
+            </div>
+            <div>
+              <label className="text-[9px] text-slate-400 font-semibold block">최대 세로 (maxH px)</label>
+              <input
+                type="number"
+                placeholder="제한 없음"
+                value={currentRule.maxHeight ?? ''}
+                onChange={(e) =>
+                  onUpdateArtboard?.({
+                    resolutionRule: {
+                      ...currentRule,
+                      enabled: true,
+                      preset: 'custom',
+                      maxHeight: e.target.value ? Number(e.target.value) : undefined
+                    }
+                  })
+                }
+                className="w-full bg-slate-50 border border-slate-200 rounded px-1.5 py-1 text-[10px] font-mono text-slate-800"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -344,8 +701,8 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
   return (
     <div className="p-3.5 space-y-4 text-xs text-slate-700 select-none divide-y divide-slate-100 overflow-y-auto max-h-full min-w-0">
-      {/* Frame Root Dimension Controls if Root Frame is selected */}
-      {isFrameRoot && renderArtboardFrameControls()}
+      {/* 0a. Artboard Role, Live Resolution Preview & Resolution Visibility Rule Controls */}
+      {renderArtboardFrameControls()}
 
       {/* 0. Visibility Condition Settings Section */}
       <VisibilityConditionSection
