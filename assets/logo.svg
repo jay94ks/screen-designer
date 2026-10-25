@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e1b4b" />
+    </linearGradient>
+
+    <!-- Artboard 1 Gradient (Desktop Canvas) -->
+    <linearGradient id="abDesktop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#312e81" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#1e1b4b" stop-opacity="0.9" />
+    </linearGradient>
+
+    <!-- Artboard 2 Gradient (Mobile Frame) -->
+    <linearGradient id="abMobile" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="50%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#818cf8" />
+    </linearGradient>
+
+    <!-- Vibrant Accent Gradient -->
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="50%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+
+    <!-- Prototype Wire Glow -->
+    <linearGradient id="wireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#a855f7" />
+    </linearGradient>
+
+    <!-- Card Background -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+
+    <!-- Glass Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <!-- 1. Squircle App Icon Base -->
+  <rect x="16" y="16" width="480" height="480" rx="108" fill="url(#bgGrad)" stroke="#334155" stroke-width="3" filter="url(#softShadow)" />
+
+  <!-- Subtle Blueprint Dot Grid -->
+  <g opacity="0.18">
+    <circle cx="80" cy="80" r="2" fill="#94a3b8" />
+    <circle cx="140" cy="80" r="2" fill="#94a3b8" />
+    <circle cx="200" cy="80" r="2" fill="#94a3b8" />
+    <circle cx="260" cy="80" r="2" fill="#94a3b8" />
+    <circle cx="320" cy="80" r="2" fill="#94a3b8" />
+    <circle cx="380" cy="80" r="2" fill="#94a3b8" />
+    <circle cx="440" cy="80" r="2" fill="#94a3b8" />
+
+    <circle cx="80" cy="140" r="2" fill="#94a3b8" />
+    <circle cx="140" cy="140" r="2" fill="#94a3b8" />
+    <circle cx="200" cy="140" r="2" fill="#94a3b8" />
+    <circle cx="260" cy="140" r="2" fill="#94a3b8" />
+    <circle cx="320" cy="140" r="2" fill="#94a3b8" />
+    <circle cx="380" cy="140" r="2" fill="#94a3b8" />
+    <circle cx="440" cy="140" r="2" fill="#94a3b8" />
+
+    <circle cx="80" cy="200" r="2" fill="#94a3b8" />
+    <circle cx="140" cy="200" r="2" fill="#94a3b8" />
+    <circle cx="200" cy="200" r="2" fill="#94a3b8" />
+    <circle cx="260" cy="200" r="2" fill="#94a3b8" />
+    <circle cx="320" cy="200" r="2" fill="#94a3b8" />
+    <circle cx="380" cy="200" r="2" fill="#94a3b8" />
+    <circle cx="440" cy="200" r="2" fill="#94a3b8" />
+
+    <circle cx="80" cy="380" r="2" fill="#94a3b8" />
+    <circle cx="140" cy="380" r="2" fill="#94a3b8" />
+    <circle cx="200" cy="380" r="2" fill="#94a3b8" />
+    <circle cx="260" cy="380" r="2" fill="#94a3b8" />
+    <circle cx="320" cy="380" r="2" fill="#94a3b8" />
+    <circle cx="380" cy="380" r="2" fill="#94a3b8" />
+    <circle cx="440" cy="380" r="2" fill="#94a3b8" />
+
+    <circle cx="80" cy="440" r="2" fill="#94a3b8" />
+    <circle cx="140" cy="440" r="2" fill="#94a3b8" />
+    <circle cx="200" cy="440" r="2" fill="#94a3b8" />
+    <circle cx="260" cy="440" r="2" fill="#94a3b8" />
+    <circle cx="320" cy="440" r="2" fill="#94a3b8" />
+    <circle cx="380" cy="440" r="2" fill="#94a3b8" />
+    <circle cx="440" cy="440" r="2" fill="#94a3b8" />
+  </g>
+
+  <!-- Background Ambient Glow -->
+  <circle cx="280" cy="220" r="140" fill="#4f46e5" opacity="0.25" filter="url(#glow)" />
+  <circle cx="180" cy="320" r="120" fill="#06b6d4" opacity="0.2" filter="url(#glow)" />
+
+  <!-- 2. Back Canvas Artboard (Desktop 16:10 Frame) -->
+  <g filter="url(#softShadow)">
+    <rect x="76" y="86" width="300" height="200" rx="16" fill="url(#abDesktop)" stroke="#4338ca" stroke-width="2" />
+    <!-- Mini Window Header Bar -->
+    <rect x="76" y="86" width="300" height="28" rx="16" fill="#1e1b4b" />
+    <circle cx="96" cy="100" r="4" fill="#ef4444" />
+    <circle cx="110" cy="100" r="4" fill="#f59e0b" />
+    <circle cx="124" cy="100" r="4" fill="#10b981" />
+    <!-- Window layout skeletons -->
+    <rect x="96" y="126" width="120" height="10" rx="5" fill="#6366f1" opacity="0.5" />
+    <rect x="96" y="146" width="70" height="8" rx="4" fill="#94a3b8" opacity="0.3" />
+    <rect x="96" y="170" width="130" height="80" rx="10" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+    <rect x="108" y="184" width="60" height="8" rx="4" fill="#38bdf8" opacity="0.8" />
+    <rect x="108" y="200" width="90" height="12" rx="4" fill="#818cf8" />
+  </g>
+
+  <!-- 3. Foreground Artboard (Mobile Device Frame) -->
+  <g filter="url(#softShadow)">
+    <rect x="236" y="160" width="190" height="280" rx="32" fill="#0b0f19" stroke="#6366f1" stroke-width="3" />
+    <!-- Dynamic Island / Speaker notch -->
+    <rect x="296" y="172" width="70" height="8" rx="4" fill="#1e293b" />
+
+    <!-- Screen Content Area -->
+    <rect x="246" y="190" width="170" height="236" rx="22" fill="url(#cardGrad)" />
+
+    <!-- Mini Hero UI inside Mobile -->
+    <rect x="256" y="206" width="150" height="74" rx="14" fill="url(#abMobile)" />
+    <!-- Sparkle on hero -->
+    <circle cx="272" cy="224" r="6" fill="#ffffff" opacity="0.8" />
+    <rect x="286" y="220" width="65" height="8" rx="4" fill="#ffffff" opacity="0.9" />
+    <rect x="272" y="244" width="95" height="14" rx="4" fill="#ffffff" />
+    <rect x="272" y="264" width="45" height="6" rx="3" fill="#c7d2fe" />
+
+    <!-- Mini Action Cards inside Mobile -->
+    <rect x="256" y="292" width="150" height="40" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <circle cx="274" cy="312" r="8" fill="#06b6d4" />
+    <rect x="290" y="306" width="70" height="6" rx="3" fill="#f1f5f9" />
+    <rect x="290" y="316" width="45" height="5" rx="2.5" fill="#64748b" />
+
+    <rect x="256" y="340" width="150" height="40" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <circle cx="274" cy="360" r="8" fill="#ec4899" />
+    <rect x="290" y="354" width="60" height="6" rx="3" fill="#f1f5f9" />
+    <rect x="290" y="364" width="40" height="5" rx="2.5" fill="#64748b" />
+
+    <!-- Bottom Primary CTA Button -->
+    <rect x="256" y="390" width="150" height="24" rx="8" fill="url(#accentGrad)" />
+    <rect x="306" y="398" width="50" height="7" rx="3.5" fill="#ffffff" />
+  </g>
+
+  <!-- 4. Interactive Prototype Bezier Wire (Connecting Desktop to Mobile) -->
+  <g filter="url(#glow)">
+    <path d="M 226 210 C 260 210, 210 244, 256 244" fill="none" stroke="url(#wireGrad)" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 4" />
+    <!-- Start Node Pulse Dot -->
+    <circle cx="226" cy="210" r="6" fill="#38bdf8" />
+    <circle cx="226" cy="210" r="10" fill="none" stroke="#38bdf8" stroke-width="2" opacity="0.7" />
+    <!-- Target Node Pulse Dot -->
+    <circle cx="256" cy="244" r="5" fill="#a855f7" />
+  </g>
+
+  <!-- 5. AI Agent Cross-Pairing Magic Sparkle (Antigravity / Claude / Codex) -->
+  <g transform="translate(382, 70)" filter="url(#glow)">
+    <!-- 4-Point Star Sparkle -->
+    <path d="M 28 0 Q 28 28 0 28 Q 28 28 28 56 Q 28 28 56 28 Q 28 28 28 0 Z" fill="url(#accentGrad)" />
+    <circle cx="28" cy="28" r="4" fill="#ffffff" />
+  </g>
+  <g transform="translate(74, 340)" opacity="0.7">
+    <path d="M 14 0 Q 14 14 0 14 Q 14 14 14 28 Q 14 14 28 14 Q 14 14 14 0 Z" fill="#38bdf8" />
+  </g>
+</svg>

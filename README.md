@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/logo.png" width="108" height="108" alt="Screen Designer Official Logo" />
+</p>
+
 # 🎨 Screen Designer
 
 > **Universal Cross-Agent Visual Storyboard Canvas, MCP Suite & Headless CLI**  
