@@ -343,16 +343,38 @@ export default function App() {
       const docsPath = settings.pageDocsPath || 'docs/ui-boards';
       const res = await projectClient.loadProject(docsPath, settings.workspacePath);
       if (res && res.success && res.pages && res.pages.length > 0) {
-        setPages(res.pages);
+        const normalizedPages = res.pages.map((p: any) => ({
+          ...p,
+          artboards: (p.artboards || []).map((a: any) => ({
+            ...a,
+            title: a.title || a.name || 'Artboard'
+          }))
+        }));
+        setPages(normalizedPages);
         const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
         const pageParam = params?.get('page');
         const targetId = pageParam ? (pageParam.startsWith('page-') ? pageParam : `page-${pageParam}`) : null;
-        if (targetId && res.pages.some((p) => p.id === targetId)) {
+        let selectedPage = normalizedPages[0];
+        if (targetId && normalizedPages.some((p: any) => p.id === targetId)) {
           setActivePageId(targetId);
-        } else if (res.project?.activePageId && res.pages.some((p) => p.id === res.project.activePageId)) {
+          selectedPage = normalizedPages.find((p: any) => p.id === targetId) || normalizedPages[0];
+        } else if (res.project?.activePageId && normalizedPages.some((p: any) => p.id === res.project.activePageId)) {
           setActivePageId(res.project.activePageId);
+          selectedPage = normalizedPages.find((p: any) => p.id === res.project.activePageId) || normalizedPages[0];
         } else {
-          setActivePageId(res.pages[0].id);
+          setActivePageId(normalizedPages[0].id);
+        }
+        const abParam = params?.get('artboard');
+        if (abParam !== null && abParam !== undefined && selectedPage?.artboards) {
+          const abIdx = parseInt(abParam, 10);
+          if (!isNaN(abIdx) && selectedPage.artboards[abIdx]) {
+            setSelectedArtboardId(selectedPage.artboards[abIdx].id);
+            if (!params?.get('panX')) {
+              const zParam = params?.get('zoom');
+              const zVal = zParam ? (parseFloat(zParam) > 5 ? parseFloat(zParam) / 100 : parseFloat(zParam)) : 0.8;
+              setPan({ x: Math.round(16 - abIdx * 1648 * zVal), y: 0 });
+            }
+          }
         }
         if (res.project?.title) {
           setDocTitle(res.project.title);
@@ -1306,6 +1328,33 @@ export default function App() {
     selectedArtboardId,
     settings
   };
+
+  const isSoloPreview =
+    typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('solo') === '1';
+
+  if (isSoloPreview && selectedArtboard) {
+    return (
+      <I18nProvider initialLang={settings.language} onLanguageChange={(lang) => handleUpdateSettings({ language: lang })}>
+        <div
+          style={{
+            width: `${selectedArtboard.width || 1600}px`,
+            height: `${selectedArtboard.height || 1000}px`,
+            overflow: 'hidden',
+            position: 'relative',
+            backgroundColor: (selectedArtboard as any).backgroundColor || '#f1f5f9'
+          }}
+          className="font-sans select-none"
+        >
+          <VNodeRenderer
+            node={selectedArtboard.rootNode}
+            selectedNodeId={null}
+            onSelectNode={() => {}}
+            interactive={false}
+          />
+        </div>
+      </I18nProvider>
+    );
+  }
 
   return (
     <I18nProvider initialLang={settings.language} onLanguageChange={(lang) => handleUpdateSettings({ language: lang })}>

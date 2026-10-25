@@ -269,7 +269,7 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
     }
 
     // 3.2 Dialog / Modal Component
-    if (node.type === 'dialog') {
+    if (node.type === 'dialog' && (!node.children || node.children.length === 0) && !node.style?.backgroundColor) {
       const isOpen = node.props?.open !== false;
       return (
         <div className="w-full relative flex flex-col items-center justify-center py-2 select-none">
@@ -294,30 +294,13 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
             {displayContent && (
               <p className="text-xs text-slate-300 leading-relaxed">{displayContent}</p>
             )}
-            {node.children && node.children.map((child) => (
-              <VNodeRenderer
-                key={child.id}
-                node={child}
-                selectedNodeId={selectedNodeId}
-                onSelectNode={onSelectNode}
-                onUpdateContent={onUpdateContent}
-                onNodeAction={onNodeAction}
-                onNodeEvent={onNodeEvent}
-                onDeleteNode={onDeleteNode}
-                onDuplicateNode={onDuplicateNode}
-                tweakValues={tweakValues}
-                interactive={interactive}
-                isPlayMode={isPlayMode}
-                showHotspots={showHotspots}
-              />
-            ))}
           </div>
         </div>
       );
     }
 
     // 3.3 Scroll Container Component
-    if (node.type === 'scroll-container') {
+    if (node.type === 'scroll-container' && node.props?.showBadge) {
       return (
         <div className="w-full flex flex-col relative">
           {/* Scroll Indicator Badge in Canvas Mode */}
@@ -377,27 +360,64 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
           />
         );
       }
-      return <span>{displayContent}</span>;
+      return (
+        <>
+          {displayContent && <span>{displayContent}</span>}
+          {node.children &&
+            node.children.map((child) => (
+              <VNodeRenderer
+                key={child.id}
+                node={child}
+                selectedNodeId={selectedNodeId}
+                onSelectNode={onSelectNode}
+                onUpdateContent={onUpdateContent}
+                onNodeAction={onNodeAction}
+                onNodeEvent={onNodeEvent}
+                onDeleteNode={onDeleteNode}
+                onDuplicateNode={onDuplicateNode}
+                tweakValues={tweakValues}
+                interactive={interactive}
+                isPlayMode={isPlayMode}
+                showHotspots={showHotspots}
+              />
+            ))}
+        </>
+      );
     }
 
     // 3.5 Input & Form Elements
     if (node.type === 'input') {
+      const hasVal = node.props?.value !== undefined || (displayContent && !node.props?.placeholder);
       return (
         <input
           type={node.props?.type || 'text'}
           readOnly
-          placeholder={node.props?.placeholder || displayContent || '입력하세요...'}
+          value={hasVal ? (node.props?.value ?? displayContent ?? '') : ''}
+          placeholder={node.props?.placeholder || (!hasVal ? displayContent : '') || '입력하세요...'}
+          style={{
+            color: cssStyle.color || '#0f172a',
+            fontSize: cssStyle.fontSize || '11px',
+            fontFamily: cssStyle.fontFamily,
+            fontWeight: cssStyle.fontWeight
+          }}
           className="w-full h-full bg-transparent border-0 focus:outline-none placeholder-slate-400 cursor-default"
         />
       );
     }
 
     if (node.type === 'textarea') {
+      const hasVal = node.props?.value !== undefined || (displayContent && !node.props?.placeholder);
       return (
         <textarea
           readOnly
           rows={node.props?.rows || 3}
-          placeholder={node.props?.placeholder || displayContent || '내용을 입력하세요...'}
+          value={hasVal ? (node.props?.value ?? displayContent ?? '') : ''}
+          placeholder={node.props?.placeholder || (!hasVal ? displayContent : '') || '내용을 입력하세요...'}
+          style={{
+            color: cssStyle.color || '#0f172a',
+            fontSize: cssStyle.fontSize || '11px',
+            fontFamily: cssStyle.fontFamily
+          }}
           className="w-full h-full bg-transparent border-0 focus:outline-none placeholder-slate-400 cursor-default resize-none"
         />
       );
@@ -452,7 +472,7 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
 
     if (node.type === 'button') {
       return (
-        <div className="w-full h-full flex items-center justify-center gap-1.5 font-bold pointer-events-none select-none">
+        <>
           {displayContent && <span>{displayContent}</span>}
           {node.children &&
             node.children.map((child) => (
@@ -472,7 +492,7 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
                 showHotspots={showHotspots}
               />
             ))}
-        </div>
+        </>
       );
     }
 
@@ -483,10 +503,11 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
         : '';
       const IconComp = (LucideIcons as any)[pascalName] || (LucideIcons as any)[rawName];
       const iconSize = typeof node.style?.width === 'number' ? node.style.width : (node.props?.size || 15);
+      const strokeWidth = node.props?.strokeWidth || 2;
       return (
         <span className="inline-flex items-center justify-center shrink-0" style={{ color: cssStyle.color }}>
           {IconComp ? (
-            <IconComp size={iconSize} />
+            <IconComp size={iconSize} strokeWidth={strokeWidth} />
           ) : node.props?.svg ? (
             <span dangerouslySetInnerHTML={{ __html: node.props.svg }} />
           ) : (
@@ -497,6 +518,9 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
     }
 
     if (node.type === 'divider') {
+      if (cssStyle.width || cssStyle.height || cssStyle.backgroundColor) {
+        return null;
+      }
       return <hr className="w-full border-t border-slate-300/40 my-1" />;
     }
 
@@ -553,13 +577,20 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
 
   const hasEventsInPlayMode = isPlayMode && node.events && node.events.length > 0;
 
+  if (node.type === 'button') {
+    if (!cssStyle.display) cssStyle.display = 'inline-flex';
+    if (!cssStyle.alignItems) cssStyle.alignItems = 'center';
+    if (!cssStyle.justifyContent) cssStyle.justifyContent = 'center';
+    if (cssStyle.gap === undefined) cssStyle.gap = '4px';
+  }
+
   return (
     <div
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onContextMenu={handleContextMenu}
       style={cssStyle}
-      className={`relative transition-all duration-75 group ${
+      className={`${cssStyle.position ? '' : 'relative'} transition-all duration-75 group ${
         node.className || ''
       } ${
         interactive && isSelected

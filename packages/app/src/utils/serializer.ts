@@ -99,9 +99,27 @@ export function styleToCssProperties(style: VNodeStyle): React.CSSProperties {
   if (style.borderTopRightRadius !== undefined) css.borderTopRightRadius = typeof style.borderTopRightRadius === 'number' ? `${style.borderTopRightRadius}px` : style.borderTopRightRadius;
   if (style.borderBottomLeftRadius !== undefined) css.borderBottomLeftRadius = typeof style.borderBottomLeftRadius === 'number' ? `${style.borderBottomLeftRadius}px` : style.borderBottomLeftRadius;
   if (style.borderBottomRightRadius !== undefined) css.borderBottomRightRadius = typeof style.borderBottomRightRadius === 'number' ? `${style.borderBottomRightRadius}px` : style.borderBottomRightRadius;
+  if (style.border) css.border = style.border;
+  if (style.borderTop) css.borderTop = style.borderTop;
+  if (style.borderRight) css.borderRight = style.borderRight;
+  if (style.borderBottom) css.borderBottom = style.borderBottom;
+  if (style.borderLeft) css.borderLeft = style.borderLeft;
   if (style.borderWidth !== undefined) css.borderWidth = typeof style.borderWidth === 'number' ? `${style.borderWidth}px` : style.borderWidth;
+  if (style.borderTopWidth !== undefined) css.borderTopWidth = typeof style.borderTopWidth === 'number' ? `${style.borderTopWidth}px` : style.borderTopWidth;
+  if (style.borderRightWidth !== undefined) css.borderRightWidth = typeof style.borderRightWidth === 'number' ? `${style.borderRightWidth}px` : style.borderRightWidth;
+  if (style.borderBottomWidth !== undefined) css.borderBottomWidth = typeof style.borderBottomWidth === 'number' ? `${style.borderBottomWidth}px` : style.borderBottomWidth;
+  if (style.borderLeftWidth !== undefined) css.borderLeftWidth = typeof style.borderLeftWidth === 'number' ? `${style.borderLeftWidth}px` : style.borderLeftWidth;
   if (style.borderColor) css.borderColor = style.borderColor;
+  if (style.borderTopColor) css.borderTopColor = style.borderTopColor;
+  if (style.borderRightColor) css.borderRightColor = style.borderRightColor;
+  if (style.borderBottomColor) css.borderBottomColor = style.borderBottomColor;
+  if (style.borderLeftColor) css.borderLeftColor = style.borderLeftColor;
   if (style.borderStyle) css.borderStyle = style.borderStyle;
+  if (style.borderTopStyle) css.borderTopStyle = style.borderTopStyle;
+  if (style.borderRightStyle) css.borderRightStyle = style.borderRightStyle;
+  if (style.borderBottomStyle) css.borderBottomStyle = style.borderBottomStyle;
+  if (style.borderLeftStyle) css.borderLeftStyle = style.borderLeftStyle;
+  if (style.outline) css.outline = style.outline;
   if (style.outlineWidth !== undefined) css.outlineWidth = typeof style.outlineWidth === 'number' ? `${style.outlineWidth}px` : style.outlineWidth;
   if (style.outlineColor) css.outlineColor = style.outlineColor;
   if (style.outlineStyle) css.outlineStyle = style.outlineStyle;
@@ -124,6 +142,9 @@ export function styleToCssProperties(style: VNodeStyle): React.CSSProperties {
 
   // Typography
   if (style.color) css.color = style.color;
+  if ((style as any).fontMono) {
+    css.fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
+  }
   if (style.fontFamily) css.fontFamily = style.fontFamily;
   if (style.fontSize !== undefined) css.fontSize = typeof style.fontSize === 'number' ? `${style.fontSize}px` : style.fontSize;
   if (style.fontWeight) css.fontWeight = style.fontWeight as any;
@@ -131,7 +152,11 @@ export function styleToCssProperties(style: VNodeStyle): React.CSSProperties {
   if (style.textAlign) css.textAlign = style.textAlign;
   if (style.textDecoration) css.textDecoration = style.textDecoration;
   if (style.textTransform) css.textTransform = style.textTransform;
-  if (style.lineHeight !== undefined) css.lineHeight = style.lineHeight;
+  if (style.lineHeight !== undefined) {
+    css.lineHeight = typeof style.lineHeight === 'number' && style.lineHeight > 4
+      ? `${style.lineHeight}px`
+      : style.lineHeight;
+  }
   if (style.letterSpacing) css.letterSpacing = style.letterSpacing;
   if (style.textOverflow) css.textOverflow = style.textOverflow;
   if (style.whiteSpace) css.whiteSpace = style.whiteSpace;
@@ -139,6 +164,7 @@ export function styleToCssProperties(style: VNodeStyle): React.CSSProperties {
 
   // Positioning
   if (style.position) css.position = style.position;
+  if ((style as any).inset !== undefined) (css as any).inset = typeof (style as any).inset === 'number' ? `${(style as any).inset}px` : (style as any).inset;
   if (style.top !== undefined) css.top = typeof style.top === 'number' ? `${style.top}px` : style.top;
   if (style.right !== undefined) css.right = typeof style.right === 'number' ? `${style.right}px` : style.right;
   if (style.bottom !== undefined) css.bottom = typeof style.bottom === 'number' ? `${style.bottom}px` : style.bottom;
