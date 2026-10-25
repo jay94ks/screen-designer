@@ -26,6 +26,6 @@
   "author": "jay94ks",
   "license": "MIT",
   "dependencies": {
-    "simple-git": "^4.0.2"
+    "es-git": "^0.7.0"
   }
 }

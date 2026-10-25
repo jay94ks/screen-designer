@@ -4,7 +4,7 @@ import path from 'path';
 import os from 'os';
 import { execSync, spawn } from 'child_process';
 import { fileURLToPath } from 'url';
-import { simpleGit } from 'simple-git';
+import { discoverRepository } from 'es-git';
 import Registry from 'winreg';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -536,15 +536,20 @@ async function status() {
   console.log(`[Screen Designer] Checking Git status in: ${cwd}`);
 
   try {
-    const git = simpleGit(cwd);
-    const isRepo = await git.checkIsRepo();
-    if (!isRepo) {
+    let repo;
+    try {
+      repo = await discoverRepository(cwd);
+    } catch {
       console.log('⚠️ Not a git repository.');
       return;
     }
 
-    const st = await git.status();
-    console.log(`🌿 Git Branch: ${st.current}`);
+    let branch = 'HEAD';
+    try {
+      const head = repo.head();
+      branch = head.shorthand() || 'HEAD';
+    } catch {}
+    console.log(`🌿 Git Branch: ${branch}`);
 
     let pageDocsPath = 'docs/ui-boards';
     try {
@@ -554,9 +559,25 @@ async function status() {
     } catch {}
 
     const normDocs = pageDocsPath.replace(/^\/+|\/+$/g, '');
-    const designChanges = st.files.filter(f => 
-      f.path.startsWith(normDocs) || f.path.startsWith('.screen-designer')
-    );
+    const statuses = repo.statuses();
+
+    const designChanges = [];
+    const statusesCount = Number(statuses.len());
+    for (let i = 0; i < statusesCount; i++) {
+      const entry = statuses.get(i);
+      if (!entry) continue;
+      const st = entry.status();
+      if (st.ignored) continue;
+      const p = entry.path().replace(/\\/g, '/');
+      if (p.endsWith('/')) continue;
+      if (p.startsWith(normDocs) || p.startsWith('.screen-designer')) {
+        let statusStr = 'MODIFIED';
+        if (st.wtNew) statusStr = 'UNTRACKED';
+        else if (st.indexNew) statusStr = 'ADDED';
+        else if (st.wtDeleted || st.indexDeleted) statusStr = 'DELETED';
+        designChanges.push({ path: p, status: statusStr });
+      }
+    }
 
     console.log(`📂 Design documents path: ${pageDocsPath}/`);
     console.log(`⚙️ Cache directory:      .screen-designer/`);
@@ -566,7 +587,7 @@ async function status() {
     } else {
       console.log(`\n⚠️  Found ${designChanges.length} modified design document(s):`);
       for (const f of designChanges) {
-        console.log(`  - [${f.index || f.working_dir || 'MODIFIED'}] ${f.path}`);
+        console.log(`  - [${f.status}] ${f.path}`);
       }
       console.log('\nTip: Use Git commit in Screen Designer Canvas UI or run "git commit" to commit your design changes.');
     }

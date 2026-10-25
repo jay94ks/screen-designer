@@ -4,7 +4,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod';
 import { promises as fs } from 'fs';
 import path from 'path';
-import { simpleGit } from 'simple-git';
+import { discoverRepository } from 'es-git';
 import { CanvasBridge } from './bridge.js';
 import { renderArtboardToImage } from './imageRenderer.js';
 
@@ -471,15 +471,20 @@ server.tool(
     const ws = workspacePath || state.workspacePath || process.cwd();
 
     try {
-      const git = simpleGit(ws);
-      const isRepo = await git.checkIsRepo();
-      if (!isRepo) {
+      let repo;
+      try {
+        repo = await discoverRepository(ws);
+      } catch {
         return {
           content: [{ type: 'text', text: JSON.stringify({ isRepo: false, message: 'Target directory is not a git repository' }) }]
         };
       }
 
-      const st = await git.status();
+      let branch = 'HEAD';
+      try {
+        const head = repo.head();
+        branch = head.shorthand() || 'HEAD';
+      } catch {}
 
       let pageDocsPath = 'docs/ui-boards';
       try {
@@ -489,13 +494,25 @@ server.tool(
       } catch {}
 
       const normDocs = pageDocsPath.replace(/^\/+|\/+$/g, '');
-      const designChanges = st.files.filter(f =>
-        f.path.startsWith(normDocs) || f.path.startsWith('.screen-designer')
-      ).map(f => ({
-        path: f.path,
-        index: f.index,
-        workingDir: f.working_dir
-      }));
+      const statuses = repo.statuses();
+
+      const designChanges: { path: string; status: string }[] = [];
+      const statusesCount = Number(statuses.len());
+      for (let i = 0; i < statusesCount; i++) {
+        const entry = statuses.get(i);
+        if (!entry) continue;
+        const st = entry.status();
+        if (st.ignored) continue;
+        const p = entry.path().replace(/\\/g, '/');
+        if (p.endsWith('/')) continue;
+        if (p.startsWith(normDocs) || p.startsWith('.screen-designer')) {
+          let statusStr = 'modified';
+          if (st.wtNew) statusStr = 'untracked';
+          else if (st.indexNew) statusStr = 'added';
+          else if (st.wtDeleted || st.indexDeleted) statusStr = 'deleted';
+          designChanges.push({ path: p, status: statusStr });
+        }
+      }
 
       return {
         content: [
@@ -503,7 +520,7 @@ server.tool(
             type: 'text',
             text: JSON.stringify({
               isRepo: true,
-              branch: st.current,
+              branch,
               pageDocsPath,
               hasDesignChanges: designChanges.length > 0,
               changeCount: designChanges.length,

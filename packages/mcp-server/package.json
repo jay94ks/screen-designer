@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.6.1",
-    "simple-git": "^4.0.2",
+    "es-git": "^0.7.0",
     "winreg": "^1.2.5",
     "ws": "^8.18.0",
     "zod": "^3.24.2"

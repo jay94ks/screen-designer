@@ -230,7 +230,7 @@ export default defineConfig({
           build: {
             outDir: 'dist-electron',
             rollupOptions: {
-              external: ['ws', 'bufferutil', 'utf-8-validate']
+              external: ['ws', 'bufferutil', 'utf-8-validate', 'es-git', /^es-git/]
             }
           }
         }

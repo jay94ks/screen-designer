@@ -220,7 +220,7 @@ export default function App() {
     } catch {}
   }, [guides]);
 
-  // Git Status State (node.js simple-git integration)
+  // Git Status State (native es-git integration)
   const [gitStatus, setGitStatus] = useState<GitStatusInfo>({
     isRepo: true,
     branch: 'main',

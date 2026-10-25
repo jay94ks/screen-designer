@@ -10,6 +10,7 @@
     "test": "node bin/index.js --help"
   },
   "dependencies": {
+    "es-git": "^0.7.0",
     "winreg": "^1.2.5"
   }
 }

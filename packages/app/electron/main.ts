@@ -3,7 +3,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import { WebSocket } from 'ws';
-import { simpleGit } from 'simple-git';
 import {
   getGitStatus,
   getFileDiff,
@@ -181,7 +180,7 @@ ipcMain.handle('project:get-config', async (_, { workspacePath }) => {
   }
 });
 
-// Git Status & Version Control IPC Handlers (node.js simple-git)
+// Git Status & Version Control IPC Handlers (native es-git)
 ipcMain.handle('git:get-status', async (_, { pageDocsPath = 'docs/ui-boards', workspacePath }) => {
   return getGitStatus(pageDocsPath, workspacePath);
 });

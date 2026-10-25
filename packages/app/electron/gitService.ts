@@ -1,6 +1,14 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import { simpleGit, SimpleGit } from 'simple-git';
+import { execSync } from 'child_process';
+import {
+  discoverRepository,
+  openRepository,
+  createSignature,
+  RevwalkSort,
+  Repository,
+  Tree
+} from 'es-git';
 
 export interface DesignGitChange {
   path: string;
@@ -67,23 +75,22 @@ export interface CommitDetailsResult {
 let cachedRoot: string | null = null;
 
 export async function getRepoRoot(workspacePath?: string): Promise<string> {
-  if (workspacePath) return workspacePath;
-  if (process.env.SCREEN_DESIGNER_WORKSPACE) return process.env.SCREEN_DESIGNER_WORKSPACE;
-  if (cachedRoot) return cachedRoot;
+  const targetDir = workspacePath || process.env.SCREEN_DESIGNER_WORKSPACE || process.cwd();
   try {
-    const git = simpleGit(process.cwd());
-    const top = await git.revparse(['--show-toplevel']);
-    if (top) {
-      cachedRoot = top.trim();
+    const repo = await discoverRepository(targetDir);
+    const workdir = repo.workdir();
+    if (workdir) {
+      cachedRoot = path.normalize(workdir).replace(/[/\\]$/, '');
       return cachedRoot;
     }
   } catch {}
-  return process.cwd();
+  return targetDir;
 }
 
-async function getGit(workspacePath?: string): Promise<{ git: SimpleGit; root: string }> {
+async function getRepo(workspacePath?: string): Promise<{ repo: Repository; root: string }> {
   const root = await getRepoRoot(workspacePath);
-  return { git: simpleGit(root), root };
+  const repo = await discoverRepository(root);
+  return { repo, root };
 }
 
 export async function getGitStatus(
@@ -91,49 +98,83 @@ export async function getGitStatus(
   workspacePath?: string
 ): Promise<GitStatusResult> {
   try {
-    const { git } = await getGit(workspacePath);
-    const isRepo = await git.checkIsRepo();
-    if (!isRepo) {
-      return {
-        isRepo: false,
-        branch: '',
-        tracking: '',
-        ahead: 0,
-        behind: 0,
-        clean: true,
-        uiChangesCount: 0,
-        designChanges: [],
-        allChangesCount: 0,
-        allChanges: []
-      };
+    const { repo, root } = await getRepo(workspacePath);
+
+    // 1. Current Branch & Upstream Tracking
+    let branch = 'main';
+    let tracking = '';
+    let ahead = 0;
+    let behind = 0;
+
+    try {
+      const headRef = repo.head();
+      branch = headRef.shorthand() || 'main';
+
+      const localBranch = repo.findBranch(branch, 'Local');
+      if (localBranch) {
+        const upstream = localBranch.findUpstream();
+        if (upstream) {
+          tracking = upstream.name() || '';
+
+          // Ahead count
+          try {
+            const walkerAhead = repo.revwalk();
+            walkerAhead.pushRange(`${tracking}..HEAD`);
+            while (walkerAhead.next()) ahead++;
+          } catch {}
+
+          // Behind count
+          try {
+            const walkerBehind = repo.revwalk();
+            walkerBehind.pushRange(`HEAD..${tracking}`);
+            while (walkerBehind.next()) behind++;
+          } catch {}
+        }
+      }
+    } catch {}
+
+    // 2. Status entries (include untracked)
+    const statuses = repo.statuses();
+
+    const allChanges: DesignGitChange[] = [];
+    const normDocsPath = pageDocsPath.replace(/^\/+|\/+$/g, '');
+    const statusesCount = Number(statuses.len());
+
+    for (let i = 0; i < statusesCount; i++) {
+      const entry = statuses.get(i);
+      if (!entry) continue;
+      const st = entry.status();
+      if (st.ignored) continue;
+
+      const p = entry.path().replace(/\\/g, '/');
+      if (p.endsWith('/')) continue;
+
+      let status: 'modified' | 'added' | 'deleted' | 'untracked' = 'modified';
+      if (st.wtNew) status = 'untracked';
+      else if (st.indexNew) status = 'added';
+      else if (st.wtDeleted || st.indexDeleted) status = 'deleted';
+      else status = 'modified';
+
+      allChanges.push({
+        path: p,
+        filename: path.basename(p),
+        status
+      });
     }
 
-    const status = await git.status();
-    const normDocsPath = pageDocsPath.replace(/^\/+|\/+$/g, '');
-
-    const allChanges: DesignGitChange[] = status.files.map((f) => {
-      let st: 'modified' | 'added' | 'deleted' | 'untracked' = 'modified';
-      if (f.index === '?' || f.working_dir === '?') st = 'untracked';
-      else if (f.index === 'A' || f.working_dir === 'A') st = 'added';
-      else if (f.index === 'D' || f.working_dir === 'D') st = 'deleted';
-
-      return {
-        path: f.path,
-        filename: path.basename(f.path),
-        status: st
-      };
-    });
-
     const designChanges = allChanges.filter(
-      (c) => c.path.startsWith(normDocsPath) || c.path.startsWith('.screen-designer') || c.path.startsWith('assets')
+      (c) =>
+        c.path.startsWith(normDocsPath) ||
+        c.path.startsWith('.screen-designer') ||
+        c.path.startsWith('assets')
     );
 
     return {
       isRepo: true,
-      branch: status.current || 'main',
-      tracking: status.tracking || '',
-      ahead: status.ahead || 0,
-      behind: status.behind || 0,
+      branch,
+      tracking,
+      ahead,
+      behind,
       clean: allChanges.length === 0,
       uiChangesCount: designChanges.length,
       designChanges,
@@ -141,7 +182,7 @@ export async function getGitStatus(
       allChanges
     };
   } catch (err: any) {
-    console.error('[gitService] getGitStatus error:', err);
+    console.warn('[gitService] getGitStatus error or not a repo:', err.message);
     return {
       isRepo: false,
       branch: '',
@@ -232,77 +273,67 @@ export async function getFileDiff(
   commitHash?: string
 ): Promise<FileDiffResult> {
   try {
-    const { git, root } = await getGit(workspacePath);
+    const { repo, root } = await getRepo(workspacePath);
     let rawDiff = '';
     let status: 'modified' | 'added' | 'deleted' | 'untracked' = 'modified';
 
+    const normalizedPath = filePath.replace(/\\/g, '/');
+
     if (commitHash) {
-      // Diff in specific commit
       try {
-        rawDiff = await git.diff([`${commitHash}^!`, '--', filePath]);
-      } catch {}
-      if (!rawDiff) {
-        // Fallback: show file content at commit
-        const content = await git.show([`${commitHash}:${filePath}`]).catch(() => '');
-        rawDiff = content
-          ? `@@ -0,0 +1,${content.split('\n').length} @@\n` +
-            content.split('\n').map((l) => `+${l}`).join('\n')
-          : '';
+        const commit = repo.getCommit(commitHash);
+        let parentTree: Tree | null = null;
+        try {
+          const parentOid = repo.revparseSingle(`${commitHash}~1`);
+          if (parentOid) {
+            parentTree = repo.getCommit(parentOid).tree();
+          }
+        } catch {}
+
+        const diff = repo.diffTreeToTree(parentTree, commit.tree(), {
+          pathspecs: [normalizedPath]
+        });
+        rawDiff = diff.print();
+      } catch (err: any) {
+        console.warn('[gitService] commit diff error:', err.message);
       }
     } else {
-      // Working tree / staged diff
-      const st = await git.status();
-      const fileEntry = st.files.find((f) => f.path === filePath);
+      let headTree: Tree | null = null;
+      try {
+        const headRef = repo.head();
+        headTree = headRef.peelToTree();
+      } catch {}
 
-      if (fileEntry && (fileEntry.index === '?' || fileEntry.working_dir === '?')) {
-        status = 'untracked';
-        const fullPath = path.resolve(root, filePath);
+      try {
+        const diff = repo.diffTreeToWorkdir(headTree, {
+          pathspecs: [normalizedPath],
+          includeUntracked: true,
+          showUntrackedContent: true,
+          recurseUntrackedDirs: true
+        });
+        rawDiff = diff.print();
+      } catch {}
+
+      // Fallback for untracked new files
+      if (!rawDiff) {
+        const fullPath = path.resolve(root, normalizedPath);
         const exists = await fs.access(fullPath).then(() => true).catch(() => false);
         if (exists) {
+          status = 'untracked';
           try {
-            rawDiff = await git.raw(['diff', '--no-index', '--', '/dev/null', filePath]);
-          } catch (e: any) {
-            rawDiff = e.stdout || '';
-          }
-          if (!rawDiff) {
             const content = await fs.readFile(fullPath, 'utf-8');
             const lines = content.split(/\r?\n/);
             rawDiff = `@@ -0,0 +1,${lines.length} @@\n` + lines.map((l) => `+${l}`).join('\n');
-          }
-        }
-      } else {
-        // Check if repo has HEAD
-        const hasHead = await git.revparse(['HEAD']).then(() => true).catch(() => false);
-        if (hasHead) {
-          rawDiff = await git.diff(['HEAD', '--', filePath]);
-          if (!rawDiff) {
-            rawDiff = await git.diff(['--', filePath]);
-          }
-        } else {
-          // Empty repo with no commits yet
-          try {
-            rawDiff = await git.raw(['diff', '--no-index', '--', '/dev/null', filePath]);
-          } catch (e: any) {
-            rawDiff = e.stdout || '';
-          }
-          if (!rawDiff) {
-            const fullPath = path.resolve(root, filePath);
-            const exists = await fs.access(fullPath).then(() => true).catch(() => false);
-            if (exists) {
-              const content = await fs.readFile(fullPath, 'utf-8');
-              const lines = content.split(/\r?\n/);
-              rawDiff = `@@ -0,0 +1,${lines.length} @@\n` + lines.map((l) => `+${l}`).join('\n');
-            }
-          }
+          } catch {}
         }
       }
     }
 
     const isBinary = rawDiff.includes('Binary files') || rawDiff.includes('GIT binary patch');
-    const rows = isBinary ? [] : parseUnifiedDiff(rawDiff, filePath);
+    const rows = isBinary ? [] : parseUnifiedDiff(rawDiff, normalizedPath);
 
     return {
-      filePath,
+      filePath: normalizedPath,
       rawDiff,
       isBinary,
       status,
@@ -327,21 +358,36 @@ export async function getGitHistory(
   workspacePath?: string
 ): Promise<GitCommitItem[]> {
   try {
-    const { git } = await getGit(workspacePath);
-    const hasHead = await git.revparse(['HEAD']).then(() => true).catch(() => false);
-    if (!hasHead) return [];
+    const { repo } = await getRepo(workspacePath);
+    let headTarget = null;
+    try {
+      headTarget = repo.revparseSingle('HEAD');
+    } catch {
+      return [];
+    }
+    if (!headTarget) return [];
 
-    const log = await git.log({ maxCount });
-    return log.all.map((c) => ({
-      hash: c.hash,
-      shortHash: c.hash.slice(0, 7),
-      date: c.date,
-      message: c.message,
-      body: c.body || '',
-      author_name: c.author_name,
-      author_email: c.author_email,
-      refs: c.refs
-    }));
+    const walker = repo.revwalk();
+    walker.pushHead();
+    walker.setSorting(RevwalkSort.Time);
+
+    const commits: GitCommitItem[] = [];
+    for (let i = 0; i < maxCount; i++) {
+      const oid = walker.next();
+      if (!oid) break;
+      const c = repo.getCommit(oid);
+      commits.push({
+        hash: c.id(),
+        shortHash: c.id().slice(0, 7),
+        date: c.time().toISOString(),
+        message: c.summary() || c.message(),
+        body: c.body() || '',
+        author_name: c.author().name,
+        author_email: c.author().email
+      });
+    }
+
+    return commits;
   } catch (err: any) {
     console.warn('[gitService] getGitHistory empty or error:', err.message);
     return [];
@@ -353,42 +399,49 @@ export async function getCommitDetails(
   workspacePath?: string
 ): Promise<CommitDetailsResult | null> {
   try {
-    const { git } = await getGit(workspacePath);
-    const log = await git.log({ from: `${commitHash}~1`, to: commitHash, maxCount: 1 }).catch(async () => {
-      return git.log({ maxCount: 1 });
-    });
-
-    const commit = log.latest || log.all[0];
+    const { repo } = await getRepo(workspacePath);
+    const commit = repo.getCommit(commitHash);
     if (!commit) return null;
 
-    const rawStat = await git.show(['--name-status', '--format=', commitHash]);
+    let parentTree: Tree | null = null;
+    try {
+      const parentOid = repo.revparseSingle(`${commitHash}~1`);
+      if (parentOid) {
+        parentTree = repo.getCommit(parentOid).tree();
+      }
+    } catch {}
+
+    const diff = repo.diffTreeToTree(parentTree, commit.tree());
     const files: { path: string; filename: string; status: 'modified' | 'added' | 'deleted' }[] = [];
 
-    const lines = rawStat.split('\n');
-    for (const l of lines) {
-      const parts = l.trim().split(/\s+/);
-      if (parts.length >= 2) {
-        const type = parts[0];
-        const p = parts.slice(1).join(' ');
-        let st: 'modified' | 'added' | 'deleted' = 'modified';
-        if (type.startsWith('A')) st = 'added';
-        else if (type.startsWith('D')) st = 'deleted';
-        files.push({
-          path: p,
-          filename: path.basename(p),
-          status: st
-        });
-      }
+    const deltasIter = diff.deltas();
+    let dItem = deltasIter.next();
+    while (!dItem.done) {
+      const delta = dItem.value;
+      const newFile = delta.newFile();
+      const filePath = (newFile.path() || delta.oldFile().path() || '').replace(/\\/g, '/');
+      let st: 'modified' | 'added' | 'deleted' = 'modified';
+      const deltaStatus = delta.status();
+      if (deltaStatus === 'Added') st = 'added';
+      else if (deltaStatus === 'Deleted') st = 'deleted';
+      else st = 'modified';
+
+      files.push({
+        path: filePath,
+        filename: path.basename(filePath),
+        status: st
+      });
+      dItem = deltasIter.next();
     }
 
     return {
-      hash: commit.hash,
-      shortHash: commit.hash.slice(0, 7),
-      date: commit.date,
-      message: commit.message,
-      body: commit.body || '',
-      author_name: commit.author_name,
-      author_email: commit.author_email,
+      hash: commit.id(),
+      shortHash: commit.id().slice(0, 7),
+      date: commit.time().toISOString(),
+      message: commit.summary() || commit.message(),
+      body: commit.body() || '',
+      author_name: commit.author().name,
+      author_email: commit.author().email,
       files
     };
   } catch (err: any) {
@@ -404,23 +457,72 @@ export async function commitFiles(
   workspacePath?: string
 ): Promise<{ success: boolean; commitHash?: string; ahead?: number; error?: string }> {
   try {
-    const { git } = await getGit(workspacePath);
+    const { repo } = await getRepo(workspacePath);
     if (!files || files.length === 0) {
       return { success: false, error: 'No files selected to commit' };
     }
 
-    await git.add(files);
+    const index = repo.index();
+    for (const f of files) {
+      const norm = f.replace(/\\/g, '/');
+      try {
+        index.addPath(norm);
+      } catch {
+        index.addAll([norm]);
+      }
+    }
+    index.write();
+    const treeOid = index.writeTree();
+    const tree = repo.getTree(treeOid);
+
+    let authorName = 'Screen Designer';
+    let authorEmail = 'designer@screen-designer.local';
+    try {
+      const cfg = repo.config();
+      const n = cfg.findString('user.name');
+      const e = cfg.findString('user.email');
+      if (n) authorName = n;
+      if (e) authorEmail = e;
+    } catch {}
+    const sig = createSignature(authorName, authorEmail);
+
+    const parents: string[] = [];
+    try {
+      const headOid = repo.revparseSingle('HEAD');
+      if (headOid) parents.push(headOid);
+    } catch {}
+
     const fullMessage = description && description.trim()
       ? `${summary.trim()}\n\n${description.trim()}`
       : summary.trim();
 
-    const result = await git.commit(fullMessage);
-    const st = await git.status();
+    const commitOid = repo.commit(tree, fullMessage, {
+      updateRef: 'HEAD',
+      author: sig,
+      committer: sig,
+      parents
+    });
+
+    // Check updated ahead count
+    let ahead = 1;
+    try {
+      const headRef = repo.head();
+      const branch = headRef.shorthand() || 'main';
+      const localBranch = repo.findBranch(branch, 'Local');
+      const upstream = localBranch?.findUpstream();
+      if (upstream) {
+        const walker = repo.revwalk();
+        walker.pushRange(`${upstream.name()}..HEAD`);
+        let count = 0;
+        while (walker.next()) count++;
+        ahead = count;
+      }
+    } catch {}
 
     return {
       success: true,
-      commitHash: result.commit,
-      ahead: st.ahead || 1
+      commitHash: commitOid,
+      ahead
     };
   } catch (err: any) {
     console.error('[gitService] commitFiles error:', err);
@@ -432,22 +534,40 @@ export async function pushCommits(
   workspacePath?: string
 ): Promise<{ success: boolean; ahead?: number; error?: string }> {
   try {
-    const { git } = await getGit(workspacePath);
-    const st = await git.status();
-    const branch = st.current || 'main';
-
-    // Push to current branch or origin
+    const { repo, root } = await getRepo(workspacePath);
+    let branch = 'main';
     try {
-      await git.push('origin', branch);
-    } catch {
-      // Try setting upstream if needed
-      await git.push(['-u', 'origin', branch]);
+      branch = repo.head().shorthand() || 'main';
+    } catch {}
+
+    // First attempt native remote.push with es-git
+    try {
+      const remote = repo.getRemote('origin');
+      await remote.push([`refs/heads/${branch}:refs/heads/${branch}`]);
+    } catch (pushErr: any) {
+      // Fallback using system git CLI for OS credential helpers
+      try {
+        execSync(`git push origin ${branch}`, { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
+      } catch (cliErr: any) {
+        throw new Error(cliErr.message || pushErr.message);
+      }
     }
 
-    const updatedStatus = await git.status();
+    // Refresh ahead count
+    let ahead = 0;
+    try {
+      const localBranch = repo.findBranch(branch, 'Local');
+      const upstream = localBranch?.findUpstream();
+      if (upstream) {
+        const walker = repo.revwalk();
+        walker.pushRange(`${upstream.name()}..HEAD`);
+        while (walker.next()) ahead++;
+      }
+    } catch {}
+
     return {
       success: true,
-      ahead: updatedStatus.ahead || 0
+      ahead
     };
   } catch (err: any) {
     console.error('[gitService] pushCommits error:', err);
