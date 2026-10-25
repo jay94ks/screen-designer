@@ -22,6 +22,7 @@ import { HistoryManager } from './utils/history';
 import { INITIAL_VDOM_ARTBOARDS } from './data/initialVdom';
 import { VDomArtboard, VNode, NodeType } from './types/vdom';
 import { generateComponentCode } from './utils/serializer';
+import { I18nProvider } from './i18n';
 import {
   DocumentProject,
   ProjectSettings,
@@ -53,7 +54,8 @@ const DEFAULT_SETTINGS: ProjectSettings = {
   componentDefaults: DEFAULT_COMPONENT_STYLES,
   pageDocsPath: 'docs/ui-boards',
   workspacePath: '.',
-  gitAutoCheck: true
+  gitAutoCheck: true,
+  language: 'ko'
 };
 
 interface PageModel {
@@ -1269,7 +1271,8 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-[#e8eaf0] text-slate-800 font-sans overflow-hidden select-none">
+    <I18nProvider initialLang={settings.language} onLanguageChange={(lang) => handleUpdateSettings({ language: lang })}>
+      <div className="flex flex-col h-screen w-screen bg-[#e8eaf0] text-slate-800 font-sans overflow-hidden select-none">
       {/* 1. Universal Top Header & Menubar (Electron Frameless Drag & Window Controls) */}
       <ClaudeHeader
         title={docTitle}
@@ -2005,6 +2008,7 @@ export default function App() {
           setSelectedArtboardId(newVdomBoard.id);
         }}
       />
-    </div>
+      </div>
+    </I18nProvider>
   );
 }

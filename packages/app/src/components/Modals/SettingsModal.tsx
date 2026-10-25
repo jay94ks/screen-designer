@@ -32,10 +32,12 @@ import {
   Table,
   AlignLeft,
   AlignCenter,
-  AlignRight
+  AlignRight,
+  Globe
 } from 'lucide-react';
 import { ProjectSettings, ComponentDefaultStyles, ComponentDefaultStyleItem, DEFAULT_COMPONENT_STYLES } from '../../types';
 import { NodeType } from '../../types/vdom';
+import { useTranslation } from '../../i18n';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -124,6 +126,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   initialTab = 'canvas',
   onOpenDesignSystem
 }) => {
+  const { t, language, setLanguage, languages } = useTranslation();
   const [activeTab, setActiveTab] = useState<'canvas' | 'components'>(initialTab);
   const [selectedComp, setSelectedComp] = useState<NodeType>('button');
   const [categoryFilter, setCategoryFilter] = useState<ComponentCategory>('all');
@@ -243,7 +246,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <Sliders size={16} />
             </div>
             <div>
-              <h2 className="font-bold text-slate-900 text-sm">환경 설정 & 디자인 시스템 (Settings)</h2>
+              <h2 className="font-bold text-slate-900 text-sm">{t('settings.title')}</h2>
               <p className="text-[11px] text-slate-500">
                 캔버스 환경 및 VDOM 전체 요소({COMPONENT_CATALOG.length}종)의 기본 스타일 토큰 관리
               </p>
@@ -262,7 +265,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 }`}
               >
                 <Sparkles size={13} className="text-indigo-600" />
-                <span>컴포넌트 기본 스타일 ({COMPONENT_CATALOG.length})</span>
+                <span>{t('settings.componentsTab')} ({COMPONENT_CATALOG.length})</span>
               </button>
               <button
                 onClick={() => setActiveTab('canvas')}
@@ -273,7 +276,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 }`}
               >
                 <Grid size={13} className="text-slate-500" />
-                <span>캔버스 환경</span>
+                <span>{t('settings.canvasTab')}</span>
               </button>
             </div>
 
@@ -477,6 +480,34 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     >
                       <div className="w-6 h-6 rounded-full border border-slate-300 shadow-2xs" style={{ backgroundColor: bg.value }} />
                       <span className="text-[11px] text-slate-700 truncate">{bg.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Language Settings (다국어 언어 설정) */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 font-bold text-slate-800 text-sm">
+                  <Globe size={16} className="text-indigo-600" />
+                  <span>{t('settings.language')}</span>
+                </div>
+                <div className="grid grid-cols-3 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200/80">
+                  {languages.map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => {
+                        setLanguage(l.code);
+                        onUpdateSettings({ language: l.code });
+                      }}
+                      className={`p-3 rounded-xl border text-center transition flex flex-col items-center gap-1.5 ${
+                        language === l.code
+                          ? 'border-indigo-600 bg-white ring-2 ring-indigo-500/20 shadow-xs font-bold'
+                          : 'border-slate-200 hover:bg-white bg-slate-50/50'
+                      }`}
+                    >
+                      <span className="text-2xl">{l.flag}</span>
+                      <span className="text-xs text-slate-800 font-semibold">{l.nativeLabel}</span>
+                      <span className="text-[10px] text-slate-400 font-mono">{l.label}</span>
                     </button>
                   ))}
                 </div>

@@ -507,6 +507,7 @@ export interface ProjectSettings {
   rulersVisible: boolean;
   canvasBackground: string;
   theme: 'light' | 'dark' | 'system';
+  language?: 'ko' | 'en' | 'ja';
   autoSave: boolean;
   componentDefaults?: ComponentDefaultStyles;
   pageDocsPath?: string;

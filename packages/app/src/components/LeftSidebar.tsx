@@ -39,6 +39,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { SECTION_TEMPLATES, SectionTemplate } from '../data/sectionTemplates';
+import { useTranslation } from '../i18n';
 
 interface LeftSidebarProps {
   artboards: VDomArtboard[];
@@ -75,6 +76,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   onClose,
   width = 270
 }) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'layers' | 'assets' | 'templates'>(() => {
     if (typeof window !== 'undefined') {
       if (window.location.search.includes('templates') || window.location.search.includes('tpl')) {
@@ -554,7 +556,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             }`}
           >
             <Layers size={12} />
-            <span>레이어</span>
+            <span>{t('sidebar.layers')}</span>
           </button>
           <button
             onClick={() => setActiveTab('assets')}
@@ -565,7 +567,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             }`}
           >
             <Component size={12} />
-            <span>컴포넌트</span>
+            <span>{t('sidebar.components')}</span>
           </button>
           <button
             onClick={() => setActiveTab('templates')}
@@ -576,7 +578,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             }`}
           >
             <Sparkles size={12} className={activeTab === 'templates' ? 'text-indigo-600' : ''} />
-            <span>템플릿</span>
+            <span>{t('sidebar.templates')}</span>
           </button>
         </div>
       </div>

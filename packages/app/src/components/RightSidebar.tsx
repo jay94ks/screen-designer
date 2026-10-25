@@ -6,6 +6,7 @@ import { EventsPanel } from './EventsPanel';
 import { VDomArtboard, VNode } from '../types/vdom';
 import { TweakDefinition } from '../types';
 import { X, Download, Save, Sparkles, Zap } from 'lucide-react';
+import { useTranslation } from '../i18n';
 
 interface RightSidebarProps {
   artboard: VDomArtboard | null;
@@ -44,6 +45,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   onOpenExport,
   width = 320
 }) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'properties' | 'events' | 'code' | 'tweaks'>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -73,7 +75,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                 : 'text-slate-500 hover:text-slate-800'
             }`}
           >
-            Properties
+            {t('properties.title')}
           </button>
           <button
             onClick={() => setActiveTab('events')}
@@ -84,7 +86,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
             }`}
           >
             <Zap size={11} className={activeTab === 'events' ? 'text-amber-500 fill-amber-500' : 'text-slate-400'} />
-            <span>Events</span>
+            <span>{t('interactions.title')}</span>
             {selectedNode?.events && selectedNode.events.length > 0 && (
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
             )}
@@ -97,7 +99,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                 : 'text-slate-500 hover:text-slate-800'
             }`}
           >
-            Code
+            {t('properties.tabCode')}
           </button>
           <button
             onClick={() => setActiveTab('tweaks')}
@@ -107,7 +109,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                 : 'text-slate-500 hover:text-slate-800'
             }`}
           >
-            <span>Tweaks</span>
+            <span>{t('properties.dynamicTweaks')}</span>
             {artboard && artboard.tweaksSchema && artboard.tweaksSchema.length > 0 && (
               <span className="w-1.5 h-1.5 rounded-full bg-indigo-600" />
             )}

@@ -33,9 +33,12 @@ import {
   GitBranch,
   GitCommit,
   Upload,
-  Search
+  Search,
+  Globe,
+  Check
 } from 'lucide-react';
 import { CanvasTool, Page, GitStatusInfo } from '../types';
+import { useTranslation } from '../i18n';
 
 interface ClaudeHeaderProps {
   title: string;
@@ -120,9 +123,11 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
   onAlignSelected,
   hasSelectedElement = false
 }) => {
+  const { t, language, setLanguage, languages } = useTranslation();
   const [activeMenu, setActiveMenu] = useState<'file' | 'edit' | 'view' | 'help' | null>(null);
   const [showPageMenu, setShowPageMenu] = useState(false);
   const [showZoomMenu, setShowZoomMenu] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
 
   useEffect(() => {
@@ -211,6 +216,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
     setActiveMenu(null);
     setShowPageMenu(false);
     setShowZoomMenu(false);
+    setShowLangMenu(false);
   };
 
   return (
@@ -235,7 +241,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             className={`p-1 rounded-md transition ${
               isLeftSidebarOpen ? 'bg-indigo-100/80 text-indigo-700 font-bold' : 'text-slate-500 hover:bg-slate-200/60'
             }`}
-            title="레이어 / 에셋 패널 토글"
+            title={t('header.toggleLeftSidebar')}
           >
             <Layers size={13} />
           </button>
@@ -248,7 +254,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
               value={title}
               onChange={(e) => onTitleChange(e.target.value)}
               className="font-bold bg-transparent border-0 hover:bg-slate-200/50 rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 w-52 text-xs truncate"
-              title="문서 제목 수정"
+              title={t('header.editTitle')}
             />
           </div>
 
@@ -259,7 +265,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             <button
               onClick={() => setShowPageMenu(!showPageMenu)}
               className="flex items-center gap-1 px-2 py-0.5 rounded hover:bg-slate-200/60 text-slate-700 font-medium text-[11px] transition"
-              title="페이지 전환 및 새 페이지 추가"
+              title={t('header.pagesList')}
             >
               <span className="truncate max-w-[150px]">{activePage.name}</span>
               <ChevronDown size={11} className="text-slate-400 shrink-0" />
@@ -270,7 +276,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                 className="absolute left-0 top-full mt-1 w-56 bg-white border border-slate-200 rounded-xl shadow-xl py-1 text-xs z-50 animate-in fade-in duration-75"
               >
                 <div className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
-                  스토리보드 페이지 목록
+                  {t('header.pagesList')}
                 </div>
                 {pages.map((p) => (
                   <button
@@ -287,7 +293,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                   >
                     <span className="truncate">{p.name}</span>
                     <span className="text-[10px] text-slate-400 font-mono">
-                      {p.artboards?.length || 0} 보드
+                      {p.artboards?.length || 0} {t('header.boards')}
                     </span>
                   </button>
                 ))}
@@ -299,7 +305,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                   }}
                   className="w-full text-left px-3 py-1.5 text-indigo-600 font-semibold hover:bg-indigo-50 flex items-center gap-1.5"
                 >
-                  <span>+ 새 페이지 생성</span>
+                  <span>+ {t('header.newPage')}</span>
                 </button>
               </div>
             )}
@@ -309,7 +315,6 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
         {/* 1-2. Center: Window Drag Handle Region */}
         <div
           className="flex-1 h-full flex items-center justify-center cursor-default app-region-drag select-none"
-          title="창 이동 (드래그)"
         >
           <div className="w-8 h-1 bg-slate-200 rounded-full pointer-events-none hover:bg-slate-300 transition" />
         </div>
@@ -320,7 +325,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
           <button
             onClick={onOpenShare}
             className="p-1 hover:bg-slate-200/60 rounded text-slate-600 transition"
-            title="공유 및 임베드"
+            title={t('header.share')}
           >
             <Share2 size={13} />
           </button>
@@ -330,18 +335,56 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             <button
               onClick={onOpenDesignSystem}
               className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-semibold text-[11px] shadow-2xs transition active:scale-95 whitespace-nowrap shrink-0"
-              title="디자인 시스템 스튜디오 열기 (창 전체 화면 활용)"
+              title={t('header.designSystem')}
             >
               <Palette size={12} className="text-indigo-600 shrink-0" />
-              <span>디자인 시스템</span>
+              <span>{t('header.designSystem')}</span>
             </button>
           )}
+
+          {/* Language Switcher Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setShowLangMenu(!showLangMenu)}
+              className="flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-slate-200/60 text-slate-600 font-medium text-[11px] transition"
+              title={t('header.language')}
+            >
+              <Globe size={12} className="text-slate-500 shrink-0" />
+              <span className="font-semibold uppercase text-[10px]">{language}</span>
+              <ChevronDown size={10} className="text-slate-400" />
+            </button>
+            {showLangMenu && (
+              <div
+                onMouseLeave={() => setShowLangMenu(false)}
+                className="absolute right-0 top-full mt-1 w-32 bg-white border border-slate-200 rounded-xl shadow-xl py-1 text-xs z-50 animate-in fade-in duration-75"
+              >
+                {languages.map((l) => (
+                  <button
+                    key={l.code}
+                    onClick={() => {
+                      setLanguage(l.code);
+                      setShowLangMenu(false);
+                    }}
+                    className={`w-full text-left px-2.5 py-1.5 flex items-center justify-between text-xs transition ${
+                      language === l.code ? 'bg-indigo-50 font-bold text-indigo-700' : 'hover:bg-slate-50 text-slate-700'
+                    }`}
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <span>{l.flag}</span>
+                      <span>{l.nativeLabel}</span>
+                    </span>
+                    {language === l.code && <Check size={12} className="text-indigo-600" />}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Settings Button */}
           <button
             onClick={() => onOpenSettings('canvas')}
             className="p-1 hover:bg-slate-200/60 rounded text-slate-600 transition"
-            title="환경 설정 (Preferences)"
+            title={t('header.settings')}
           >
             <Settings size={13} />
           </button>
@@ -352,7 +395,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             className={`p-1 rounded transition ${
               isRightSidebarOpen ? 'bg-indigo-100/80 text-indigo-700 font-bold' : 'text-slate-500 hover:bg-slate-200/60'
             }`}
-            title="속성 / 코드 / Tweaks 패널 토글"
+            title={t('header.toggleRightSidebar')}
           >
             <PanelRight size={13} />
           </button>
@@ -362,21 +405,21 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             <button
               onClick={handleMinimize}
               className="w-9 h-9 flex items-center justify-center text-slate-500 hover:bg-slate-200/80 hover:text-slate-800 transition"
-              title="최소화"
+              title={t('header.minimize')}
             >
               <Minus size={12} />
             </button>
             <button
               onClick={handleMaximize}
               className="w-9 h-9 flex items-center justify-center text-slate-500 hover:bg-slate-200/80 hover:text-slate-800 transition"
-              title={isMaximized ? '이전 크기로 복원' : '최대화'}
+              title={isMaximized ? t('header.restore') : t('header.maximize')}
             >
               {isMaximized ? <Copy size={11} className="rotate-180" /> : <Square size={11} />}
             </button>
             <button
               onClick={handleClose}
               className="w-10 h-9 flex items-center justify-center text-slate-500 hover:bg-rose-600 hover:text-white transition"
-              title="닫기"
+              title={t('header.close')}
             >
               <X size={13} />
             </button>
@@ -401,7 +444,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                 activeMenu === 'file' ? 'bg-slate-100 font-bold text-slate-900' : ''
               }`}
             >
-              파일 (File)
+              {t('header.menuFile')}
             </button>
             {activeMenu === 'file' && (
               <div
@@ -415,7 +458,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                   }}
                   className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700 flex justify-between"
                 >
-                  <span>새 프레임 추가</span>
+                  <span>{t('header.toolFrame')}</span>
                   <span className="text-[10px] text-slate-400 font-mono">F</span>
                 </button>
                 <button
@@ -425,7 +468,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                   }}
                   className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700 flex justify-between"
                 >
-                  <span>내보내기 (Export)</span>
+                  <span>{t('common.export')}</span>
                   <span className="text-[10px] text-slate-400 font-mono">Ctrl+E</span>
                 </button>
                 <div className="h-px bg-slate-100 my-1" />
@@ -439,10 +482,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                 >
                   <span className="flex items-center gap-1.5 font-medium">
                     <Palette size={12} className="text-indigo-600" />
-                    <span>디자인 시스템 스튜디오</span>
-                  </span>
-                  <span className="text-[10px] text-indigo-600 font-bold bg-indigo-50 px-1.5 py-0.2 rounded border border-indigo-200">
-                    전체 창
+                    <span>{t('header.designSystem')}</span>
                   </span>
                 </button>
                 <button
@@ -452,7 +492,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                   }}
                   className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700"
                 >
-                  환경 설정 (Preferences)
+                  {t('header.settings')}
                 </button>
               </div>
             )}
@@ -466,7 +506,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                 activeMenu === 'edit' ? 'bg-slate-100 font-bold text-slate-900' : ''
               }`}
             >
-              편집 (Edit)
+              {t('header.menuEdit')}
             </button>
             {activeMenu === 'edit' && (
               <div
@@ -507,7 +547,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                 activeMenu === 'view' ? 'bg-slate-100 font-bold text-slate-900' : ''
               }`}
             >
-              보기 (View)
+              {t('header.menuView')}
             </button>
             {activeMenu === 'view' && (
               <div
@@ -521,7 +561,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                   }}
                   className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700 flex justify-between"
                 >
-                  <span>확대 (Zoom In)</span>
+                  <span>{t('header.zoomIn')}</span>
                   <span className="text-[10px] text-slate-400 font-mono">Ctrl++</span>
                 </button>
                 <button
@@ -531,7 +571,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                   }}
                   className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700 flex justify-between"
                 >
-                  <span>축소 (Zoom Out)</span>
+                  <span>{t('header.zoomOut')}</span>
                   <span className="text-[10px] text-slate-400 font-mono">Ctrl+-</span>
                 </button>
                 <button
@@ -541,7 +581,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                   }}
                   className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700 flex justify-between"
                 >
-                  <span>100% 크기로</span>
+                  <span>{t('header.fitScreen')}</span>
                   <span className="text-[10px] text-slate-400 font-mono">Ctrl+0</span>
                 </button>
                 <div className="h-px bg-slate-100 my-1" />
@@ -553,7 +593,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                     }}
                     className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700 flex justify-between items-center"
                   >
-                    <span>눈금자 및 가이드 ({showRulers ? '숨김' : '표시'})</span>
+                    <span>{t('settings.rulersVisible')} ({showRulers ? '숨김' : '표시'})</span>
                     <span className="text-[10px] text-slate-400 font-mono">Shift+R</span>
                   </button>
                 )}
@@ -565,7 +605,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                     }}
                     className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700 flex justify-between items-center"
                   >
-                    <span>명령 팔레트 (Command Palette)</span>
+                    <span>{t('commandPalette.placeholder')}</span>
                     <span className="text-[10px] text-slate-400 font-mono">Ctrl+K</span>
                   </button>
                 )}
@@ -577,7 +617,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                   }}
                   className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700 flex justify-between"
                 >
-                  <span>레이어 트리 패널 토글</span>
+                  <span>{t('header.toggleLeftSidebar')}</span>
                   <span className="text-[10px] text-slate-400 font-mono">Alt+1</span>
                 </button>
                 <button
@@ -587,7 +627,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                   }}
                   className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-700 flex justify-between"
                 >
-                  <span>속성 패널 토글</span>
+                  <span>{t('header.toggleRightSidebar')}</span>
                   <span className="text-[10px] text-slate-400 font-mono">Alt+2</span>
                 </button>
               </div>
@@ -602,7 +642,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                 activeMenu === 'help' ? 'bg-slate-100 font-bold text-slate-900' : ''
               }`}
             >
-              도움말 (Help)
+              {t('header.menuHelp')}
             </button>
             {activeMenu === 'help' && (
               <div
@@ -668,12 +708,12 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
           {/* Canvas Tools */}
           <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200/80 shadow-2xs">
             {[
-              { id: 'select' as CanvasTool, icon: MousePointer, label: '선택 도구 (V)' },
-              { id: 'hand' as CanvasTool, icon: Hand, label: '이동 도구 (H)' },
-              { id: 'frame' as CanvasTool, icon: Hash, label: '새 프레임/아트보드 (F)' },
-              { id: 'text' as CanvasTool, icon: Type, label: '텍스트 추가 (T)' },
-              { id: 'rect' as CanvasTool, icon: Square, label: '사각형 추가 (R)' },
-              { id: 'circle' as CanvasTool, icon: Circle, label: '원형 추가 (O)' }
+              { id: 'select' as CanvasTool, icon: MousePointer, label: `${t('header.toolSelect')} (V)` },
+              { id: 'hand' as CanvasTool, icon: Hand, label: `${t('header.toolHand')} (H)` },
+              { id: 'frame' as CanvasTool, icon: Hash, label: `${t('header.toolFrame')} (F)` },
+              { id: 'text' as CanvasTool, icon: Type, label: `${t('header.toolText')} (T)` },
+              { id: 'rect' as CanvasTool, icon: Square, label: `${t('header.toolBox')} (R)` },
+              { id: 'circle' as CanvasTool, icon: Circle, label: `${t('header.toolCircle')} (O)` }
             ].map((item) => {
               const Icon = item.icon;
               const isActive = activeTool === item.id;
@@ -684,13 +724,13 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                     if (item.id === 'frame') {
                       onOpenNewFrame();
                     } else if (item.id === 'text' && onInsertNode) {
-                      onInsertNode('text', '새 텍스트', '텍스트를 입력하세요');
+                      onInsertNode('text', 'New Text', 'Text');
                       onSelectTool('select');
                     } else if (item.id === 'rect' && onInsertNode) {
-                      onInsertNode('box', '새 사각형 박스');
+                      onInsertNode('box', 'Box');
                       onSelectTool('select');
                     } else if (item.id === 'circle' && onInsertNode) {
-                      onInsertNode('circle', '새 원형 배지');
+                      onInsertNode('circle', 'Circle');
                       onSelectTool('select');
                     } else {
                       onSelectTool(item.id);
@@ -718,21 +758,21 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             >
               <button
                 onClick={() => onAlignSelected('left')}
-                title="좌측 정렬 (Align Left)"
+                title={t('header.alignLeft')}
                 className="p-1.5 rounded hover:bg-white text-slate-600 hover:text-indigo-600 transition"
               >
                 <AlignLeft size={12} />
               </button>
               <button
                 onClick={() => onAlignSelected('center')}
-                title="수평 중앙 정렬 (Align Horizontal Center)"
+                title={t('header.alignCenter')}
                 className="p-1.5 rounded hover:bg-white text-slate-600 hover:text-indigo-600 transition"
               >
                 <AlignCenter size={12} />
               </button>
               <button
                 onClick={() => onAlignSelected('right')}
-                title="우측 정렬 (Align Right)"
+                title={t('header.alignRight')}
                 className="p-1.5 rounded hover:bg-white text-slate-600 hover:text-indigo-600 transition"
               >
                 <AlignRight size={12} />
@@ -740,7 +780,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
               <div className="w-px h-3 bg-slate-300 mx-0.5" />
               <button
                 onClick={() => onAlignSelected('middle')}
-                title="수직 중앙 정렬 (Align Vertical Center)"
+                title={t('header.alignMiddle')}
                 className="p-1.5 rounded hover:bg-white text-slate-600 hover:text-indigo-600 transition"
               >
                 <ArrowUpDown size={12} />
@@ -760,10 +800,10 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                   ? 'bg-purple-50 border-purple-300 text-purple-700 shadow-purple-500/10'
                   : 'bg-white border-slate-200 text-slate-500 hover:text-slate-800'
               }`}
-              title="화면 간 인터랙티브 프로토타입 연결선 (Figma Prototype Wire) 표시 토글"
+              title={t('header.flowWires')}
             >
               <Zap size={11} className={showPrototypeWires ? 'text-purple-600 fill-purple-600' : 'text-slate-400'} />
-              <span>플로우</span>
+              <span>{t('header.flowWires')}</span>
               {showPrototypeWires && <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />}
             </button>
           )}
@@ -772,10 +812,10 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
           <button
             onClick={onPlay}
             className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition active:scale-95 text-xs shadow-xs"
-            title="실시간 인터랙티브 프레젠테이션 모드 실행"
+            title={t('header.play')}
           >
             <Play size={12} className="fill-white" />
-            <span>PLAY</span>
+            <span>{t('header.play')}</span>
           </button>
 
           <div className="h-3.5 w-px bg-slate-200 mx-0.5" />
@@ -785,7 +825,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             <button
               onClick={() => onZoomChange(Math.max(0.3, zoom - 0.1))}
               className="p-1 hover:bg-white rounded text-slate-500 transition"
-              title="줌 아웃"
+              title={t('header.zoomOut')}
             >
               <ZoomOut size={12} />
             </button>
@@ -824,7 +864,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                     }}
                     className="w-full text-left px-3 py-1 text-[11px] text-slate-600 hover:bg-indigo-50"
                   >
-                    100%로 맞추기
+                    {t('header.fitScreen')}
                   </button>
                 </div>
               )}
@@ -832,7 +872,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             <button
               onClick={() => onZoomChange(Math.min(2.0, zoom + 0.1))}
               className="p-1 hover:bg-white rounded text-slate-500 transition"
-              title="줌 인"
+              title={t('header.zoomIn')}
             >
               <ZoomIn size={12} />
             </button>
@@ -843,7 +883,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
           {/* Screen / Artboard Navigator */}
           <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-0.5 border border-slate-200">
             <span className="text-[11px] text-slate-500 px-2 font-mono">
-              {totalCount > 0 ? `${totalCount}개 중 ${currentIndex + 1}번째` : '0개'}
+              {totalCount > 0 ? `${totalCount} / ${currentIndex + 1}` : '0'}
             </span>
             <button
               onClick={onPrev}
@@ -869,7 +909,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
               <button
                 onClick={onOpenGitStatus}
                 className="flex items-center gap-1 px-2 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer border border-slate-200"
-                title={`Git 브랜치: ${gitStatus.branch || 'main'}`}
+                title={`${t('header.gitStatus')}: ${gitStatus.branch || 'main'}`}
               >
                 <GitBranch
                   size={12}
@@ -892,7 +932,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                   <button
                     onClick={onOpenGitStatus}
                     className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold shadow-xs transition cursor-pointer"
-                    title="디자인 파일 변경 감지됨 - 클릭하여 Git 커밋/푸시 다이얼로그 열기"
+                    title={t('header.uncommittedChanges')}
                   >
                     <GitCommit size={12} />
                     <span>커밋 ({gitStatus.uiChangesCount || gitStatus.allChangesCount})</span>
@@ -904,7 +944,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
                 <button
                   onClick={onOpenGitStatus}
                   className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold shadow-xs transition cursor-pointer"
-                  title="원격 저장소에 푸시할 커밋이 있습니다."
+                  title="Push"
                 >
                   <Upload size={12} />
                   <span>Push ({gitStatus.ahead})</span>
