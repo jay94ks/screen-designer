@@ -173,7 +173,7 @@ export const CanvasRulers: React.FC<CanvasRulersProps> = ({
       {/* 1. Corner Box (Intersection of Top & Left Rulers) */}
       <div
         style={{ width: `${RULER_SIZE}px`, height: `${RULER_SIZE}px` }}
-        className="absolute top-0 left-0 bg-slate-200 border-r border-b border-slate-300 z-40 flex items-center justify-center font-mono text-[9px] text-slate-500 select-none cursor-pointer hover:bg-indigo-100 hover:text-indigo-700 transition"
+        className="absolute top-0 left-0 bg-slate-200 border-r border-b border-slate-300 z-25 flex items-center justify-center font-mono text-[9px] text-slate-500 select-none cursor-pointer hover:bg-indigo-100 hover:text-indigo-700 transition"
         title="눈금자 (px 단위). 클릭 시 가이드 생성 도움말"
       >
         px
@@ -183,7 +183,7 @@ export const CanvasRulers: React.FC<CanvasRulersProps> = ({
       <div
         onMouseDown={handleStartDragTopRuler}
         style={{ left: `${RULER_SIZE}px`, height: `${RULER_SIZE}px`, width: `calc(100% - ${RULER_SIZE}px)` }}
-        className="absolute top-0 overflow-hidden bg-slate-100/95 backdrop-blur-2xs border-b border-slate-300 z-30 select-none cursor-ns-resize"
+        className="absolute top-0 overflow-hidden bg-slate-100/95 backdrop-blur-2xs border-b border-slate-300 z-20 select-none cursor-ns-resize"
         title="아래로 드래그하여 수평 가이드라인 생성"
       >
         <svg className="w-full h-full">
@@ -232,7 +232,7 @@ export const CanvasRulers: React.FC<CanvasRulersProps> = ({
       <div
         onMouseDown={handleStartDragLeftRuler}
         style={{ top: `${RULER_SIZE}px`, width: `${RULER_SIZE}px`, height: `calc(100% - ${RULER_SIZE}px)` }}
-        className="absolute left-0 overflow-hidden bg-slate-100/95 backdrop-blur-2xs border-r border-slate-300 z-30 select-none cursor-ew-resize"
+        className="absolute left-0 overflow-hidden bg-slate-100/95 backdrop-blur-2xs border-r border-slate-300 z-20 select-none cursor-ew-resize"
         title="우측으로 드래그하여 수직 가이드라인 생성"
       >
         <svg className="w-full h-full">
@@ -300,7 +300,7 @@ export const CanvasRulers: React.FC<CanvasRulersProps> = ({
                 left: `${RULER_SIZE}px`,
                 width: `calc(100% - ${RULER_SIZE}px)`
               }}
-              className="absolute z-20 cursor-ns-resize group select-none pointer-events-auto"
+              className="absolute z-15 cursor-ns-resize group select-none pointer-events-auto"
             >
               {/* Actual Line */}
               <div
@@ -348,7 +348,7 @@ export const CanvasRulers: React.FC<CanvasRulersProps> = ({
                 top: `${RULER_SIZE}px`,
                 height: `calc(100% - ${RULER_SIZE}px)`
               }}
-              className="absolute z-20 cursor-ew-resize group select-none pointer-events-auto"
+              className="absolute z-15 cursor-ew-resize group select-none pointer-events-auto"
             >
               {/* Actual Line */}
               <div

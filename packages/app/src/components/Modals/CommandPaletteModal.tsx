@@ -325,7 +325,7 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-start justify-center pt-24 p-4 animate-in fade-in duration-100 select-none"
+      className="fixed inset-0 z-[110] bg-slate-900/40 backdrop-blur-xs flex items-start justify-center pt-24 p-4 animate-in fade-in duration-100 select-none"
     >
       <div
         onClick={(e) => e.stopPropagation()}

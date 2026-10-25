@@ -36,6 +36,7 @@ export type NodeType =
   | 'video'
   | 'audio'
   | 'iframe'
+  | 'icon'
   // Lists & Data
   | 'ul'
   | 'ol'

@@ -238,7 +238,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
   const activePage = pages.find((p) => p.id === activePageId) || pages[0];
 
   return (
-    <div className="flex flex-col shrink-0 select-none text-slate-700 text-xs shadow-xs relative z-30">
+    <div className="flex flex-col shrink-0 select-none text-slate-700 text-xs shadow-xs relative z-40">
       {/* =========================================================================
           BAR 1: CAPTION BAR (상단 캡션 바 / 윈도우 타이틀바)
           - Left: Left Sidebar Toggle, App Logo, Editable Document Title, Page Selector

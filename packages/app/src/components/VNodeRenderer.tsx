@@ -3,6 +3,7 @@ import { VNode } from '../types/vdom';
 import { styleToCssProperties } from '../utils/serializer';
 import { evaluateNodeVisibility } from '../utils/conditionEvaluator';
 import { getPresetByFileName } from '../data/imagePresets';
+import * as LucideIcons from 'lucide-react';
 import {
   Layers,
   Trash2,
@@ -451,9 +452,47 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
 
     if (node.type === 'button') {
       return (
-        <button className="w-full h-full bg-transparent border-0 cursor-pointer pointer-events-none font-bold">
-          {displayContent}
-        </button>
+        <div className="w-full h-full flex items-center justify-center gap-1.5 font-bold pointer-events-none select-none">
+          {displayContent && <span>{displayContent}</span>}
+          {node.children &&
+            node.children.map((child) => (
+              <VNodeRenderer
+                key={child.id}
+                node={child}
+                selectedNodeId={selectedNodeId}
+                onSelectNode={onSelectNode}
+                onUpdateContent={onUpdateContent}
+                onNodeAction={onNodeAction}
+                onNodeEvent={onNodeEvent}
+                onDeleteNode={onDeleteNode}
+                onDuplicateNode={onDuplicateNode}
+                tweakValues={tweakValues}
+                interactive={interactive}
+                isPlayMode={isPlayMode}
+                showHotspots={showHotspots}
+              />
+            ))}
+        </div>
+      );
+    }
+
+    if (node.type === 'icon') {
+      const rawName = node.props?.icon || node.props?.name || node.content || '';
+      const pascalName = rawName
+        ? rawName.split('-').map((s: string) => s.charAt(0).toUpperCase() + s.slice(1)).join('')
+        : '';
+      const IconComp = (LucideIcons as any)[pascalName] || (LucideIcons as any)[rawName];
+      const iconSize = typeof node.style?.width === 'number' ? node.style.width : (node.props?.size || 15);
+      return (
+        <span className="inline-flex items-center justify-center shrink-0" style={{ color: cssStyle.color }}>
+          {IconComp ? (
+            <IconComp size={iconSize} />
+          ) : node.props?.svg ? (
+            <span dangerouslySetInnerHTML={{ __html: node.props.svg }} />
+          ) : (
+            <span className="text-xs">{displayContent || '★'}</span>
+          )}
+        </span>
       );
     }
 

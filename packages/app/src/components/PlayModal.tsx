@@ -156,9 +156,9 @@ export const PlayModal: React.FC<PlayModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-between p-4 select-none animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-[110] bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-between p-4 select-none animate-in fade-in duration-150">
       {/* Top Floating Control Bar */}
-      <header className="h-12 bg-slate-900/90 border border-slate-700/80 rounded-full px-5 flex items-center gap-5 shadow-2xl z-50 text-white">
+      <header className="h-12 bg-slate-900/90 border border-slate-700/80 rounded-full px-5 flex items-center gap-5 shadow-2xl z-[110] text-white">
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
           <span className="text-xs font-bold tracking-wide">
@@ -258,7 +258,7 @@ export const PlayModal: React.FC<PlayModalProps> = ({
 
       {/* Floating Interactive Toast Feedback */}
       {toastMessage && (
-        <div className="fixed top-18 z-50 px-4 py-2 bg-slate-900/95 border border-amber-500/80 text-amber-300 rounded-full font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+        <div className="fixed top-18 z-[110] px-4 py-2 bg-slate-900/95 border border-amber-500/80 text-amber-300 rounded-full font-bold text-xs shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
           <Zap size={14} className="text-amber-400 fill-amber-400" />
           <span>{toastMessage}</span>
         </div>

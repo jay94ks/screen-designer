@@ -11,7 +11,7 @@ export function styleToCssProperties(style: VNodeStyle): React.CSSProperties {
   if (style.flex !== undefined) css.flex = style.flex;
   if (style.flexWrap) css.flexWrap = style.flexWrap;
   if (style.flexGrow !== undefined) css.flexGrow = style.flexGrow;
-  if (style.flexShrink !== undefined) css.flexShrink = style.flexShrink;
+  if (style.flexShrink !== undefined || (style as any).shrink !== undefined) css.flexShrink = style.flexShrink ?? (style as any).shrink;
   if (style.flexBasis !== undefined) css.flexBasis = typeof style.flexBasis === 'number' ? `${style.flexBasis}px` : style.flexBasis;
   if (style.alignItems) css.alignItems = style.alignItems;
   if (style.alignContent) css.alignContent = style.alignContent;
@@ -222,6 +222,8 @@ export function getHtmlTag(type: string, props?: any): string {
       return 'summary';
     case 'divider':
       return 'hr';
+    case 'icon':
+      return 'span';
     case 'scroll-container':
     case 'frame':
     case 'container':

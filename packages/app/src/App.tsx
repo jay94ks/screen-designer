@@ -151,7 +151,17 @@ export default function App() {
     setSelectedNodeId(null);
   };
 
-  const [zoom, setZoom] = useState(0.8);
+  const [zoom, setZoom] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const z = params.get('zoom');
+      if (z) {
+        const parsed = parseFloat(z);
+        if (!isNaN(parsed) && parsed > 0) return parsed > 2 ? parsed / 100 : parsed;
+      }
+    }
+    return 0.8;
+  });
   const [activeTool, setActiveTool] = useState<CanvasTool>('select');
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
@@ -433,7 +443,17 @@ export default function App() {
   const [canRedo, setCanRedo] = useState(false);
 
   // Canvas Pan State
-  const [pan, setPan] = useState({ x: 20, y: 0 });
+  const [pan, setPan] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const px = params.get('panX');
+      const py = params.get('panY');
+      if (px || py) {
+        return { x: px ? parseFloat(px) : 20, y: py ? parseFloat(py) : 0 };
+      }
+    }
+    return { x: 20, y: 0 };
+  });
   const [isPanning, setIsPanning] = useState(false);
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
   const [isSpacePressed, setIsSpacePressed] = useState(false);

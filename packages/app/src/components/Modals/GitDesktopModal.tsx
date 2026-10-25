@@ -339,7 +339,7 @@ export const GitDesktopModal: React.FC<GitDesktopModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-center justify-center p-3 select-none animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-[100] bg-black/65 backdrop-blur-xs flex items-center justify-center p-3 select-none animate-in fade-in duration-150">
       <div className="bg-white rounded-xl shadow-2xl border border-slate-300 w-full max-w-[1280px] h-[88vh] flex flex-col overflow-hidden text-xs font-sans">
         {/* 1. Modal Top Navigation Bar (GitHub Desktop Style) */}
         <div className="h-12 border-b border-slate-200 px-4 flex items-center justify-between shrink-0 bg-slate-50">

@@ -275,7 +275,7 @@ export const DesignSystemModal: React.FC<DesignSystemModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-3 md:p-6 animate-in fade-in duration-150 select-none">
+    <div className="fixed inset-0 z-[100] bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-3 md:p-6 animate-in fade-in duration-150 select-none">
       <div className="w-full h-full max-w-[1720px] max-h-[96vh] bg-white rounded-2xl shadow-2xl flex flex-col border border-slate-200 overflow-hidden">
         {/* 1. Header Toolbar */}
         <header className="h-16 px-6 border-b border-slate-200 flex items-center justify-between shrink-0 bg-slate-50/80">
