@@ -1,136 +1,146 @@
-# Screen Designer — Agent Development & Architecture Guide
+# Screen Designer — 코드베이스 유지보수 및 개발 지침서 (Maintenance & Development Guide)
 
-이 문서는 **Screen Designer** 코드베이스에서 작업하는 모든 AI 에이전트(Claude, Cursor, Codex, Gemini, Antigravity 등)와 기여자를 위한 종합 아키텍처 및 작업 지침서입니다.
-
----
-
-## 1. 프로젝트 개요 (Project Overview)
-
-**Screen Designer**는 개발자와 디자이너가 실시간으로 소통할 수 있도록 지원하는 **시각적 가상 DOM(VDOM) 기반 UI 디자인 도구이자 인터랙티브 스토리보드 에디터**입니다.
-
-- **실행 모드**:
-  - **Electron 데스크톱 앱**: 프레임리스 윈도우, 네이티브 윈도우 캡션 컨트롤, 로컬 파일 시스템 직접 제어.
-  - **웹 브라우저 모드 (`--web`)**: 리눅스 헤드리스 및 원격 환경 지원을 위한 Vite HTTP 서버 서빙.
-- **모노레포 패키지 구성**:
-  - `packages/app`: React + Vite 기반의 메인 디자이너 GUI 및 Electron 데스크톱 앱.
-  - `packages/mcp-server`: AI 에이전트와의 실시간 시각적 상호작용을 위한 Model Context Protocol(MCP) 서버.
-  - `packages/cli`: 프로젝트 초기화, 시안 렌더링, 코드 추출, Git 커밋, MCP 도구 호출을 수행하는 통합 CLI 도구.
-  - `docs/`: 기능 명세서, MCP/CLI 레퍼런스, 전역 설치 설계 문서 등.
+> **대상**: 이 문서(`AGENTS.md`)는 **Screen Designer 프로젝트 자체를 개발, 유지보수, 확장, 리팩토링, 디버깅하는 AI 에이전트와 엔지니어**를 위한 핵심 개발 지침서입니다.  
+> 외부 사용자 관점의 사용법이 아니라, **이 레포지토리의 소스 코드를 안전하게 수정하고 올바르게 빌드·배포하기 위한 기술 명세와 내부 아키텍처 규칙**을 규정합니다.
 
 ---
 
-## 2. 기술 스택 & 핵심 라이브러리 (Tech Stack)
+## 1. 모노레포 구조 및 패키지별 역할 (Monorepo Architecture)
 
-| 영역 | 기술 스택 | 설명 |
+이 프로젝트는 npm workspaces 기반의 모노레포 구조를 채택하고 있습니다.
+
+```
+screen-designer/
+├── packages/
+│   ├── app/                 # [GUI & Desktop] React 18 + Vite + Electron 데스크톱 앱
+│   ├── mcp-server/          # [MCP Server] AI 에이전트 제어용 Model Context Protocol 서버 (17종 툴)
+│   └── cli/                 # [CLI Launcher] 터미널 명령어, 캔버스 실행기, 크롬 헤드리스 렌더러
+├── docs/                    # [문서] 기능 명세, MCP/CLI 레퍼런스, 배포 및 전역 설치 설계
+│   ├── features.md          # 13개 핵심 기능 상세 구현 명세서
+│   ├── mcp-and-cli-reference.md  # 17개 MCP 툴 및 CLI 명령어 레퍼런스
+│   └── global-install-and-execution-design.md
+├── AGENTS.md                # [본 문서] 코드베이스 개발/유지보수 지침서
+└── CLAUDE.md                # AGENTS.md 참조 포인터
+```
+
+---
+
+## 2. 패키지별 내부 구조 및 핵심 소스 파일
+
+### 2.1 `packages/app` (디자이너 프론트엔드 & Electron)
+- **`src/components/`**:
+  - `ClaudeHeader.tsx`: 상단 2단 헤더 (캡션 바 + 메뉴바/도구상자/정렬바/플레이/줌/Git 상태/언어 선택기).
+  - `LeftSidebar.tsx`: 좌측 사이드바 (레이어 트리 탐색기, 45종 컴포넌트 목록, 섹션 템플릿).
+  - `RightSidebar.tsx`: 우측 인스펙터 패널 (속성 `Properties`, 인터랙션 `Events`, 코드 `Code`, 동적 `Tweaks` 4단 탭).
+  - `PropertiesPanel.tsx`: 플렉스박스 레이아웃, 크기, 타이포그래피, 배경색/그라디언트/패턴/메시, 테두리, 그림자 등 정밀 제어기.
+  - `VNodeRenderer.tsx`: 가상 DOM(`VNode`) 트리를 브라우저 DOM으로 재귀 렌더링하고 클릭/호버 인터랙션 처리.
+  - `PlayModal.tsx`: 모바일 디바이스 목업 프레임 안에서 실제 화면 전환 및 클릭 액션을 수행하는 프레젠테이션 플레이어.
+  - `CanvasRulers.tsx`: 상단/좌측 픽셀 눈금자 및 사용자 가이드라인 오버레이.
+  - `PrototypeWiresOverlay.tsx`: 화면 간 전환 연결선(Figma Prototype Wire) SVG 오버레이.
+  - `Modals/`: `GitDesktopModal.tsx`, `SettingsModal.tsx`, `DesignSystemModal.tsx`, `ExportModal.tsx`, `CommandPaletteModal.tsx`, `NewArtboardModal.tsx` 등.
+- **`src/i18n/`**: 다국어(i18n) 시스템 코어.
+  - `types.ts`: `TranslationSchema` 표준 스키마 인터페이스.
+  - `ko.ts`, `en.ts`, `ja.ts`: 한국어/영어/일본어 사전.
+  - `index.tsx`: `I18nProvider`, `useTranslation()`, `AVAILABLE_LANGUAGES` 및 Fallback 로직.
+- **`src/types/`**:
+  - `types.ts`: `ProjectSettings`, `CanvasTool`, `TweakDefinition`, `GitStatusInfo` 등.
+  - `types/vdom.ts`: `VNode`, `NodeType`(45종), `VNodeStyle`, `NodeEventBinding`, `VDomArtboard`.
+- **`src/utils/`**:
+  - `gitClient.ts`: Electron IPC를 통한 `es-git` Git 연동 클라이언트.
+  - `projectClient.ts`: `project.json` 로드, 저장, 디렉터리 마이그레이션.
+  - `artboardExporter.ts`: 이미지/JSON/코드 클라이언트 내보내기.
+  - `serializer.ts`: VDOM을 React TSX 및 Tailwind 코드로 컴파일.
+  - `history.ts`: 실행 취소(Undo) / 다시 실행(Redo) 상태 히스토리 매니저.
+- **`electron/`**:
+  - `main.ts`: Electron 메인 프로세스, 프레임리스 윈도우 생성, IPC 핸들러, WebSocket 브릿지 서버.
+  - `preload.ts`: `window.electronAPI` 브릿지 노출 (윈도우 최소화/최대화/닫기, es-git 통신).
+
+### 2.2 `packages/mcp-server` (AI 에이전트 제어 서버)
+- **`src/index.ts`**: MCP 서버 인스턴스 초기화, Stdio 트랜스포트 연결, `CanvasBridge` 연동.
+- **`src/tools.ts`**: 17종 도메인 도구 구현 (`screen_designer_*`) 및 Zod 스키마, VDOM 템플릿 빌더, 재귀 노드 업데이트.
+- **`src/bridge.ts`**: 캔버스 GUI와의 실시간 원격 제어를 위한 WebSocket 통신 브릿지 (`CanvasBridge`).
+- **`src/imageRenderer.ts`**: Chrome Headless를 구동하여 VDOM을 캡처하고 Base64 PNG 이미지로 반환하는 렌더러.
+- **`src/codeGenerator.ts`**: VDOM을 순수 React, Vue 3, HTML 코드로 컴파일하는 오프라인 제너레이터.
+
+### 2.3 `packages/cli` (통합 실행 및 제어 CLI)
+- **`bin/index.js`**: `screen-designer` 바이너리 엔트리포인트.
+  - 데스크톱/웹 캔버스 런처 (`launch`, `init`).
+  - MCP 서버 서빙 및 직접 도구 호출 (`screen-designer mcp list`, `screen-designer mcp call`).
+  - 1등급 CLI 액션: `page`, `artboard`, `tokens`, `commit`, `status`, `export`, `render-image`.
+
+---
+
+## 3. 핵심 엔지니어링 원칙 (Strict Maintenance Rules)
+
+에이전트는 이 프로젝트를 수정할 때 다음 원칙을 반드시 준수해야 합니다.
+
+### 원칙 1: `simple-git` 완전 배제 및 `es-git` 전용 사용
+- 과거 사용되던 `simple-git`은 외부 git 바이너리 의존성 및 환경 불안정성 문제로 **프로젝트 전역에서 완전히 제거**되었습니다.
+- 모든 Git 상태 조회, diff 파싱, 스테이징, 커밋, 푸시는 Toss의 네이티브 libgit2 바인딩 라이브러리인 **`es-git`**을 일관되게 사용해야 합니다.
+
+### 원칙 2: 빌드 무결성 (`npm run build` 0 Error)
+- 코드를 수정한 후에는 반드시 루트에서 빌드를 검증해야 합니다:
+  ```bash
+  npm run build
+  ```
+- `@screen-designer/app`의 Vite 번들링 및 `@screen-designer/mcp-server`의 TypeScript 컴파일(`tsc`) 모두 에러가 없어야 합니다.
+- `any` 타입을 남발하지 말고 명확한 TypeScript 인터페이스와 Zod 스키마를 정의하세요.
+
+### 원칙 3: 다국어(i18n) 동기화 원칙
+- UI 컴포넌트(`ClaudeHeader`, `LeftSidebar`, `RightSidebar`, `PropertiesPanel`, `SettingsModal` 등)에 새로운 라벨, 버튼 텍스트, 툴팁을 추가할 때는 하드코딩하지 마세요.
+- **추가 절차**:
+  1. [packages/app/src/i18n/types.ts](file:///home/jay94ks/screen-designer/packages/app/src/i18n/types.ts)의 `TranslationSchema`에 키 추가.
+  2. [packages/app/src/i18n/ko.ts](file:///home/jay94ks/screen-designer/packages/app/src/i18n/ko.ts), [en.ts](file:///home/jay94ks/screen-designer/packages/app/src/i18n/en.ts), [ja.ts](file:///home/jay94ks/screen-designer/packages/app/src/i18n/ja.ts)에 각 언어 번역 동시 등록.
+  3. 컴포넌트에서 `const { t } = useTranslation();`을 통해 `t('category.key')` 형태로 호출.
+
+### 원칙 4: 문서 및 주석 무결성 유지 (Documentation Integrity)
+- 기존 코드에 작성된 주석, JSDoc 설명, 명세 문서는 임의로 삭제하지 말고 보존해야 합니다.
+- 새로운 기능이나 MCP 도구를 추가한 경우 반드시 `docs/features.md` 및 `docs/mcp-and-cli-reference.md`를 함께 갱신하세요.
+
+### 원칙 5: WSL ↔ Windows 미러 동기화 원칙
+- 주 개발 작업은 WSL 리눅스 환경(`/home/jay94ks/screen-designer`)에서 수행됩니다.
+- 변경 사항을 커밋하고 `origin main`에 푸시한 후, Windows 미러 경로(`/mnt/c/Users/jay94/screen-designer`)에서도 항상 `git pull origin main`을 실행하여 Windows 네이티브 환경과 100% 동기화 상태를 유지해야 합니다.
+- (주의: WSL 9P 파일시스템 레이턴시로 인해 `/mnt/c` 직접 rsync는 지양하고, Git 워크플로우를 사용하세요.)
+
+---
+
+## 4. 기능 추가 및 확장 개발 가이드 (How-to Guide)
+
+### 4.1 새로운 VDOM 컴포넌트(NodeType) 추가 시
+1. `packages/app/src/types/vdom.ts`: `NodeType` 유니온 타입에 신규 태그 추가 (예: `accordion`).
+2. `packages/app/src/types/vdom.ts`: 기본 `VNodeStyle` 및 `props` 확장.
+3. `packages/app/src/components/VNodeRenderer.tsx`: 신규 노드 타입에 대한 HTML 태그 렌더링 및 스타일 매핑 로직 추가.
+4. `packages/app/src/components/Modals/SettingsModal.tsx`: `COMPONENT_CATALOG`에 신규 컴포넌트 메타데이터(아이콘, 설명, 기본값) 등록.
+5. `packages/mcp-server/src/codeGenerator.ts` & `packages/cli/bin/index.js`: `getHtmlTag()` 및 코드 제너레이터 매핑 추가.
+
+### 4.2 새로운 MCP 도구(Tool) 추가 시
+1. `packages/mcp-server/src/tools.ts`:
+   - `ToolDefinition` 객체를 생성하여 `TOOLS` 배열에 추가.
+   - 명확한 표준 도구명 (`screen_designer_*`)과 별칭(`aliases`), Zod 파라미터 스키마 정의.
+   - `execute` 비동기 함수 구현 (결과는 표준 JSON 텍스트 또는 이미지 반환).
+2. `packages/mcp-server/`: `npm run build`를 실행하여 컴파일 검증.
+3. `packages/cli/bin/index.js`: CLI 명령어로 직접 호출할 수 있도록 라우팅 및 도움말(`help()`) 추가.
+4. `docs/mcp-and-cli-reference.md`: 신규 도구 및 CLI 사용법 문서화.
+
+---
+
+## 5. 자주 발생하는 이슈 및 트러블슈팅 (Troubleshooting)
+
+| 현상 / 에러 | 원인 | 해결책 |
 |---|---|---|
-| **Frontend Framework** | React 18, TypeScript, Tailwind CSS | 반응형 VDOM 에디터 및 컴포넌트 렌더러 |
-| **Icons & UI Assets** | Lucide React | 일관된 모던 UI 아이콘 세트 |
-| **Desktop Environment** | Electron 35 | 크로스 플랫폼 데스크톱 셸 (Windows/macOS/Linux) |
-| **Git Engine** | **`es-git`** (Toss) | 외부 바이너리 종속 없는 네이티브 libgit2 바인딩 (초고속 diff 및 커밋) |
-| **AI Protocol** | `@modelcontextprotocol/sdk` (MCP) | 17종 도메인 기반 표준 MCP 툴 세트 |
-| **Image Rendering** | Chrome Headless (`winreg` 레지스트리 탐색) | 가상 DOM을 실제 고해상도 PNG 이미지로 즉각 렌더링 |
-| **Internationalization** | 자체 내장 경량 i18n (`packages/app/src/i18n/`) | 한국어(`ko`, 기본), 영어(`en`), 일본어(`ja`) 완전 지원 |
+| `ERR_MODULE_NOT_FOUND` (MCP 서버) | 패키지 간 상대 경로 해석 오류 | `packages/cli/package.json`의 dependencies에 `@screen-designer/mcp-server`를 등록하고 패키지명으로 import |
+| `Parameter 'args' implicitly has an 'any' type` | MCP SDK 콜백 함수 타입 누락 | `(args: any) => tool.execute(...)`로 명시적 타입 부여 |
+| `options.pageId.endsWith is not a function` | CLI 인자 파서가 숫자 `"1"`을 정수 `1`로 파싱 | `String(options.pageId)`로 문자열 보장 처리 |
+| Windows에서 헤드리스 크롬을 찾지 못함 | PATH 미등록 또는 레지스트리 미검색 | `winreg` 라이브러리로 `App Paths\chrome.exe` 및 `msedge.exe` 레지스트리 자동 탐색 |
+| 저장 후 페이지 파일명이 분리되는 문제 | `id`(`page-2`)와 파일명(`2.json`) 불일치 | `findPageDoc`에서 원본 파일 경로(`fullPath`)를 추적하여 `persistPageDoc` 시 기존 파일명 우선 저장 |
 
 ---
 
-## 3. 프로젝트 저장 체계 (Project Storage Architecture)
+## 6. 에이전트 체크리스트 (Agent Final Checklist)
 
-모든 디자인 데이터는 사람이 읽을 수 있는 표준 JSON 파일로 저장되며, Git 버전 관리 시스템과 완벽히 동기화됩니다.
-
-```
-<project-root>/
-├── docs/ui-boards/              # 프로젝트 UI 디자인 및 스토리보드 기본 저장소 (설정에서 변경 가능)
-│   ├── project.json             # 프로젝트 매니페스트 (페이지 목록, 에셋 목록, 캔버스 환경 설정)
-│   ├── design-system.json       # 디자인 토큰 (컬러 팔레트, 타이포그래피, 45종 컴포넌트 기본 스타일)
-│   ├── pages/                   # 페이지별 가상 DOM 문서
-│   │   ├── 1.json               # 페이지 1 (가상 DOM 계층 트리, 아트보드 목록, 프로토타입 연결선)
-│   │   └── 2.json               # 페이지 2
-│   └── assets/                  # 프로젝트 에셋 (SVG, 프리셋 그래픽)
-├── .screen-designer/            # 앱 내부 캐시 및 로컬 설정 디렉터리
-│   ├── config.json              # 작업 공간 설정 (pageDocsPath, gitAutoCheck 등)
-│   └── cache/manifest.json      # 페이지 인덱스 캐시
-```
-
----
-
-## 4. MCP 도구 목록 (17 Domain Tools)
-
-AI 에이전트는 `@screen-designer/mcp-server`의 도구를 호출하여 프로젝트를 읽고, 시안을 직접 생성·편집·검수할 수 있습니다.
-
-### 1) 프로젝트 및 작업 공간
-- `screen_designer_get_project`: 프로젝트 설정, 페이지 목록, 캔버스 연결 상태 조회.
-
-### 2) 페이지 (Pages) 관리
-- `screen_designer_list_pages`: 전체 페이지 목록, 아트보드 수, 뷰포트 정보 조회.
-- `screen_designer_get_page`: 특정 페이지의 전체 VDOM JSON(아트보드, 노드, 스타일) 조회.
-- `screen_designer_create_page`: 새 페이지 생성 (템플릿 지정 가능).
-- `screen_designer_save_page`: 외부 VDOM JSON을 페이지로 저장/임포트.
-- `screen_designer_delete_page`: 지정된 페이지 삭제 및 프로젝트 매니페스트 동기화.
-
-### 3) 아트보드 (Artboards / 시안) 관리
-- `screen_designer_add_artboard`: 페이지에 새 아트보드 추가 (`login`, `dashboard`, `hero`, `blank` 템플릿 지원).
-- `screen_designer_update_artboard`: 기존 아트보드 속성/크기/제목 수정, `rootNode` 교체, 또는 `nodeUpdates`로 **특정 노드(버튼 텍스트, 색상 등)만 타겟 수정**.
-- `screen_designer_delete_artboard`: 페이지 내 특정 아트보드 삭제.
-
-### 4) 디자인 시스템 & 토큰
-- `screen_designer_get_design_system`: 토큰 및 45종 컴포넌트 기본 스타일 조회.
-- `screen_designer_save_design_system`: 디자인 시스템 토큰 오버라이드 및 라이브 캔버스 반영.
-
-### 5) 시각적 검수 & 코드 변환
-- `screen_designer_render_artboard_image`: 헤드리스 크롬으로 아트보드를 고해상도 PNG(Base64)로 렌더링하여 반환.
-- `screen_designer_export_code`: VDOM을 React TSX, Vue 3, HTML 코드로 일괄 컴파일.
-
-### 6) Git 버전 관리 & 라이브 원격 제어
-- `screen_designer_git_status`: 디자인 문서 변경 사항 조회 (`es-git`).
-- `screen_designer_git_commit`: 디자인 문서 변경분 스마트 자동 커밋 (`es-git`).
-- `screen_designer_canvas_status`: 웹소켓 브리지 연결 및 캔버스 선택 상태 조회.
-- `screen_designer_canvas_preview`: 열려 있는 캔버스에 실시간 라이브 코드/프리뷰 전송.
-
----
-
-## 5. CLI 명령어 레퍼런스 (CLI Usage)
-
-```bash
-# 디자이너 GUI 실행
-screen-designer [경로]                       # Electron 데스크톱 앱 실행 (기본: .)
-screen-designer [경로] --web                 # 웹 브라우저 모드로 실행
-
-# 페이지 및 아트보드 제어
-screen-designer page list                   # 전체 페이지 및 아트보드 목록
-screen-designer page create "온보딩"        # 새 페이지 생성
-screen-designer page show <pageId>          # 페이지 VDOM JSON 출력
-screen-designer artboard list <pageId>      # 페이지 내 아트보드 목록
-screen-designer artboard add 1 "회원가입"   # 새 아트보드 추가
-screen-designer artboard update 1 <id>      # 아트보드 수정
-screen-designer artboard delete 1 <id>      # 아트보드 삭제
-
-# MCP 서버 및 툴 호출
-screen-designer mcp list                    # 등록된 17종 MCP 도구 및 파라미터 조회
-screen-designer mcp call <tool-name> [args] # MCP 도구 직접 호출
-screen-designer mcp [serve]                 # Stdio MCP 서버 기동 (Claude Desktop 연동)
-
-# 코드 추출, 렌더링, Git 커밋
-screen-designer export --format=react       # React TSX 컴포넌트 코드 일괄 생성
-screen-designer render-image <pageId>       # 헤드리스 크롬으로 시안 캡처
-screen-designer commit -m "feat: design"    # es-git 스마트 커밋
-screen-designer tokens                      # 디자인 시스템 토큰 조회
-screen-designer status                      # Git 변경 상태 확인
-```
-
----
-
-## 6. 개발 빌드 및 에이전트 작업 원칙 (Agent Work Guidelines)
-
-1. **빌드 무결성 유지**:
-   - 코드 변경 후 반드시 루트에서 `npm run build`를 실행하여 `@screen-designer/app`과 `@screen-designer/mcp-server`의 TypeScript 컴파일 0 에러를 확인합니다.
-2. **타입 안전성(Type-Safety)**:
-   - TypeScript `strict` 모드를 준수하며 암시적 `any`를 피하고, 명확한 스키마(Zod / TypeScript 인터페이스)를 사용합니다.
-3. **기존 주석 및 문서 보존**:
-   - 기존의 유용한 주석과 docstring, JSDoc을 삭제하지 않고 보존합니다.
-4. **Git 엔진 원칙**:
-   - `simple-git`을 사용하지 않으며, Toss의 네이티브 바인딩인 **`es-git`**을 일관되게 사용합니다.
-5. **Windows 미러 동기화**:
-   - WSL 환경(`/home/jay94ks/screen-designer`)에서 작업 후 `origin main`에 푸시하고, Windows 미러 경로(`/mnt/c/Users/jay94/screen-designer`)에서 `git pull origin main`을 실행하여 항상 양방향 동기화 상태를 유지합니다.
-6. **사용자 소통 및 파일 링크**:
-   - 사용자 응답은 한국어로 간결하고 명확하게 작성합니다.
-   - 모든 파일 경로 및 코드 심볼은 `file://` 스키마 기반의 클릭 가능한 마크다운 링크(예: [ClaudeHeader.tsx](file:///home/jay94ks/screen-designer/packages/app/src/components/ClaudeHeader.tsx))로 제공합니다.
+작업 완료 전 다음 5가지를 반드시 점검하세요:
+- [ ] `npm run build` 실행 시 TypeScript 및 Vite 빌드 에러가 0건인가?
+- [ ] 새롭게 추가된 UI 라벨이 `packages/app/src/i18n/` 3개 언어 사전에 모두 등록되었는가?
+- [ ] `simple-git`이 포함되지 않고 `es-git`을 정상 사용하고 있는가?
+- [ ] 변경 사항이 `origin main`에 푸시되고 Windows 미러(`/mnt/c/Users/jay94/screen-designer`)에 pull 되었는가?
+- [ ] 사용자 응답 시 클릭 가능한 마크다운 링크(`file://...`)와 한국어 설명으로 작성되었는가?
