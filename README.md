@@ -1,16 +1,20 @@
 <p align="center">
-  <img src="docs/logo.png" width="108" height="108" alt="Screen Designer Official Logo" />
+  <img src="docs/logo.png" width="128" height="128" alt="Screen Designer Logo" />
 </p>
 
-# 🎨 Screen Designer
+<h1 align="center">Screen Designer</h1>
 
-> **Universal Cross-Agent Visual Storyboard Canvas, MCP Suite & Headless CLI**  
-> Claude Code, Cursor, OpenAI Codex/GPT, Google Gemini(Antigravity)를 위한 차세대 실시간 UI 디자인 & 비주얼 프로토타이핑 시스템
+<p align="center">
+  <strong>Universal Cross-Agent Visual Storyboard Canvas, MCP Suite & Headless CLI</strong><br>
+  Claude Code, Cursor, OpenAI Codex/GPT, Google Gemini(Antigravity)를 위한 차세대 실시간 UI 디자인 & 비주얼 프로토타이핑 시스템
+</p>
 
-[![npm version](https://img.shields.io/badge/npm-v1.0.0-blue.svg)](https://www.npmjs.com/)
-[![MCP Standard](https://img.shields.io/badge/MCP-17%20Tools-brightgreen.svg)](https://modelcontextprotocol.io/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![i18n](https://img.shields.io/badge/i18n-KO%20%7C%20EN%20%7C%20JA-purple.svg)](docs/features.md#13-다국어-지원)
+<p align="center">
+  <a href="https://www.npmjs.com/"><img src="https://img.shields.io/badge/npm-v1.0.0-blue.svg" alt="npm version" /></a>
+  <a href="https://modelcontextprotocol.io/"><img src="https://img.shields.io/badge/MCP-17%20Tools-brightgreen.svg" alt="MCP Standard" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
+  <a href="docs/features.md#13-다국어-지원"><img src="https://img.shields.io/badge/i18n-KO%20%7C%20EN%20%7C%20JA-purple.svg" alt="i18n" /></a>
+</p>
 
 ---
 

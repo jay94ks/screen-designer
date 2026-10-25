@@ -266,11 +266,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
 
           {/* App Logo & Document Title */}
           <div className="flex items-center gap-1.5 font-semibold text-slate-800">
-            <img
-              src="/assets/logo.svg"
-              alt="Screen Designer Logo"
-              className="w-4 h-4 rounded-xs shadow-2xs pointer-events-none select-none"
-            />
+            <span className="w-2.5 h-2.5 rounded bg-indigo-600 inline-block shadow-2xs pointer-events-none" />
             <input
               type="text"
               value={title}
