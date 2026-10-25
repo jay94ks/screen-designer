@@ -1,7 +1,7 @@
 {
   "name": "Screen Designer Storyboard",
   "version": "1.0.0",
-  "updatedAt": "2026-10-25T02:06:42.917Z",
+  "updatedAt": "2026-10-25T04:34:10.500Z",
   "activePageId": "page-1",
   "pageDocsPath": "docs/ui-boards",
   "pages": [
@@ -15,8 +15,9 @@
     {
       "id": "page-2",
       "name": "Page 2 (새로운 작업 공간)",
-      "file": "pages/2.json",
-      "updatedAt": "2026-10-25T03:04:04.474Z"
+      "number": 2,
+      "fileName": "pages/2.json",
+      "artboardsCount": 0
     }
   ],
   "assets": [
