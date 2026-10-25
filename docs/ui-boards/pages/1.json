@@ -1,9 +1,7 @@
 {
   "id": "page-workspace",
   "name": "1. Core Canvas Workspace (캔버스 & 워크스페이스)",
-  "number": 1,
-  "version": "1.0.0",
-  "updatedAt": "2026-10-25T05:07:26.960Z",
+  "updatedAt": "2026-10-25T06:18:38.899Z",
   "artboards": [
     {
       "id": "ab-sd-full-workspace",
@@ -11,195 +9,288 @@
       "viewport": "desktop",
       "width": 1380,
       "height": 860,
-      "x": 60,
-      "y": 60,
+      "x": 40,
+      "y": 40,
       "rootNode": {
-        "id": "node-ws-root",
+        "id": "root-ws-1",
         "type": "frame",
-        "name": "Screen Designer Window Shell",
+        "name": "root-ws-1",
         "style": {
           "width": "100%",
           "height": "100%",
           "backgroundColor": "#020617",
           "display": "flex",
           "flexDirection": "column",
-          "borderRadius": 14,
+          "borderRadius": 12,
           "overflow": "hidden",
           "borderWidth": 1,
           "borderColor": "#1e293b",
-          "boxShadow": "0 25px 50px -12px rgba(0, 0, 0, 0.7)"
+          "boxShadow": "0 25px 50px -12px rgba(0, 0, 0, 0.8)"
         },
+        "props": {},
+        "content": "",
         "children": [
           {
-            "id": "node-ws-caption",
+            "id": "bar-caption",
             "type": "box",
-            "name": "Window Caption Bar",
+            "name": "bar-caption",
             "style": {
-              "height": 38,
-              "backgroundColor": "#0b0f19",
+              "height": 36,
+              "backgroundColor": "#090d16",
               "borderBottomWidth": 1,
               "borderColor": "#1e293b",
               "display": "flex",
               "alignItems": "center",
               "justifyContent": "space-between",
-              "paddingLeft": 14,
-              "paddingRight": 14
+              "paddingLeft": 12,
+              "paddingRight": 12
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-ws-cap-left",
+                "id": "cap-left",
                 "type": "box",
-                "name": "Logo & Title",
-                "style": {
-                  "display": "flex",
-                  "alignItems": "center",
-                  "gap": 10
-                },
-                "children": [
-                  {
-                    "id": "node-ws-logo",
-                    "type": "badge",
-                    "name": "App Brand Badge",
-                    "content": "🎨 Screen Designer",
-                    "style": {
-                      "backgroundColor": "#4f46e5",
-                      "color": "#ffffff",
-                      "fontSize": 11,
-                      "fontWeight": 700,
-                      "paddingLeft": 8,
-                      "paddingRight": 8,
-                      "paddingTop": 3,
-                      "paddingBottom": 3,
-                      "borderRadius": 6
-                    }
-                  },
-                  {
-                    "id": "node-ws-proj-title",
-                    "type": "text",
-                    "name": "Project Title",
-                    "content": "Fintech Mobile App Storyboard",
-                    "style": {
-                      "color": "#e2e8f0",
-                      "fontSize": 12,
-                      "fontWeight": 600
-                    }
-                  },
-                  {
-                    "id": "node-ws-page-badge",
-                    "type": "badge",
-                    "name": "Active Page",
-                    "content": "Page 1: 온보딩 플로우 ▾",
-                    "style": {
-                      "backgroundColor": "#1e293b",
-                      "color": "#94a3b8",
-                      "fontSize": 11,
-                      "paddingLeft": 8,
-                      "paddingRight": 8,
-                      "paddingTop": 3,
-                      "paddingBottom": 3,
-                      "borderRadius": 6
-                    }
-                  }
-                ]
-              },
-              {
-                "id": "node-ws-cap-center",
-                "type": "box",
-                "name": "Center Drag Bar",
-                "style": {
-                  "width": 80,
-                  "height": 4,
-                  "backgroundColor": "#334155",
-                  "borderRadius": 2
-                }
-              },
-              {
-                "id": "node-ws-cap-right",
-                "type": "box",
-                "name": "Right Actions",
+                "name": "cap-left",
                 "style": {
                   "display": "flex",
                   "alignItems": "center",
                   "gap": 8
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-ws-lang-btn",
+                    "id": "cap-logo",
                     "type": "badge",
-                    "name": "Lang Switcher",
-                    "content": "🌐 KO ▾",
+                    "name": "cap-logo",
+                    "style": {
+                      "width": 10,
+                      "height": 10,
+                      "backgroundColor": "#6366f1",
+                      "borderRadius": 3
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": []
+                  },
+                  {
+                    "id": "cap-title",
+                    "type": "text",
+                    "name": "cap-title",
+                    "style": {
+                      "color": "#f8fafc",
+                      "fontSize": 12,
+                      "fontWeight": 700
+                    },
+                    "props": {},
+                    "content": "Screen Designer - Live Storyboard Canvas",
+                    "children": []
+                  },
+                  {
+                    "id": "cap-divider-1",
+                    "type": "badge",
+                    "name": "cap-divider-1",
+                    "style": {
+                      "width": 1,
+                      "height": 14,
+                      "backgroundColor": "#334155"
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": []
+                  },
+                  {
+                    "id": "cap-page-pill",
+                    "type": "badge",
+                    "name": "cap-page-pill",
                     "style": {
                       "backgroundColor": "#1e293b",
-                      "color": "#cbd5e1",
+                      "color": "#94a3b8",
                       "fontSize": 11,
+                      "fontWeight": 500,
                       "paddingLeft": 8,
                       "paddingRight": 8,
                       "paddingTop": 3,
                       "paddingBottom": 3,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "1. Core Canvas Workspace ▾",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "cap-center",
+                "type": "box",
+                "name": "cap-center",
+                "style": {
+                  "display": "flex",
+                  "alignItems": "center"
+                },
+                "props": {},
+                "content": "",
+                "children": [
+                  {
+                    "id": "cap-drag-pill",
+                    "type": "badge",
+                    "name": "cap-drag-pill",
+                    "style": {
+                      "width": 36,
+                      "height": 4,
+                      "backgroundColor": "#334155",
+                      "borderRadius": 2
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "cap-right",
+                "type": "box",
+                "name": "cap-right",
+                "style": {
+                  "display": "flex",
+                  "alignItems": "center",
+                  "gap": 6
+                },
+                "props": {},
+                "content": "",
+                "children": [
+                  {
+                    "id": "cap-btn-share",
+                    "type": "button",
+                    "name": "cap-btn-share",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#94a3b8",
+                      "fontSize": 10,
+                      "padding": 5,
+                      "borderRadius": 6
+                    },
+                    "props": {},
+                    "content": "공유",
+                    "children": []
                   },
                   {
-                    "id": "node-ws-ds-btn",
+                    "id": "cap-btn-ds",
                     "type": "button",
-                    "name": "Design System Studio Button",
-                    "content": "🎨 디자인 시스템",
+                    "name": "cap-btn-ds",
                     "style": {
                       "backgroundColor": "#312e81",
                       "color": "#c7d2fe",
-                      "borderColor": "#4338ca",
-                      "borderWidth": 1,
-                      "fontSize": 11,
+                      "fontSize": 10,
                       "fontWeight": 600,
-                      "paddingLeft": 10,
-                      "paddingRight": 10,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
+                      "borderRadius": 6,
+                      "borderWidth": 1,
+                      "borderColor": "#4338ca"
+                    },
+                    "props": {},
+                    "content": "🎨 디자인 시스템",
+                    "children": []
+                  },
+                  {
+                    "id": "cap-lang",
+                    "type": "badge",
+                    "name": "cap-lang",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#38bdf8",
+                      "fontSize": 10,
+                      "fontWeight": 600,
+                      "paddingLeft": 6,
+                      "paddingRight": 6,
                       "paddingTop": 4,
                       "paddingBottom": 4,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "🌐 KO ▾",
+                    "children": []
                   },
                   {
-                    "id": "node-ws-os-controls",
+                    "id": "cap-btn-settings",
+                    "type": "button",
+                    "name": "cap-btn-settings",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#94a3b8",
+                      "fontSize": 10,
+                      "padding": 5,
+                      "borderRadius": 6
+                    },
+                    "props": {},
+                    "content": "⚙️",
+                    "children": []
+                  },
+                  {
+                    "id": "cap-divider-2",
+                    "type": "badge",
+                    "name": "cap-divider-2",
+                    "style": {
+                      "width": 1,
+                      "height": 14,
+                      "backgroundColor": "#334155"
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": []
+                  },
+                  {
+                    "id": "cap-win-controls",
                     "type": "box",
-                    "name": "OS Window Controls",
+                    "name": "cap-win-controls",
                     "style": {
                       "display": "flex",
-                      "gap": 6,
-                      "marginLeft": 8
+                      "gap": 8,
+                      "alignItems": "center",
+                      "paddingLeft": 6
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-ws-min",
-                        "type": "badge",
+                        "id": "win-min",
+                        "type": "text",
+                        "name": "win-min",
+                        "style": {
+                          "color": "#64748b",
+                          "fontSize": 11
+                        },
+                        "props": {},
                         "content": "—",
-                        "style": {
-                          "color": "#94a3b8",
-                          "fontSize": 10,
-                          "width": 20,
-                          "textAlign": "center"
-                        }
+                        "children": []
                       },
                       {
-                        "id": "node-ws-max",
-                        "type": "badge",
+                        "id": "win-max",
+                        "type": "text",
+                        "name": "win-max",
+                        "style": {
+                          "color": "#64748b",
+                          "fontSize": 11
+                        },
+                        "props": {},
                         "content": "▢",
-                        "style": {
-                          "color": "#94a3b8",
-                          "fontSize": 10,
-                          "width": 20,
-                          "textAlign": "center"
-                        }
+                        "children": []
                       },
                       {
-                        "id": "node-ws-close",
-                        "type": "badge",
-                        "content": "✕",
+                        "id": "win-close",
+                        "type": "text",
+                        "name": "win-close",
                         "style": {
-                          "color": "#f87171",
-                          "fontSize": 10,
-                          "width": 20,
-                          "textAlign": "center"
-                        }
+                          "color": "#ef4444",
+                          "fontSize": 11
+                        },
+                        "props": {},
+                        "content": "✕",
+                        "children": []
                       }
                     ]
                   }
@@ -208,36 +299,130 @@
             ]
           },
           {
-            "id": "node-ws-topbar",
+            "id": "bar-toolbar",
             "type": "box",
-            "name": "Editor Toolbar",
+            "name": "bar-toolbar",
             "style": {
-              "height": 44,
-              "backgroundColor": "#0f172a",
+              "height": 42,
+              "backgroundColor": "#0d1322",
               "borderBottomWidth": 1,
               "borderColor": "#1e293b",
               "display": "flex",
               "alignItems": "center",
               "justifyContent": "space-between",
-              "paddingLeft": 14,
-              "paddingRight": 14
+              "paddingLeft": 12,
+              "paddingRight": 12
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-ws-tools",
+                "id": "tb-left",
                 "type": "box",
-                "name": "Toolbox Buttons",
+                "name": "tb-left",
+                "style": {
+                  "display": "flex",
+                  "alignItems": "center",
+                  "gap": 6
+                },
+                "props": {},
+                "content": "",
+                "children": [
+                  {
+                    "id": "tb-m-file",
+                    "type": "text",
+                    "name": "tb-m-file",
+                    "style": {
+                      "color": "#cbd5e1",
+                      "fontSize": 11,
+                      "fontWeight": 500,
+                      "padding": 4
+                    },
+                    "props": {},
+                    "content": "파일 (File)",
+                    "children": []
+                  },
+                  {
+                    "id": "tb-m-edit",
+                    "type": "text",
+                    "name": "tb-m-edit",
+                    "style": {
+                      "color": "#94a3b8",
+                      "fontSize": 11,
+                      "fontWeight": 500,
+                      "padding": 4
+                    },
+                    "props": {},
+                    "content": "편집 (Edit)",
+                    "children": []
+                  },
+                  {
+                    "id": "tb-m-view",
+                    "type": "text",
+                    "name": "tb-m-view",
+                    "style": {
+                      "color": "#94a3b8",
+                      "fontSize": 11,
+                      "fontWeight": 500,
+                      "padding": 4
+                    },
+                    "props": {},
+                    "content": "보기 (View)",
+                    "children": []
+                  },
+                  {
+                    "id": "tb-m-help",
+                    "type": "text",
+                    "name": "tb-m-help",
+                    "style": {
+                      "color": "#94a3b8",
+                      "fontSize": 11,
+                      "fontWeight": 500,
+                      "padding": 4
+                    },
+                    "props": {},
+                    "content": "도움말 (Help)",
+                    "children": []
+                  },
+                  {
+                    "id": "tb-cmd-search",
+                    "type": "badge",
+                    "name": "tb-cmd-search",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "borderWidth": 1,
+                      "borderColor": "#334155",
+                      "color": "#64748b",
+                      "fontSize": 11,
+                      "paddingLeft": 10,
+                      "paddingRight": 10,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
+                      "borderRadius": 6,
+                      "marginLeft": 8
+                    },
+                    "props": {},
+                    "content": "🔍 명령 검색, 컴포넌트 삽입...  Ctrl+K",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "tb-center",
+                "type": "box",
+                "name": "tb-center",
                 "style": {
                   "display": "flex",
                   "alignItems": "center",
                   "gap": 4
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-tool-select",
+                    "id": "tb-tool-select",
                     "type": "button",
-                    "name": "Select Tool",
-                    "content": "↖ 선택 (V)",
+                    "name": "tb-tool-select",
                     "style": {
                       "backgroundColor": "#4f46e5",
                       "color": "#ffffff",
@@ -245,137 +430,125 @@
                       "fontWeight": 600,
                       "paddingLeft": 8,
                       "paddingRight": 8,
-                      "paddingTop": 5,
-                      "paddingBottom": 5,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "↖ 선택 (V)",
+                    "children": []
                   },
                   {
-                    "id": "node-tool-hand",
+                    "id": "tb-tool-hand",
                     "type": "button",
-                    "name": "Hand Tool",
+                    "name": "tb-tool-hand",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#94a3b8",
+                      "fontSize": 11,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
+                      "borderRadius": 6
+                    },
+                    "props": {},
                     "content": "✋ 손 (H)",
+                    "children": []
+                  },
+                  {
+                    "id": "tb-tool-frame",
+                    "type": "button",
+                    "name": "tb-tool-frame",
                     "style": {
                       "backgroundColor": "#1e293b",
                       "color": "#94a3b8",
                       "fontSize": 11,
                       "paddingLeft": 8,
                       "paddingRight": 8,
-                      "paddingTop": 5,
-                      "paddingBottom": 5,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
                       "borderRadius": 6
-                    }
-                  },
-                  {
-                    "id": "node-tool-frame",
-                    "type": "button",
-                    "name": "Frame Tool",
+                    },
+                    "props": {},
                     "content": "▢ 프레임 (R)",
-                    "style": {
-                      "backgroundColor": "#1e293b",
-                      "color": "#94a3b8",
-                      "fontSize": 11,
-                      "paddingLeft": 8,
-                      "paddingRight": 8,
-                      "paddingTop": 5,
-                      "paddingBottom": 5,
-                      "borderRadius": 6
-                    }
+                    "children": []
                   },
                   {
-                    "id": "node-tool-text",
+                    "id": "tb-tool-text",
                     "type": "button",
-                    "name": "Text Tool",
-                    "content": "T 텍스트 (T)",
+                    "name": "tb-tool-text",
                     "style": {
                       "backgroundColor": "#1e293b",
                       "color": "#94a3b8",
                       "fontSize": 11,
                       "paddingLeft": 8,
                       "paddingRight": 8,
-                      "paddingTop": 5,
-                      "paddingBottom": 5,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
                       "borderRadius": 6
-                    }
-                  }
-                ]
-              },
-              {
-                "id": "node-ws-searchbar",
-                "type": "box",
-                "name": "Command Palette Trigger",
-                "style": {
-                  "backgroundColor": "#1e293b",
-                  "borderWidth": 1,
-                  "borderColor": "#334155",
-                  "borderRadius": 8,
-                  "paddingLeft": 12,
-                  "paddingRight": 12,
-                  "paddingTop": 5,
-                  "paddingBottom": 5,
-                  "display": "flex",
-                  "alignItems": "center",
-                  "gap": 8,
-                  "width": 280,
-                  "justifyContent": "space-between"
-                },
-                "children": [
-                  {
-                    "id": "node-cmd-placeholder",
-                    "type": "text",
-                    "content": "🔍 명령 검색, 컴포넌트 삽입...",
-                    "style": {
-                      "color": "#64748b",
-                      "fontSize": 11
-                    }
+                    },
+                    "props": {},
+                    "content": "T 텍스트 (T)",
+                    "children": []
                   },
                   {
-                    "id": "node-cmd-shortcut",
-                    "type": "badge",
-                    "content": "Ctrl + K",
+                    "id": "tb-tool-shape",
+                    "type": "button",
+                    "name": "tb-tool-shape",
                     "style": {
-                      "backgroundColor": "#334155",
+                      "backgroundColor": "#1e293b",
                       "color": "#94a3b8",
-                      "fontSize": 9,
-                      "paddingLeft": 4,
-                      "paddingRight": 4,
-                      "paddingTop": 2,
-                      "paddingBottom": 2,
-                      "borderRadius": 4
-                    }
+                      "fontSize": 11,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
+                      "borderRadius": 6
+                    },
+                    "props": {},
+                    "content": "◯ 도형 ▾",
+                    "children": []
                   }
                 ]
               },
               {
-                "id": "node-ws-actions",
+                "id": "tb-right",
                 "type": "box",
-                "name": "Header Actions",
+                "name": "tb-right",
                 "style": {
                   "display": "flex",
                   "alignItems": "center",
                   "gap": 8
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-act-flow",
+                    "id": "tb-btn-wires",
                     "type": "button",
-                    "content": "플로우 ● On",
+                    "name": "tb-btn-wires",
                     "style": {
-                      "backgroundColor": "#065f46",
-                      "color": "#a7f3d0",
-                      "fontSize": 11,
+                      "backgroundColor": "#3b0764",
+                      "color": "#d8b4fe",
+                      "fontSize": 10,
                       "fontWeight": 600,
                       "paddingLeft": 8,
                       "paddingRight": 8,
-                      "paddingTop": 5,
-                      "paddingBottom": 5,
-                      "borderRadius": 6
-                    }
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
+                      "borderRadius": 6,
+                      "borderWidth": 1,
+                      "borderColor": "#6b21a8"
+                    },
+                    "props": {},
+                    "content": "⚡ 플로우 와이어 ● On",
+                    "children": []
                   },
                   {
-                    "id": "node-act-play",
+                    "id": "tb-btn-play",
                     "type": "button",
-                    "content": "▶ PLAY 시연",
+                    "name": "tb-btn-play",
                     "style": {
                       "backgroundColor": "#4f46e5",
                       "color": "#ffffff",
@@ -386,760 +559,1136 @@
                       "paddingTop": 5,
                       "paddingBottom": 5,
                       "borderRadius": 6,
-                      "boxShadow": "0 2px 8px rgba(79, 70, 229, 0.4)"
-                    }
+                      "boxShadow": "0 2px 10px rgba(79, 70, 229, 0.4)"
+                    },
+                    "props": {},
+                    "content": "▶ PLAY 시연",
+                    "children": []
                   },
                   {
-                    "id": "node-act-git",
+                    "id": "tb-zoom",
                     "type": "badge",
-                    "content": "🌿 main  •  커밋 (2)",
+                    "name": "tb-zoom",
                     "style": {
                       "backgroundColor": "#1e293b",
-                      "borderColor": "#475569",
-                      "borderWidth": 1,
-                      "color": "#38bdf8",
+                      "color": "#94a3b8",
                       "fontSize": 11,
-                      "fontWeight": 600,
                       "paddingLeft": 8,
                       "paddingRight": 8,
                       "paddingTop": 4,
                       "paddingBottom": 4,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "100% ▾",
+                    "children": []
+                  },
+                  {
+                    "id": "tb-git-pill",
+                    "type": "badge",
+                    "name": "tb-git-pill",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#38bdf8",
+                      "fontSize": 10,
+                      "fontWeight": 600,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
+                      "borderRadius": 6,
+                      "borderWidth": 1,
+                      "borderColor": "#0284c7"
+                    },
+                    "props": {},
+                    "content": "🌿 main  •  커밋 (0)",
+                    "children": []
                   }
                 ]
               }
             ]
           },
           {
-            "id": "node-ws-body",
+            "id": "ws-body-split",
             "type": "box",
-            "name": "Three-Pane Layout",
+            "name": "ws-body-split",
             "style": {
               "flex": 1,
-              "height": "calc(100% - 82px)",
+              "height": "calc(100% - 78px)",
               "display": "flex",
-              "backgroundColor": "#090d16",
+              "backgroundColor": "#020617",
               "overflow": "hidden"
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-pane-left",
+                "id": "pane-left-sidebar",
                 "type": "box",
-                "name": "Left Sidebar (Layers)",
+                "name": "pane-left-sidebar",
                 "style": {
-                  "width": 250,
-                  "backgroundColor": "#0d1322",
+                  "width": 270,
+                  "backgroundColor": "#090d16",
                   "borderRightWidth": 1,
                   "borderColor": "#1e293b",
                   "display": "flex",
                   "flexDirection": "column"
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-left-hdr",
+                    "id": "ls-tabs",
                     "type": "box",
-                    "style": {
-                      "padding": 12,
-                      "borderBottomWidth": 1,
-                      "borderColor": "#1e293b",
-                      "display": "flex",
-                      "justifyContent": "space-between",
-                      "alignItems": "center"
-                    },
-                    "children": [
-                      {
-                        "id": "node-left-title",
-                        "type": "text",
-                        "content": "계층 레이어 (Layers)",
-                        "style": {
-                          "color": "#cbd5e1",
-                          "fontSize": 11,
-                          "fontWeight": 700
-                        }
-                      },
-                      {
-                        "id": "node-left-add-btn",
-                        "type": "badge",
-                        "content": "+ 추가",
-                        "style": {
-                          "backgroundColor": "#4f46e5",
-                          "color": "#ffffff",
-                          "fontSize": 10,
-                          "paddingLeft": 6,
-                          "paddingRight": 6,
-                          "paddingTop": 2,
-                          "paddingBottom": 2,
-                          "borderRadius": 4
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "id": "node-layer-list",
-                    "type": "box",
-                    "style": {
-                      "padding": 8,
-                      "display": "flex",
-                      "flexDirection": "column",
-                      "gap": 4
-                    },
-                    "children": [
-                      {
-                        "id": "node-layer-1",
-                        "type": "box",
-                        "style": {
-                          "backgroundColor": "#1e293b",
-                          "padding": 6,
-                          "borderRadius": 6,
-                          "display": "flex",
-                          "alignItems": "center",
-                          "gap": 6
-                        },
-                        "children": [
-                          {
-                            "id": "node-l1-icon",
-                            "type": "text",
-                            "content": "📱",
-                            "style": {
-                              "fontSize": 11
-                            }
-                          },
-                          {
-                            "id": "node-l1-name",
-                            "type": "text",
-                            "content": "1. AI 자산 관리 홈",
-                            "style": {
-                              "color": "#ffffff",
-                              "fontSize": 11,
-                              "fontWeight": 600
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "id": "node-layer-2",
-                        "type": "box",
-                        "style": {
-                          "paddingLeft": 20,
-                          "paddingTop": 4,
-                          "paddingBottom": 4,
-                          "display": "flex",
-                          "alignItems": "center",
-                          "gap": 6
-                        },
-                        "children": [
-                          {
-                            "id": "node-l2-icon",
-                            "type": "text",
-                            "content": "▢",
-                            "style": {
-                              "color": "#818cf8",
-                              "fontSize": 10
-                            }
-                          },
-                          {
-                            "id": "node-l2-name",
-                            "type": "text",
-                            "content": "Hero Card Container",
-                            "style": {
-                              "color": "#94a3b8",
-                              "fontSize": 11
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "id": "node-layer-3",
-                        "type": "box",
-                        "style": {
-                          "backgroundColor": "#312e81",
-                          "borderColor": "#6366f1",
-                          "borderWidth": 1,
-                          "paddingLeft": 30,
-                          "paddingTop": 4,
-                          "paddingBottom": 4,
-                          "paddingRight": 6,
-                          "borderRadius": 6,
-                          "display": "flex",
-                          "alignItems": "center",
-                          "gap": 6
-                        },
-                        "children": [
-                          {
-                            "id": "node-l3-icon",
-                            "type": "text",
-                            "content": "🔘",
-                            "style": {
-                              "fontSize": 10
-                            }
-                          },
-                          {
-                            "id": "node-l3-name",
-                            "type": "text",
-                            "content": "CTA 즉시 입금 버튼 (Selected)",
-                            "style": {
-                              "color": "#ffffff",
-                              "fontSize": 11,
-                              "fontWeight": 700
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "id": "node-layer-4",
-                        "type": "box",
-                        "style": {
-                          "backgroundColor": "#131b2e",
-                          "padding": 6,
-                          "borderRadius": 6,
-                          "display": "flex",
-                          "alignItems": "center",
-                          "gap": 6,
-                          "marginTop": 6
-                        },
-                        "children": [
-                          {
-                            "id": "node-l4-icon",
-                            "type": "text",
-                            "content": "📱",
-                            "style": {
-                              "fontSize": 11
-                            }
-                          },
-                          {
-                            "id": "node-l4-name",
-                            "type": "text",
-                            "content": "2. 빠른 송금 모달",
-                            "style": {
-                              "color": "#cbd5e1",
-                              "fontSize": 11,
-                              "fontWeight": 600
-                            }
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "id": "node-pane-canvas",
-                "type": "box",
-                "name": "Infinite Canvas Workspace",
-                "style": {
-                  "flex": 1,
-                  "backgroundColor": "#090d16",
-                  "display": "flex",
-                  "alignItems": "center",
-                  "justifyContent": "center",
-                  "gap": 36,
-                  "padding": 24,
-                  "position": "relative"
-                },
-                "children": [
-                  {
-                    "id": "node-mock-artboard-1",
-                    "type": "card",
-                    "name": "Artboard 1: Mobile Home",
-                    "style": {
-                      "width": 320,
-                      "height": 600,
-                      "backgroundColor": "#0f172a",
-                      "borderRadius": 24,
-                      "borderWidth": 2,
-                      "borderColor": "#4f46e5",
-                      "boxShadow": "0 20px 40px rgba(0,0,0,0.6)",
-                      "display": "flex",
-                      "flexDirection": "column",
-                      "overflow": "hidden"
-                    },
-                    "children": [
-                      {
-                        "id": "node-m1-status",
-                        "type": "box",
-                        "style": {
-                          "height": 28,
-                          "display": "flex",
-                          "justifyContent": "space-between",
-                          "paddingLeft": 16,
-                          "paddingRight": 16,
-                          "paddingTop": 6
-                        },
-                        "children": [
-                          {
-                            "id": "node-m1-time",
-                            "type": "text",
-                            "content": "9:41",
-                            "style": {
-                              "color": "#ffffff",
-                              "fontSize": 10,
-                              "fontWeight": 700
-                            }
-                          },
-                          {
-                            "id": "node-m1-icons",
-                            "type": "text",
-                            "content": "5G 100%",
-                            "style": {
-                              "color": "#94a3b8",
-                              "fontSize": 9
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "id": "node-m1-header",
-                        "type": "box",
-                        "style": {
-                          "padding": 16
-                        },
-                        "children": [
-                          {
-                            "id": "node-m1-greeting",
-                            "type": "text",
-                            "content": "환영합니다, 김제이님 👋",
-                            "style": {
-                              "color": "#94a3b8",
-                              "fontSize": 11
-                            }
-                          },
-                          {
-                            "id": "node-m1-balance",
-                            "type": "heading",
-                            "content": "₩ 48,250,000",
-                            "style": {
-                              "color": "#ffffff",
-                              "fontSize": 20,
-                              "fontWeight": 800,
-                              "marginTop": 4
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "id": "node-m1-card",
-                        "type": "card",
-                        "style": {
-                          "margin": 14,
-                          "padding": 16,
-                          "borderRadius": 16,
-                          "backgroundGradient": "linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)",
-                          "color": "#ffffff"
-                        },
-                        "children": [
-                          {
-                            "id": "node-m1-ctitle",
-                            "type": "text",
-                            "content": "AI 자율 스마트 투자",
-                            "style": {
-                              "fontSize": 11,
-                              "fontWeight": 600
-                            }
-                          },
-                          {
-                            "id": "node-m1-cstat",
-                            "type": "heading",
-                            "content": "+18.4% 연간 수익률",
-                            "style": {
-                              "fontSize": 16,
-                              "fontWeight": 800,
-                              "marginTop": 4
-                            }
-                          },
-                          {
-                            "id": "node-m1-cbtn",
-                            "type": "button",
-                            "content": "수익금 즉시 입금하기",
-                            "style": {
-                              "backgroundColor": "#ffffff",
-                              "color": "#4f46e5",
-                              "fontSize": 11,
-                              "fontWeight": 700,
-                              "marginTop": 12,
-                              "padding": 8,
-                              "borderRadius": 10,
-                              "textAlign": "center"
-                            }
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "id": "node-mock-artboard-2",
-                    "type": "card",
-                    "name": "Artboard 2: Quick Transfer",
-                    "style": {
-                      "width": 320,
-                      "height": 600,
-                      "backgroundColor": "#0f172a",
-                      "borderRadius": 24,
-                      "borderWidth": 1,
-                      "borderColor": "#334155",
-                      "boxShadow": "0 20px 40px rgba(0,0,0,0.4)",
-                      "display": "flex",
-                      "flexDirection": "column",
-                      "overflow": "hidden"
-                    },
-                    "children": [
-                      {
-                        "id": "node-m2-status",
-                        "type": "box",
-                        "style": {
-                          "height": 28,
-                          "display": "flex",
-                          "justifyContent": "space-between",
-                          "paddingLeft": 16,
-                          "paddingRight": 16,
-                          "paddingTop": 6
-                        },
-                        "children": [
-                          {
-                            "id": "node-m2-time",
-                            "type": "text",
-                            "content": "9:41",
-                            "style": {
-                              "color": "#ffffff",
-                              "fontSize": 10,
-                              "fontWeight": 700
-                            }
-                          },
-                          {
-                            "id": "node-m2-icons",
-                            "type": "text",
-                            "content": "5G 100%",
-                            "style": {
-                              "color": "#94a3b8",
-                              "fontSize": 9
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "id": "node-m2-title",
-                        "type": "box",
-                        "style": {
-                          "padding": 16
-                        },
-                        "children": [
-                          {
-                            "id": "node-m2-t1",
-                            "type": "heading",
-                            "content": "빠른 송금",
-                            "style": {
-                              "color": "#ffffff",
-                              "fontSize": 16,
-                              "fontWeight": 700
-                            }
-                          },
-                          {
-                            "id": "node-m2-t2",
-                            "type": "text",
-                            "content": "최근 보낸 계좌로 1초 송금",
-                            "style": {
-                              "color": "#94a3b8",
-                              "fontSize": 11,
-                              "marginTop": 2
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "id": "node-m2-form",
-                        "type": "box",
-                        "style": {
-                          "padding": 14,
-                          "display": "flex",
-                          "flexDirection": "column",
-                          "gap": 10
-                        },
-                        "children": [
-                          {
-                            "id": "node-m2-inp1",
-                            "type": "input",
-                            "content": "보낼 금액 입력 (원)",
-                            "style": {
-                              "backgroundColor": "#1e293b",
-                              "color": "#ffffff",
-                              "borderWidth": 1,
-                              "borderColor": "#334155",
-                              "padding": 10,
-                              "borderRadius": 10,
-                              "fontSize": 12
-                            }
-                          },
-                          {
-                            "id": "node-m2-btn",
-                            "type": "button",
-                            "content": "송금 확인",
-                            "style": {
-                              "backgroundColor": "#06b6d4",
-                              "color": "#ffffff",
-                              "padding": 10,
-                              "borderRadius": 10,
-                              "fontSize": 12,
-                              "fontWeight": 700,
-                              "textAlign": "center"
-                            }
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "id": "node-pane-right",
-                "type": "box",
-                "name": "Right Sidebar (Inspector)",
-                "style": {
-                  "width": 290,
-                  "backgroundColor": "#0d1322",
-                  "borderLeftWidth": 1,
-                  "borderColor": "#1e293b",
-                  "display": "flex",
-                  "flexDirection": "column"
-                },
-                "children": [
-                  {
-                    "id": "node-ins-tabs",
-                    "type": "box",
+                    "name": "ls-tabs",
                     "style": {
                       "display": "flex",
                       "borderBottomWidth": 1,
-                      "borderColor": "#1e293b"
+                      "borderColor": "#1e293b",
+                      "backgroundColor": "#0d1322"
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-tab-style",
+                        "id": "ls-tab-layers",
                         "type": "button",
-                        "content": "스타일 (Style)",
+                        "name": "ls-tab-layers",
                         "style": {
                           "flex": 1,
                           "padding": 8,
                           "fontSize": 11,
                           "fontWeight": 700,
-                          "backgroundColor": "#1e293b",
-                          "color": "#ffffff",
+                          "color": "#6366f1",
+                          "borderBottomWidth": 2,
+                          "borderColor": "#6366f1",
+                          "backgroundColor": "#090d16",
                           "textAlign": "center"
-                        }
+                        },
+                        "props": {},
+                        "content": "계층 레이어",
+                        "children": []
                       },
                       {
-                        "id": "node-tab-layout",
+                        "id": "ls-tab-comps",
                         "type": "button",
-                        "content": "레이아웃",
+                        "name": "ls-tab-comps",
                         "style": {
                           "flex": 1,
                           "padding": 8,
                           "fontSize": 11,
-                          "color": "#94a3b8",
-                          "backgroundColor": "transparent",
+                          "fontWeight": 500,
+                          "color": "#64748b",
                           "textAlign": "center"
-                        }
+                        },
+                        "props": {},
+                        "content": "컴포넌트",
+                        "children": []
                       },
                       {
-                        "id": "node-tab-event",
+                        "id": "ls-tab-tpls",
                         "type": "button",
-                        "content": "이벤트",
+                        "name": "ls-tab-tpls",
                         "style": {
                           "flex": 1,
                           "padding": 8,
                           "fontSize": 11,
-                          "color": "#94a3b8",
-                          "backgroundColor": "transparent",
+                          "fontWeight": 500,
+                          "color": "#64748b",
                           "textAlign": "center"
-                        }
+                        },
+                        "props": {},
+                        "content": "템플릿",
+                        "children": []
                       }
                     ]
                   },
                   {
-                    "id": "node-ins-sections",
+                    "id": "ls-search-wrap",
                     "type": "box",
+                    "name": "ls-search-wrap",
                     "style": {
-                      "padding": 14,
-                      "display": "flex",
-                      "flexDirection": "column",
-                      "gap": 14,
-                      "overflow": "auto"
+                      "padding": 8
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-ins-meta",
-                        "type": "card",
+                        "id": "ls-search-input",
+                        "type": "input",
+                        "name": "ls-search-input",
                         "style": {
-                          "backgroundColor": "#141c2e",
-                          "padding": 10,
-                          "borderRadius": 8,
+                          "width": "100%",
+                          "backgroundColor": "#1e293b",
+                          "color": "#e2e8f0",
+                          "fontSize": 11,
+                          "padding": 6,
+                          "borderRadius": 6,
                           "borderWidth": 1,
-                          "borderColor": "#27354f"
+                          "borderColor": "#334155"
                         },
+                        "props": {
+                          "placeholder": "🔍 레이어 검색..."
+                        },
+                        "content": "",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "ls-tree",
+                    "type": "box",
+                    "name": "ls-tree",
+                    "style": {
+                      "flex": 1,
+                      "padding": 8,
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": 4,
+                      "overflow": "auto"
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": [
+                      {
+                        "id": "ls-ab-head",
+                        "type": "box",
+                        "name": "ls-ab-head",
+                        "style": {
+                          "display": "flex",
+                          "alignItems": "center",
+                          "justifyContent": "space-between",
+                          "padding": 6,
+                          "backgroundColor": "#1e293b",
+                          "borderRadius": 6
+                        },
+                        "props": {},
+                        "content": "",
                         "children": [
                           {
-                            "id": "node-im-name",
-                            "type": "heading",
-                            "content": "CTA 즉시 입금 버튼",
+                            "id": "ls-ab-name",
+                            "type": "text",
+                            "name": "ls-ab-name",
                             "style": {
-                              "color": "#ffffff",
-                              "fontSize": 12,
-                              "fontWeight": 700
-                            }
+                              "color": "#f8fafc",
+                              "fontSize": 11,
+                              "fontWeight": 600
+                            },
+                            "props": {},
+                            "content": "▼ 📱 1. 메인 캔버스 (Active)",
+                            "children": []
                           },
                           {
-                            "id": "node-im-type",
-                            "type": "badge",
-                            "content": "type: button  •  id: #node-m1-cbtn",
+                            "id": "ls-ab-vis",
+                            "type": "text",
+                            "name": "ls-ab-vis",
                             "style": {
-                              "color": "#818cf8",
-                              "fontSize": 9,
-                              "marginTop": 4
-                            }
+                              "color": "#94a3b8",
+                              "fontSize": 10
+                            },
+                            "props": {},
+                            "content": "👁️ 🔒",
+                            "children": []
                           }
                         ]
                       },
                       {
-                        "id": "node-ins-radius",
+                        "id": "ls-node-1",
                         "type": "box",
+                        "name": "ls-node-1",
                         "style": {
+                          "display": "flex",
+                          "alignItems": "center",
+                          "justifyContent": "space-between",
+                          "paddingLeft": 18,
+                          "paddingTop": 4,
+                          "paddingBottom": 4
+                        },
+                        "props": {},
+                        "content": "",
+                        "children": [
+                          {
+                            "id": "ls-n1-name",
+                            "type": "text",
+                            "name": "ls-n1-name",
+                            "style": {
+                              "color": "#94a3b8",
+                              "fontSize": 11
+                            },
+                            "props": {},
+                            "content": "├─ ▢ Top Header Container",
+                            "children": []
+                          },
+                          {
+                            "id": "ls-n1-eye",
+                            "type": "text",
+                            "name": "ls-n1-eye",
+                            "style": {
+                              "color": "#64748b",
+                              "fontSize": 9
+                            },
+                            "props": {},
+                            "content": "👁️",
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "id": "ls-node-2",
+                        "type": "box",
+                        "name": "ls-node-2",
+                        "style": {
+                          "display": "flex",
+                          "alignItems": "center",
+                          "justifyContent": "space-between",
+                          "paddingLeft": 18,
+                          "paddingTop": 4,
+                          "paddingBottom": 4
+                        },
+                        "props": {},
+                        "content": "",
+                        "children": [
+                          {
+                            "id": "ls-n2-name",
+                            "type": "text",
+                            "name": "ls-n2-name",
+                            "style": {
+                              "color": "#94a3b8",
+                              "fontSize": 11
+                            },
+                            "props": {},
+                            "content": "├─ ▢ Left Navigation Sidebar",
+                            "children": []
+                          },
+                          {
+                            "id": "ls-n2-eye",
+                            "type": "text",
+                            "name": "ls-n2-eye",
+                            "style": {
+                              "color": "#64748b",
+                              "fontSize": 9
+                            },
+                            "props": {},
+                            "content": "👁️",
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "id": "ls-node-3",
+                        "type": "box",
+                        "name": "ls-node-3",
+                        "style": {
+                          "display": "flex",
+                          "alignItems": "center",
+                          "justifyContent": "space-between",
+                          "paddingLeft": 18,
+                          "paddingTop": 4,
+                          "paddingBottom": 4,
+                          "backgroundColor": "#312e81",
+                          "borderRadius": 6,
+                          "borderWidth": 1,
+                          "borderColor": "#6366f1"
+                        },
+                        "props": {},
+                        "content": "",
+                        "children": [
+                          {
+                            "id": "ls-n3-name",
+                            "type": "text",
+                            "name": "ls-n3-name",
+                            "style": {
+                              "color": "#ffffff",
+                              "fontSize": 11,
+                              "fontWeight": 700
+                            },
+                            "props": {},
+                            "content": "└─ 🔘 CTA 실행 버튼 ★ (Selected)",
+                            "children": []
+                          },
+                          {
+                            "id": "ls-n3-eye",
+                            "type": "text",
+                            "name": "ls-n3-eye",
+                            "style": {
+                              "color": "#c7d2fe",
+                              "fontSize": 9
+                            },
+                            "props": {},
+                            "content": "👁️",
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "pane-center-canvas",
+                "type": "box",
+                "name": "pane-center-canvas",
+                "style": {
+                  "flex": 1,
+                  "backgroundColor": "#040711",
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "position": "relative",
+                  "overflow": "hidden"
+                },
+                "props": {},
+                "content": "",
+                "children": [
+                  {
+                    "id": "cv-ruler-top",
+                    "type": "box",
+                    "name": "cv-ruler-top",
+                    "style": {
+                      "height": 20,
+                      "backgroundColor": "#0a0f1d",
+                      "borderBottomWidth": 1,
+                      "borderColor": "#1e293b",
+                      "display": "flex",
+                      "alignItems": "center",
+                      "paddingLeft": 24,
+                      "fontSize": 9,
+                      "color": "#64748b",
+                      "gap": 50
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": [
+                      {
+                        "id": "rt-0",
+                        "type": "text",
+                        "name": "rt-0",
+                        "style": {},
+                        "props": {},
+                        "content": "0",
+                        "children": []
+                      },
+                      {
+                        "id": "rt-100",
+                        "type": "text",
+                        "name": "rt-100",
+                        "style": {},
+                        "props": {},
+                        "content": "100",
+                        "children": []
+                      },
+                      {
+                        "id": "rt-200",
+                        "type": "text",
+                        "name": "rt-200",
+                        "style": {},
+                        "props": {},
+                        "content": "200",
+                        "children": []
+                      },
+                      {
+                        "id": "rt-300",
+                        "type": "text",
+                        "name": "rt-300",
+                        "style": {},
+                        "props": {},
+                        "content": "300",
+                        "children": []
+                      },
+                      {
+                        "id": "rt-400",
+                        "type": "text",
+                        "name": "rt-400",
+                        "style": {},
+                        "props": {},
+                        "content": "400",
+                        "children": []
+                      },
+                      {
+                        "id": "rt-500",
+                        "type": "text",
+                        "name": "rt-500",
+                        "style": {},
+                        "props": {},
+                        "content": "500",
+                        "children": []
+                      },
+                      {
+                        "id": "rt-600",
+                        "type": "text",
+                        "name": "rt-600",
+                        "style": {},
+                        "props": {},
+                        "content": "600",
+                        "children": []
+                      },
+                      {
+                        "id": "rt-700",
+                        "type": "text",
+                        "name": "rt-700",
+                        "style": {},
+                        "props": {},
+                        "content": "700",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "cv-viewport",
+                    "type": "box",
+                    "name": "cv-viewport",
+                    "style": {
+                      "flex": 1,
+                      "display": "flex",
+                      "alignItems": "center",
+                      "justifyContent": "center",
+                      "padding": 24,
+                      "gap": 32,
+                      "backgroundImage": "radial-gradient(#334155 1px, transparent 1px)",
+                      "backgroundSize": "24px 24px"
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": [
+                      {
+                        "id": "cv-artboard-1",
+                        "type": "card",
+                        "name": "cv-artboard-1",
+                        "style": {
+                          "width": 440,
+                          "height": 640,
+                          "backgroundColor": "#090d16",
+                          "borderRadius": 16,
+                          "borderWidth": 2,
+                          "borderColor": "#6366f1",
+                          "boxShadow": "0 20px 40px rgba(0, 0, 0, 0.7)",
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "overflow": "hidden"
+                        },
+                        "props": {},
+                        "content": "",
+                        "children": [
+                          {
+                            "id": "ab1-bar",
+                            "type": "box",
+                            "name": "ab1-bar",
+                            "style": {
+                              "height": 32,
+                              "backgroundColor": "#0d1322",
+                              "borderBottomWidth": 1,
+                              "borderColor": "#1e293b",
+                              "display": "flex",
+                              "alignItems": "center",
+                              "justifyContent": "space-between",
+                              "paddingLeft": 12,
+                              "paddingRight": 12
+                            },
+                            "props": {},
+                            "content": "",
+                            "children": [
+                              {
+                                "id": "ab1-title",
+                                "type": "text",
+                                "name": "ab1-title",
+                                "style": {
+                                  "color": "#f8fafc",
+                                  "fontSize": 11,
+                                  "fontWeight": 700
+                                },
+                                "props": {},
+                                "content": "📱 Screen Designer 메인 뷰포트",
+                                "children": []
+                              },
+                              {
+                                "id": "ab1-actions",
+                                "type": "box",
+                                "name": "ab1-actions",
+                                "style": {
+                                  "display": "flex",
+                                  "gap": 4
+                                },
+                                "props": {},
+                                "content": "",
+                                "children": [
+                                  {
+                                    "id": "ab1-badge-exp",
+                                    "type": "badge",
+                                    "name": "ab1-badge-exp",
+                                    "style": {
+                                      "backgroundColor": "#1e293b",
+                                      "color": "#38bdf8",
+                                      "fontSize": 9,
+                                      "padding": 3,
+                                      "borderRadius": 4
+                                    },
+                                    "props": {},
+                                    "content": "이미지",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "ab1-badge-json",
+                                    "type": "badge",
+                                    "name": "ab1-badge-json",
+                                    "style": {
+                                      "backgroundColor": "#1e293b",
+                                      "color": "#10b981",
+                                      "fontSize": 9,
+                                      "padding": 3,
+                                      "borderRadius": 4
+                                    },
+                                    "props": {},
+                                    "content": "JSON",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "ab1-badge-dup",
+                                    "type": "badge",
+                                    "name": "ab1-badge-dup",
+                                    "style": {
+                                      "backgroundColor": "#1e293b",
+                                      "color": "#94a3b8",
+                                      "fontSize": 9,
+                                      "padding": 3,
+                                      "borderRadius": 4
+                                    },
+                                    "props": {},
+                                    "content": "복제",
+                                    "children": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "id": "ab1-body",
+                            "type": "box",
+                            "name": "ab1-body",
+                            "style": {
+                              "flex": 1,
+                              "padding": 18,
+                              "display": "flex",
+                              "flexDirection": "column",
+                              "gap": 14,
+                              "backgroundColor": "#020617"
+                            },
+                            "props": {},
+                            "content": "",
+                            "children": [
+                              {
+                                "id": "ab1-hero-card",
+                                "type": "card",
+                                "name": "ab1-hero-card",
+                                "style": {
+                                  "padding": 16,
+                                  "borderRadius": 14,
+                                  "backgroundImage": "linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)",
+                                  "color": "#ffffff",
+                                  "display": "flex",
+                                  "flexDirection": "column",
+                                  "gap": 8
+                                },
+                                "props": {},
+                                "content": "",
+                                "children": [
+                                  {
+                                    "id": "ab1-hc-sub",
+                                    "type": "text",
+                                    "name": "ab1-hc-sub",
+                                    "style": {
+                                      "fontSize": 11,
+                                      "fontWeight": 600,
+                                      "opacity": 0.9
+                                    },
+                                    "props": {},
+                                    "content": "⚡ Screen Designer VDOM Engine",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "ab1-hc-title",
+                                    "type": "text",
+                                    "name": "ab1-hc-title",
+                                    "style": {
+                                      "fontSize": 20,
+                                      "fontWeight": 900
+                                    },
+                                    "props": {},
+                                    "content": "인터랙티브 디자인 & 실시간 코드 생성",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "ab1-hc-chip",
+                                    "type": "badge",
+                                    "name": "ab1-hc-chip",
+                                    "style": {
+                                      "backgroundColor": "rgba(255,255,255,0.2)",
+                                      "color": "#fff",
+                                      "fontSize": 10,
+                                      "padding": 4,
+                                      "borderRadius": 6,
+                                      "alignSelf": "flex-start"
+                                    },
+                                    "props": {},
+                                    "content": "React TSX + Vue + HTML5",
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "id": "ab1-btn-cta",
+                                "type": "button",
+                                "name": "ab1-btn-cta",
+                                "style": {
+                                  "backgroundColor": "#6366f1",
+                                  "color": "#ffffff",
+                                  "fontSize": 13,
+                                  "fontWeight": 700,
+                                  "padding": 12,
+                                  "borderRadius": 10,
+                                  "textAlign": "center",
+                                  "boxShadow": "0 0 0 3px #a855f7, 0 10px 20px rgba(99, 102, 241, 0.4)",
+                                  "cursor": "pointer"
+                                },
+                                "props": {},
+                                "content": "🔘 컴포넌트 삽입 및 스타일 편집 ★ (Selected)",
+                                "children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "pane-right-inspector",
+                "type": "box",
+                "name": "pane-right-inspector",
+                "style": {
+                  "width": 310,
+                  "backgroundColor": "#090d16",
+                  "borderLeftWidth": 1,
+                  "borderColor": "#1e293b",
+                  "display": "flex",
+                  "flexDirection": "column"
+                },
+                "props": {},
+                "content": "",
+                "children": [
+                  {
+                    "id": "insp-tabs",
+                    "type": "box",
+                    "name": "insp-tabs",
+                    "style": {
+                      "display": "flex",
+                      "borderBottomWidth": 1,
+                      "borderColor": "#1e293b",
+                      "backgroundColor": "#0d1322"
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": [
+                      {
+                        "id": "insp-t-prop",
+                        "type": "button",
+                        "name": "insp-t-prop",
+                        "style": {
+                          "flex": 1,
+                          "padding": 8,
+                          "fontSize": 11,
+                          "fontWeight": 700,
+                          "color": "#6366f1",
+                          "borderBottomWidth": 2,
+                          "borderColor": "#6366f1",
+                          "backgroundColor": "#090d16",
+                          "textAlign": "center"
+                        },
+                        "props": {},
+                        "content": "속성",
+                        "children": []
+                      },
+                      {
+                        "id": "insp-t-ev",
+                        "type": "button",
+                        "name": "insp-t-ev",
+                        "style": {
+                          "flex": 1,
+                          "padding": 8,
+                          "fontSize": 11,
+                          "fontWeight": 500,
+                          "color": "#64748b",
+                          "textAlign": "center"
+                        },
+                        "props": {},
+                        "content": "이벤트",
+                        "children": []
+                      },
+                      {
+                        "id": "insp-t-code",
+                        "type": "button",
+                        "name": "insp-t-code",
+                        "style": {
+                          "flex": 1,
+                          "padding": 8,
+                          "fontSize": 11,
+                          "fontWeight": 500,
+                          "color": "#64748b",
+                          "textAlign": "center"
+                        },
+                        "props": {},
+                        "content": "코드",
+                        "children": []
+                      },
+                      {
+                        "id": "insp-t-twk",
+                        "type": "button",
+                        "name": "insp-t-twk",
+                        "style": {
+                          "flex": 1,
+                          "padding": 8,
+                          "fontSize": 11,
+                          "fontWeight": 500,
+                          "color": "#64748b",
+                          "textAlign": "center"
+                        },
+                        "props": {},
+                        "content": "튜닝",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "insp-body",
+                    "type": "box",
+                    "name": "insp-body",
+                    "style": {
+                      "flex": 1,
+                      "padding": 12,
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": 12,
+                      "overflow": "auto"
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": [
+                      {
+                        "id": "insp-target-head",
+                        "type": "box",
+                        "name": "insp-target-head",
+                        "style": {
+                          "display": "flex",
+                          "justifyContent": "space-between",
+                          "alignItems": "center"
+                        },
+                        "props": {},
+                        "content": "",
+                        "children": [
+                          {
+                            "id": "insp-tgt-name",
+                            "type": "text",
+                            "name": "insp-tgt-name",
+                            "style": {
+                              "color": "#f8fafc",
+                              "fontSize": 11,
+                              "fontWeight": 700
+                            },
+                            "props": {},
+                            "content": "선택: button #ab1-btn-cta",
+                            "children": []
+                          },
+                          {
+                            "id": "insp-tgt-type",
+                            "type": "badge",
+                            "name": "insp-tgt-type",
+                            "style": {
+                              "backgroundColor": "#312e81",
+                              "color": "#c7d2fe",
+                              "fontSize": 9,
+                              "padding": 3,
+                              "borderRadius": 4
+                            },
+                            "props": {},
+                            "content": "Button",
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "id": "insp-sec-dim",
+                        "type": "card",
+                        "name": "insp-sec-dim",
+                        "style": {
+                          "backgroundColor": "#0d1322",
+                          "padding": 10,
+                          "borderRadius": 8,
+                          "borderWidth": 1,
+                          "borderColor": "#1e293b",
                           "display": "flex",
                           "flexDirection": "column",
                           "gap": 6
                         },
+                        "props": {},
+                        "content": "",
                         "children": [
                           {
-                            "id": "node-ir-hdr",
-                            "type": "box",
+                            "id": "is-dim-lbl",
+                            "type": "text",
+                            "name": "is-dim-lbl",
                             "style": {
-                              "display": "flex",
-                              "justifyContent": "space-between"
+                              "color": "#94a3b8",
+                              "fontSize": 10,
+                              "fontWeight": 700
                             },
-                            "children": [
-                              {
-                                "id": "node-ir-title",
-                                "type": "text",
-                                "content": "테두리 곡률 (Radius)",
-                                "style": {
-                                  "color": "#cbd5e1",
-                                  "fontSize": 11,
-                                  "fontWeight": 600
-                                }
-                              },
-                              {
-                                "id": "node-ir-val",
-                                "type": "badge",
-                                "content": "10px (4모서리)",
-                                "style": {
-                                  "color": "#38bdf8",
-                                  "fontSize": 10
-                                }
-                              }
-                            ]
+                            "props": {},
+                            "content": "위치 및 크기 (Layout)",
+                            "children": []
                           },
                           {
-                            "id": "node-ir-slider",
+                            "id": "is-dim-row",
                             "type": "box",
+                            "name": "is-dim-row",
                             "style": {
-                              "height": 6,
-                              "backgroundColor": "#334155",
-                              "borderRadius": 3,
-                              "position": "relative"
+                              "display": "flex",
+                              "gap": 6
                             },
+                            "props": {},
+                            "content": "",
                             "children": [
                               {
-                                "id": "node-ir-fill",
-                                "type": "box",
+                                "id": "is-dim-w",
+                                "type": "badge",
+                                "name": "is-dim-w",
                                 "style": {
-                                  "width": "35%",
-                                  "height": "100%",
-                                  "backgroundColor": "#4f46e5",
-                                  "borderRadius": 3
-                                }
+                                  "flex": 1,
+                                  "backgroundColor": "#1e293b",
+                                  "color": "#cbd5e1",
+                                  "fontSize": 10,
+                                  "padding": 4,
+                                  "borderRadius": 4
+                                },
+                                "props": {},
+                                "content": "W: 404px",
+                                "children": []
+                              },
+                              {
+                                "id": "is-dim-h",
+                                "type": "badge",
+                                "name": "is-dim-h",
+                                "style": {
+                                  "flex": 1,
+                                  "backgroundColor": "#1e293b",
+                                  "color": "#cbd5e1",
+                                  "fontSize": 10,
+                                  "padding": 4,
+                                  "borderRadius": 4
+                                },
+                                "props": {},
+                                "content": "H: 48px",
+                                "children": []
+                              },
+                              {
+                                "id": "is-dim-r",
+                                "type": "badge",
+                                "name": "is-dim-r",
+                                "style": {
+                                  "flex": 1,
+                                  "backgroundColor": "#1e293b",
+                                  "color": "#cbd5e1",
+                                  "fontSize": 10,
+                                  "padding": 4,
+                                  "borderRadius": 4
+                                },
+                                "props": {},
+                                "content": "회전: 0°",
+                                "children": []
                               }
                             ]
                           }
                         ]
                       },
                       {
-                        "id": "node-ins-bg",
+                        "id": "insp-sec-radius",
                         "type": "card",
+                        "name": "insp-sec-radius",
                         "style": {
-                          "backgroundColor": "#141c2e",
+                          "backgroundColor": "#0d1322",
                           "padding": 10,
                           "borderRadius": 8,
                           "borderWidth": 1,
-                          "borderColor": "#27354f",
+                          "borderColor": "#1e293b",
                           "display": "flex",
                           "flexDirection": "column",
-                          "gap": 8
+                          "gap": 6
                         },
+                        "props": {},
+                        "content": "",
                         "children": [
                           {
-                            "id": "node-ibg-title",
+                            "id": "is-rad-lbl",
                             "type": "text",
-                            "content": "🎨 실시간 그라데이션 제어판",
+                            "name": "is-rad-lbl",
                             "style": {
-                              "color": "#e2e8f0",
-                              "fontSize": 11,
+                              "color": "#94a3b8",
+                              "fontSize": 10,
                               "fontWeight": 700
-                            }
+                            },
+                            "props": {},
+                            "content": "4모서리 독립 곡률 (Corner Radius)",
+                            "children": []
                           },
                           {
-                            "id": "node-ibg-chips",
+                            "id": "is-rad-row",
                             "type": "box",
+                            "name": "is-rad-row",
                             "style": {
                               "display": "flex",
                               "gap": 4
                             },
+                            "props": {},
+                            "content": "",
                             "children": [
                               {
-                                "id": "node-c1",
+                                "id": "is-r-tl",
                                 "type": "badge",
-                                "content": "선형 네온",
+                                "name": "is-r-tl",
                                 "style": {
-                                  "backgroundColor": "#4f46e5",
-                                  "color": "#fff",
+                                  "flex": 1,
+                                  "backgroundColor": "#1e293b",
+                                  "color": "#818cf8",
                                   "fontSize": 9,
-                                  "padding": 3,
+                                  "padding": 4,
                                   "borderRadius": 4
-                                }
+                                },
+                                "props": {},
+                                "content": "TL: 10",
+                                "children": []
                               },
                               {
-                                "id": "node-c2",
+                                "id": "is-r-tr",
                                 "type": "badge",
-                                "content": "다크 메쉬",
+                                "name": "is-r-tr",
                                 "style": {
+                                  "flex": 1,
                                   "backgroundColor": "#1e293b",
-                                  "color": "#94a3b8",
+                                  "color": "#818cf8",
+                                  "fontSize": 9,
+                                  "padding": 4,
+                                  "borderRadius": 4
+                                },
+                                "props": {},
+                                "content": "TR: 10",
+                                "children": []
+                              },
+                              {
+                                "id": "is-r-br",
+                                "type": "badge",
+                                "name": "is-r-br",
+                                "style": {
+                                  "flex": 1,
+                                  "backgroundColor": "#1e293b",
+                                  "color": "#818cf8",
+                                  "fontSize": 9,
+                                  "padding": 4,
+                                  "borderRadius": 4
+                                },
+                                "props": {},
+                                "content": "BR: 10",
+                                "children": []
+                              },
+                              {
+                                "id": "is-r-bl",
+                                "type": "badge",
+                                "name": "is-r-bl",
+                                "style": {
+                                  "flex": 1,
+                                  "backgroundColor": "#1e293b",
+                                  "color": "#818cf8",
+                                  "fontSize": 9,
+                                  "padding": 4,
+                                  "borderRadius": 4
+                                },
+                                "props": {},
+                                "content": "BL: 10",
+                                "children": []
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "id": "insp-sec-neon",
+                        "type": "card",
+                        "name": "insp-sec-neon",
+                        "style": {
+                          "backgroundColor": "#0d1322",
+                          "padding": 10,
+                          "borderRadius": 8,
+                          "borderWidth": 1,
+                          "borderColor": "#6b21a8",
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": 8
+                        },
+                        "props": {},
+                        "content": "",
+                        "children": [
+                          {
+                            "id": "is-neon-head",
+                            "type": "box",
+                            "name": "is-neon-head",
+                            "style": {
+                              "display": "flex",
+                              "justifyContent": "space-between",
+                              "alignItems": "center"
+                            },
+                            "props": {},
+                            "content": "",
+                            "children": [
+                              {
+                                "id": "is-neon-lbl",
+                                "type": "text",
+                                "name": "is-neon-lbl",
+                                "style": {
+                                  "color": "#c084fc",
+                                  "fontSize": 10,
+                                  "fontWeight": 700
+                                },
+                                "props": {},
+                                "content": "⚡ 네온 글로우 & 메쉬 배경 엔진",
+                                "children": []
+                              },
+                              {
+                                "id": "is-neon-on",
+                                "type": "badge",
+                                "name": "is-neon-on",
+                                "style": {
+                                  "backgroundColor": "#581c87",
+                                  "color": "#f3e8ff",
                                   "fontSize": 9,
                                   "padding": 3,
                                   "borderRadius": 4
-                                }
+                                },
+                                "props": {},
+                                "content": "Active ●",
+                                "children": []
                               }
                             ]
                           },
                           {
-                            "id": "node-ibg-preview",
-                            "type": "box",
+                            "id": "is-neon-val",
+                            "type": "badge",
+                            "name": "is-neon-val",
                             "style": {
-                              "height": 36,
-                              "borderRadius": 6,
-                              "backgroundGradient": "linear-gradient(90deg, #4f46e5 0%, #06b6d4 100%)",
-                              "display": "flex",
-                              "alignItems": "center",
-                              "justifyContent": "center"
+                              "backgroundColor": "#1e293b",
+                              "color": "#e2e8f0",
+                              "fontSize": 10,
+                              "padding": 6,
+                              "borderRadius": 6
                             },
-                            "children": [
-                              {
-                                "id": "node-ibg-text",
-                                "type": "text",
-                                "content": "Angle: 90°  •  #4f46e5 → #06b6d4",
-                                "style": {
-                                  "color": "#ffffff",
-                                  "fontSize": 9,
-                                  "fontWeight": 700
-                                }
-                              }
-                            ]
+                            "props": {},
+                            "content": "Glow: #a855f7 | Radius: 28px | Spread: 6px",
+                            "children": []
                           }
                         ]
                       }
@@ -1158,199 +1707,278 @@
       "viewport": "mobile",
       "width": 440,
       "height": 860,
-      "x": 1480,
-      "y": 60,
+      "x": 1460,
+      "y": 40,
       "rootNode": {
-        "id": "node-ly-root",
+        "id": "root-ls-detail",
         "type": "frame",
-        "name": "Left Sidebar Panel Deep Dive",
+        "name": "root-ls-detail",
         "style": {
           "width": "100%",
           "height": "100%",
-          "backgroundColor": "#0d1322",
-          "borderWidth": 1,
-          "borderColor": "#1e293b",
-          "borderRadius": 14,
-          "padding": 16,
+          "backgroundColor": "#090d16",
           "display": "flex",
           "flexDirection": "column",
-          "gap": 14
+          "borderRadius": 14,
+          "padding": 16,
+          "gap": 14,
+          "borderWidth": 1,
+          "borderColor": "#1e293b",
+          "boxShadow": "0 25px 50px -12px rgba(0, 0, 0, 0.8)"
         },
+        "props": {},
+        "content": "",
         "children": [
           {
-            "id": "node-ly-header",
+            "id": "lsd-head",
             "type": "box",
+            "name": "lsd-head",
             "style": {
               "display": "flex",
               "justifyContent": "space-between",
               "alignItems": "center"
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-ly-title",
-                "type": "heading",
-                "content": "📑 페이지 및 VDOM 레이어",
+                "id": "lsd-title",
+                "type": "text",
+                "name": "lsd-title",
                 "style": {
-                  "color": "#ffffff",
+                  "color": "#f8fafc",
                   "fontSize": 14,
-                  "fontWeight": 700
-                }
+                  "fontWeight": 800
+                },
+                "props": {},
+                "content": "📑 좌측 사이드바 구조 심층 (Left Sidebar)",
+                "children": []
               },
               {
-                "id": "node-ly-filter",
+                "id": "lsd-mode",
                 "type": "badge",
-                "content": "필터: 전체 (14개 요소)",
+                "name": "lsd-mode",
                 "style": {
-                  "backgroundColor": "#1e293b",
-                  "color": "#38bdf8",
+                  "backgroundColor": "#312e81",
+                  "color": "#c7d2fe",
                   "fontSize": 10,
                   "padding": 4,
                   "borderRadius": 6
-                }
+                },
+                "props": {},
+                "content": "Navigation & Assets",
+                "children": []
               }
             ]
           },
           {
-            "id": "node-ly-pages",
+            "id": "lsd-tabs-row",
             "type": "box",
+            "name": "lsd-tabs-row",
             "style": {
               "display": "flex",
-              "gap": 6,
-              "backgroundColor": "#080c14",
-              "padding": 6,
-              "borderRadius": 8
+              "gap": 6
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-p1-tab",
-                "type": "badge",
-                "content": "1. 메인 홈 (Active)",
+                "id": "lsd-tb-1",
+                "type": "button",
+                "name": "lsd-tb-1",
                 "style": {
+                  "flex": 1,
+                  "padding": 8,
                   "backgroundColor": "#4f46e5",
-                  "color": "#ffffff",
+                  "color": "#fff",
                   "fontSize": 11,
-                  "padding": 6,
+                  "fontWeight": 700,
                   "borderRadius": 6,
-                  "fontWeight": 600
-                }
+                  "textAlign": "center"
+                },
+                "props": {},
+                "content": "계층 레이어 (14)",
+                "children": []
               },
               {
-                "id": "node-p2-tab",
-                "type": "badge",
-                "content": "2. 결제 플로우",
+                "id": "lsd-tb-2",
+                "type": "button",
+                "name": "lsd-tb-2",
                 "style": {
-                  "backgroundColor": "transparent",
-                  "color": "#64748b",
+                  "flex": 1,
+                  "padding": 8,
+                  "backgroundColor": "#1e293b",
+                  "color": "#94a3b8",
                   "fontSize": 11,
-                  "padding": 6
-                }
+                  "borderRadius": 6,
+                  "textAlign": "center"
+                },
+                "props": {},
+                "content": "컴포넌트 라이브러리",
+                "children": []
               },
               {
-                "id": "node-p3-tab",
-                "type": "badge",
-                "content": "+ 새 페이지",
+                "id": "lsd-tb-3",
+                "type": "button",
+                "name": "lsd-tb-3",
                 "style": {
-                  "backgroundColor": "transparent",
-                  "color": "#818cf8",
+                  "flex": 1,
+                  "padding": 8,
+                  "backgroundColor": "#1e293b",
+                  "color": "#94a3b8",
                   "fontSize": 11,
-                  "padding": 6
-                }
+                  "borderRadius": 6,
+                  "textAlign": "center"
+                },
+                "props": {},
+                "content": "섹션 템플릿",
+                "children": []
               }
             ]
           },
           {
-            "id": "node-ly-insert-grid",
+            "id": "lsd-comp-grid",
             "type": "card",
-            "name": "Component Insertion Drawer",
+            "name": "lsd-comp-grid",
             "style": {
-              "backgroundColor": "#131b2e",
+              "backgroundColor": "#0d1322",
               "padding": 12,
               "borderRadius": 10,
               "borderWidth": 1,
-              "borderColor": "#27354f",
+              "borderColor": "#1e293b",
               "display": "flex",
               "flexDirection": "column",
               "gap": 8
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-ig-title",
+                "id": "lsd-cg-lbl",
                 "type": "text",
-                "content": "🧩 VDOM 컴포넌트 원클릭 삽입",
+                "name": "lsd-cg-lbl",
                 "style": {
                   "color": "#cbd5e1",
                   "fontSize": 11,
                   "fontWeight": 700
-                }
+                },
+                "props": {},
+                "content": "🧩 VDOM 원클릭 삽입 팔레트 (Components)",
+                "children": []
               },
               {
-                "id": "node-ig-buttons",
+                "id": "lsd-cg-items",
                 "type": "box",
+                "name": "lsd-cg-items",
                 "style": {
                   "display": "flex",
                   "flexWrap": "wrap",
                   "gap": 6
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-b-btn",
+                    "id": "cp-btn",
                     "type": "badge",
-                    "content": "+ CTA 버튼",
+                    "name": "cp-btn",
                     "style": {
                       "backgroundColor": "#1e293b",
                       "color": "#e2e8f0",
-                      "fontSize": 10,
+                      "fontSize": 11,
                       "padding": 6,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "+ Button (버튼)",
+                    "children": []
                   },
                   {
-                    "id": "node-b-card",
+                    "id": "cp-card",
                     "type": "badge",
-                    "content": "+ 정보 카드",
+                    "name": "cp-card",
                     "style": {
                       "backgroundColor": "#1e293b",
                       "color": "#e2e8f0",
-                      "fontSize": 10,
+                      "fontSize": 11,
                       "padding": 6,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "+ Card (카드)",
+                    "children": []
                   },
                   {
-                    "id": "node-b-inp",
+                    "id": "cp-input",
                     "type": "badge",
-                    "content": "+ 입력 필드",
+                    "name": "cp-input",
                     "style": {
                       "backgroundColor": "#1e293b",
                       "color": "#e2e8f0",
-                      "fontSize": 10,
+                      "fontSize": 11,
                       "padding": 6,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "+ Input (입력창)",
+                    "children": []
                   },
                   {
-                    "id": "node-b-img",
+                    "id": "cp-text",
                     "type": "badge",
-                    "content": "+ 로컬 이미지",
+                    "name": "cp-text",
                     "style": {
                       "backgroundColor": "#1e293b",
                       "color": "#e2e8f0",
-                      "fontSize": 10,
+                      "fontSize": 11,
                       "padding": 6,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "+ Text (타이포)",
+                    "children": []
+                  },
+                  {
+                    "id": "cp-badge",
+                    "type": "badge",
+                    "name": "cp-badge",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#e2e8f0",
+                      "fontSize": 11,
+                      "padding": 6,
+                      "borderRadius": 6
+                    },
+                    "props": {},
+                    "content": "+ Badge (태그)",
+                    "children": []
+                  },
+                  {
+                    "id": "cp-img",
+                    "type": "badge",
+                    "name": "cp-img",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#e2e8f0",
+                      "fontSize": 11,
+                      "padding": 6,
+                      "borderRadius": 6
+                    },
+                    "props": {},
+                    "content": "+ Image (미디어)",
+                    "children": []
                   }
                 ]
               }
             ]
           },
           {
-            "id": "node-ly-tree",
+            "id": "lsd-tree-card",
             "type": "card",
-            "name": "Tree Hierarchy",
+            "name": "lsd-tree-card",
             "style": {
               "flex": 1,
-              "backgroundColor": "#0b0f19",
+              "backgroundColor": "#0d1322",
               "padding": 12,
               "borderRadius": 10,
               "borderWidth": 1,
@@ -1359,42 +1987,67 @@
               "flexDirection": "column",
               "gap": 6
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-tr-root",
-                "type": "box",
+                "id": "lsd-tc-lbl",
+                "type": "text",
+                "name": "lsd-tc-lbl",
                 "style": {
+                  "color": "#cbd5e1",
+                  "fontSize": 11,
+                  "fontWeight": 700
+                },
+                "props": {},
+                "content": "계층 레이어 트리 (Tree Hierarchy)",
+                "children": []
+              },
+              {
+                "id": "lt-row-1",
+                "type": "box",
+                "name": "lt-row-1",
+                "style": {
+                  "padding": 6,
                   "backgroundColor": "#1e293b",
-                  "padding": 8,
                   "borderRadius": 6,
                   "display": "flex",
                   "justifyContent": "space-between"
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-tr-rname",
+                    "id": "lt-1-t",
                     "type": "text",
-                    "content": "▼ 📱 Artboard: AI 홈",
+                    "name": "lt-1-t",
                     "style": {
-                      "color": "#ffffff",
+                      "color": "#f8fafc",
                       "fontSize": 11,
-                      "fontWeight": 700
-                    }
+                      "fontWeight": 600
+                    },
+                    "props": {},
+                    "content": "▼ 📱 Artboard: Core Workspace",
+                    "children": []
                   },
                   {
-                    "id": "node-tr-raction",
+                    "id": "lt-1-a",
                     "type": "text",
-                    "content": "복제 | 삭제",
+                    "name": "lt-1-a",
                     "style": {
-                      "color": "#64748b",
+                      "color": "#94a3b8",
                       "fontSize": 10
-                    }
+                    },
+                    "props": {},
+                    "content": "👁️ 🔒",
+                    "children": []
                   }
                 ]
               },
               {
-                "id": "node-tr-n1",
+                "id": "lt-row-2",
                 "type": "box",
+                "name": "lt-row-2",
                 "style": {
                   "paddingLeft": 16,
                   "paddingTop": 4,
@@ -1402,87 +2055,124 @@
                   "display": "flex",
                   "justifyContent": "space-between"
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-tr-n1t",
+                    "id": "lt-2-t",
                     "type": "text",
-                    "content": "├─ ▢ Header Container",
+                    "name": "lt-2-t",
                     "style": {
                       "color": "#94a3b8",
                       "fontSize": 11
-                    }
+                    },
+                    "props": {},
+                    "content": "├── ▢ Header Bar (36px)",
+                    "children": []
                   },
                   {
-                    "id": "node-tr-n1c",
+                    "id": "lt-2-c",
                     "type": "badge",
-                    "content": "flex-col",
+                    "name": "lt-2-c",
                     "style": {
                       "backgroundColor": "#1e293b",
                       "color": "#818cf8",
-                      "fontSize": 9
-                    }
+                      "fontSize": 9,
+                      "padding": 2,
+                      "borderRadius": 3
+                    },
+                    "props": {},
+                    "content": "flex-row",
+                    "children": []
                   }
                 ]
               },
               {
-                "id": "node-tr-n2",
+                "id": "lt-row-3",
                 "type": "box",
+                "name": "lt-row-3",
                 "style": {
-                  "paddingLeft": 30,
+                  "paddingLeft": 16,
                   "paddingTop": 4,
                   "paddingBottom": 4,
                   "display": "flex",
                   "justifyContent": "space-between"
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-tr-n2t",
+                    "id": "lt-3-t",
                     "type": "text",
-                    "content": "├─ T '환영합니다, 김제이님'",
+                    "name": "lt-3-t",
                     "style": {
-                      "color": "#cbd5e1",
+                      "color": "#94a3b8",
                       "fontSize": 11
-                    }
+                    },
+                    "props": {},
+                    "content": "├── ▢ Toolbar Bar (42px)",
+                    "children": []
+                  },
+                  {
+                    "id": "lt-3-c",
+                    "type": "badge",
+                    "name": "lt-3-c",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#818cf8",
+                      "fontSize": 9,
+                      "padding": 2,
+                      "borderRadius": 3
+                    },
+                    "props": {},
+                    "content": "flex-row",
+                    "children": []
                   }
                 ]
               },
               {
-                "id": "node-tr-n3",
+                "id": "lt-row-4",
                 "type": "box",
+                "name": "lt-row-4",
                 "style": {
+                  "paddingLeft": 16,
+                  "paddingTop": 4,
+                  "paddingBottom": 4,
                   "backgroundColor": "#312e81",
-                  "borderColor": "#6366f1",
-                  "borderWidth": 1,
-                  "paddingLeft": 30,
-                  "paddingRight": 8,
-                  "paddingTop": 6,
-                  "paddingBottom": 6,
                   "borderRadius": 6,
                   "display": "flex",
                   "justifyContent": "space-between"
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-tr-n3t",
+                    "id": "lt-4-t",
                     "type": "text",
-                    "content": "└─ 🔘 CTA 입금 버튼 ★",
+                    "name": "lt-4-t",
                     "style": {
                       "color": "#ffffff",
                       "fontSize": 11,
                       "fontWeight": 700
-                    }
+                    },
+                    "props": {},
+                    "content": "└── 🔘 CTA 실행 버튼 ★ (Selected)",
+                    "children": []
                   },
                   {
-                    "id": "node-tr-n3c",
+                    "id": "lt-4-c",
                     "type": "badge",
-                    "content": "Selected",
+                    "name": "lt-4-c",
                     "style": {
                       "backgroundColor": "#4f46e5",
                       "color": "#ffffff",
                       "fontSize": 9,
                       "padding": 2,
-                      "borderRadius": 4
-                    }
+                      "borderRadius": 3
+                    },
+                    "props": {},
+                    "content": "Selected",
+                    "children": []
                   }
                 ]
               }
@@ -1497,354 +2187,482 @@
       "viewport": "mobile",
       "width": 440,
       "height": 860,
-      "x": 1960,
-      "y": 60,
+      "x": 1940,
+      "y": 40,
       "rootNode": {
-        "id": "node-in-root",
+        "id": "root-insp-detail",
         "type": "frame",
-        "name": "Inspector Panel Deep Dive",
+        "name": "root-insp-detail",
         "style": {
           "width": "100%",
           "height": "100%",
-          "backgroundColor": "#0d1322",
-          "borderWidth": 1,
-          "borderColor": "#1e293b",
-          "borderRadius": 14,
-          "padding": 16,
+          "backgroundColor": "#090d16",
           "display": "flex",
           "flexDirection": "column",
-          "gap": 14
+          "borderRadius": 14,
+          "padding": 16,
+          "gap": 14,
+          "borderWidth": 1,
+          "borderColor": "#1e293b",
+          "boxShadow": "0 25px 50px -12px rgba(0, 0, 0, 0.8)"
         },
+        "props": {},
+        "content": "",
         "children": [
           {
-            "id": "node-in-header",
+            "id": "insd-head",
             "type": "box",
+            "name": "insd-head",
             "style": {
               "display": "flex",
               "justifyContent": "space-between",
               "alignItems": "center"
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-in-title",
-                "type": "heading",
-                "content": "🎛️ 속성 인스펙터 (Inspector)",
+                "id": "insd-title",
+                "type": "text",
+                "name": "insd-title",
                 "style": {
-                  "color": "#ffffff",
+                  "color": "#f8fafc",
                   "fontSize": 14,
-                  "fontWeight": 700
-                }
+                  "fontWeight": 800
+                },
+                "props": {},
+                "content": "⚂ 정밀 속성 인스펙터 (Inspector Engine)",
+                "children": []
               },
               {
-                "id": "node-in-tag",
+                "id": "insd-pill",
                 "type": "badge",
-                "content": "button #node-m1-cbtn",
+                "name": "insd-pill",
                 "style": {
                   "backgroundColor": "#312e81",
                   "color": "#c7d2fe",
                   "fontSize": 10,
                   "padding": 4,
                   "borderRadius": 6
-                }
+                },
+                "props": {},
+                "content": "button #ab1-btn-cta",
+                "children": []
               }
             ]
           },
           {
-            "id": "node-in-flex",
-            "type": "card",
-            "name": "Flexbox Layout Controls",
+            "id": "insd-tabs-row",
+            "type": "box",
+            "name": "insd-tabs-row",
             "style": {
-              "backgroundColor": "#131b2e",
+              "display": "flex",
+              "gap": 6
+            },
+            "props": {},
+            "content": "",
+            "children": [
+              {
+                "id": "insd-tb-1",
+                "type": "button",
+                "name": "insd-tb-1",
+                "style": {
+                  "flex": 1,
+                  "padding": 8,
+                  "backgroundColor": "#4f46e5",
+                  "color": "#fff",
+                  "fontSize": 11,
+                  "fontWeight": 700,
+                  "borderRadius": 6,
+                  "textAlign": "center"
+                },
+                "props": {},
+                "content": "속성 (Props)",
+                "children": []
+              },
+              {
+                "id": "insd-tb-2",
+                "type": "button",
+                "name": "insd-tb-2",
+                "style": {
+                  "flex": 1,
+                  "padding": 8,
+                  "backgroundColor": "#1e293b",
+                  "color": "#94a3b8",
+                  "fontSize": 11,
+                  "borderRadius": 6,
+                  "textAlign": "center"
+                },
+                "props": {},
+                "content": "이벤트 (Events)",
+                "children": []
+              },
+              {
+                "id": "insd-tb-3",
+                "type": "button",
+                "name": "insd-tb-3",
+                "style": {
+                  "flex": 1,
+                  "padding": 8,
+                  "backgroundColor": "#1e293b",
+                  "color": "#94a3b8",
+                  "fontSize": 11,
+                  "borderRadius": 6,
+                  "textAlign": "center"
+                },
+                "props": {},
+                "content": "코드 (Code)",
+                "children": []
+              },
+              {
+                "id": "insd-tb-4",
+                "type": "button",
+                "name": "insd-tb-4",
+                "style": {
+                  "flex": 1,
+                  "padding": 8,
+                  "backgroundColor": "#1e293b",
+                  "color": "#94a3b8",
+                  "fontSize": 11,
+                  "borderRadius": 6,
+                  "textAlign": "center"
+                },
+                "props": {},
+                "content": "튜닝 (Tweaks)",
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "insd-sec-flex",
+            "type": "card",
+            "name": "insd-sec-flex",
+            "style": {
+              "backgroundColor": "#0d1322",
               "padding": 12,
               "borderRadius": 10,
               "borderWidth": 1,
-              "borderColor": "#27354f",
+              "borderColor": "#1e293b",
               "display": "flex",
               "flexDirection": "column",
               "gap": 8
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-if-title",
+                "id": "is-flex-lbl",
                 "type": "text",
-                "content": "플렉스 레이아웃 (Flexbox)",
+                "name": "is-flex-lbl",
                 "style": {
                   "color": "#cbd5e1",
                   "fontSize": 11,
                   "fontWeight": 700
-                }
+                },
+                "props": {},
+                "content": "플렉스 레이아웃 (Flexbox Engine)",
+                "children": []
               },
               {
-                "id": "node-if-chips",
+                "id": "is-flex-btns",
                 "type": "box",
+                "name": "is-flex-btns",
                 "style": {
                   "display": "flex",
                   "gap": 6
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-fc-row",
+                    "id": "fb-row",
                     "type": "badge",
-                    "content": "가로 (Row)",
+                    "name": "fb-row",
                     "style": {
                       "backgroundColor": "#1e293b",
                       "color": "#94a3b8",
-                      "fontSize": 10,
-                      "padding": 4,
-                      "borderRadius": 4
-                    }
+                      "fontSize": 11,
+                      "padding": 6,
+                      "borderRadius": 6
+                    },
+                    "props": {},
+                    "content": "가로 (Row)",
+                    "children": []
                   },
                   {
-                    "id": "node-fc-col",
+                    "id": "fb-col",
                     "type": "badge",
+                    "name": "fb-col",
+                    "style": {
+                      "backgroundColor": "#4f46e5",
+                      "color": "#ffffff",
+                      "fontSize": 11,
+                      "fontWeight": 600,
+                      "padding": 6,
+                      "borderRadius": 6
+                    },
+                    "props": {},
                     "content": "세로 (Col) ✓",
-                    "style": {
-                      "backgroundColor": "#4f46e5",
-                      "color": "#ffffff",
-                      "fontSize": 10,
-                      "padding": 4,
-                      "borderRadius": 4,
-                      "fontWeight": 600
-                    }
+                    "children": []
                   },
                   {
-                    "id": "node-fc-center",
+                    "id": "fb-center",
                     "type": "badge",
-                    "content": "중앙 정렬 ✓",
+                    "name": "fb-center",
                     "style": {
                       "backgroundColor": "#4f46e5",
                       "color": "#ffffff",
-                      "fontSize": 10,
-                      "padding": 4,
-                      "borderRadius": 4,
-                      "fontWeight": 600
-                    }
+                      "fontSize": 11,
+                      "fontWeight": 600,
+                      "padding": 6,
+                      "borderRadius": 6
+                    },
+                    "props": {},
+                    "content": "중앙 정렬 ✓",
+                    "children": []
                   }
                 ]
               }
             ]
           },
           {
-            "id": "node-in-4radius",
+            "id": "insd-sec-rad",
             "type": "card",
-            "name": "4-Way Radius Controller",
+            "name": "insd-sec-rad",
             "style": {
-              "backgroundColor": "#131b2e",
+              "backgroundColor": "#0d1322",
               "padding": 12,
               "borderRadius": 10,
               "borderWidth": 1,
-              "borderColor": "#27354f",
+              "borderColor": "#1e293b",
               "display": "flex",
               "flexDirection": "column",
               "gap": 8
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-i4r-title",
+                "id": "is-rad-title",
                 "type": "text",
-                "content": "4모서리 독립 라운딩 (Corner Radius)",
+                "name": "is-rad-title",
                 "style": {
                   "color": "#cbd5e1",
                   "fontSize": 11,
                   "fontWeight": 700
-                }
+                },
+                "props": {},
+                "content": "4모서리 독립 라운딩 (Corner Radius)",
+                "children": []
               },
               {
-                "id": "node-i4r-boxes",
+                "id": "is-rad-boxes",
                 "type": "box",
+                "name": "is-rad-boxes",
                 "style": {
                   "display": "flex",
                   "gap": 6
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-r-tl",
+                    "id": "ir-tl",
                     "type": "badge",
-                    "content": "TL: 12px",
+                    "name": "ir-tl",
                     "style": {
+                      "flex": 1,
                       "backgroundColor": "#1e293b",
                       "color": "#38bdf8",
-                      "fontSize": 10,
+                      "fontSize": 11,
                       "padding": 6,
                       "borderRadius": 6,
-                      "flex": 1,
                       "textAlign": "center"
-                    }
+                    },
+                    "props": {},
+                    "content": "TL: 10px",
+                    "children": []
                   },
                   {
-                    "id": "node-r-tr",
+                    "id": "ir-tr",
                     "type": "badge",
-                    "content": "TR: 12px",
+                    "name": "ir-tr",
                     "style": {
+                      "flex": 1,
                       "backgroundColor": "#1e293b",
                       "color": "#38bdf8",
-                      "fontSize": 10,
+                      "fontSize": 11,
                       "padding": 6,
                       "borderRadius": 6,
-                      "flex": 1,
                       "textAlign": "center"
-                    }
+                    },
+                    "props": {},
+                    "content": "TR: 10px",
+                    "children": []
                   },
                   {
-                    "id": "node-r-br",
+                    "id": "ir-br",
                     "type": "badge",
-                    "content": "BR: 4px",
+                    "name": "ir-br",
                     "style": {
+                      "flex": 1,
                       "backgroundColor": "#1e293b",
                       "color": "#38bdf8",
-                      "fontSize": 10,
+                      "fontSize": 11,
                       "padding": 6,
                       "borderRadius": 6,
-                      "flex": 1,
                       "textAlign": "center"
-                    }
+                    },
+                    "props": {},
+                    "content": "BR: 10px",
+                    "children": []
                   },
                   {
-                    "id": "node-r-bl",
+                    "id": "ir-bl",
                     "type": "badge",
-                    "content": "BL: 4px",
+                    "name": "ir-bl",
                     "style": {
+                      "flex": 1,
                       "backgroundColor": "#1e293b",
                       "color": "#38bdf8",
-                      "fontSize": 10,
+                      "fontSize": 11,
                       "padding": 6,
                       "borderRadius": 6,
-                      "flex": 1,
                       "textAlign": "center"
-                    }
+                    },
+                    "props": {},
+                    "content": "BL: 10px",
+                    "children": []
                   }
                 ]
               }
             ]
           },
           {
-            "id": "node-in-neon",
+            "id": "insd-sec-grad",
             "type": "card",
-            "name": "Linear Neon Gradient Studio",
+            "name": "insd-sec-grad",
             "style": {
-              "backgroundColor": "#131b2e",
+              "backgroundColor": "#0d1322",
               "padding": 12,
               "borderRadius": 10,
               "borderWidth": 1,
-              "borderColor": "#27354f",
+              "borderColor": "#38bdf8",
               "display": "flex",
               "flexDirection": "column",
-              "gap": 10
+              "gap": 8
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-in-title",
-                "type": "text",
-                "content": "⚡ 네온 선형 그라데이션 실시간 제어",
-                "style": {
-                  "color": "#38bdf8",
-                  "fontSize": 11,
-                  "fontWeight": 700
-                }
-              },
-              {
-                "id": "node-in-angle",
+                "id": "is-grad-head",
                 "type": "box",
+                "name": "is-grad-head",
                 "style": {
                   "display": "flex",
                   "justifyContent": "space-between",
                   "alignItems": "center"
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-in-albl",
+                    "id": "is-grad-title",
                     "type": "text",
-                    "content": "회전 각도 (Angle)",
+                    "name": "is-grad-title",
                     "style": {
-                      "color": "#94a3b8",
-                      "fontSize": 10
-                    }
+                      "color": "#38bdf8",
+                      "fontSize": 11,
+                      "fontWeight": 700
+                    },
+                    "props": {},
+                    "content": "⚡ 선형 그라데이션 실시간 제어 (Linear Gradient)",
+                    "children": []
                   },
                   {
-                    "id": "node-in-aval",
+                    "id": "is-grad-ang",
                     "type": "badge",
-                    "content": "135°",
+                    "name": "is-grad-ang",
                     "style": {
-                      "backgroundColor": "#4f46e5",
-                      "color": "#fff",
+                      "backgroundColor": "#0369a1",
+                      "color": "#e0f2fe",
                       "fontSize": 10,
-                      "padding": 3,
+                      "padding": 4,
                       "borderRadius": 4
-                    }
+                    },
+                    "props": {},
+                    "content": "135°",
+                    "children": []
                   }
                 ]
               },
               {
-                "id": "node-in-colors",
+                "id": "is-grad-preview",
                 "type": "box",
+                "name": "is-grad-preview",
                 "style": {
-                  "display": "flex",
-                  "gap": 8,
-                  "alignItems": "center"
-                },
-                "children": [
-                  {
-                    "id": "node-in-c1",
-                    "type": "badge",
-                    "content": "#4f46e5 (Indigo)",
-                    "style": {
-                      "backgroundColor": "#4f46e5",
-                      "color": "#fff",
-                      "fontSize": 10,
-                      "padding": 6,
-                      "borderRadius": 6,
-                      "flex": 1,
-                      "textAlign": "center"
-                    }
-                  },
-                  {
-                    "id": "node-in-arrow",
-                    "type": "text",
-                    "content": "➔",
-                    "style": {
-                      "color": "#94a3b8",
-                      "fontSize": 12
-                    }
-                  },
-                  {
-                    "id": "node-in-c2",
-                    "type": "badge",
-                    "content": "#06b6d4 (Cyan)",
-                    "style": {
-                      "backgroundColor": "#06b6d4",
-                      "color": "#fff",
-                      "fontSize": 10,
-                      "padding": 6,
-                      "borderRadius": 6,
-                      "flex": 1,
-                      "textAlign": "center"
-                    }
-                  }
-                ]
-              },
-              {
-                "id": "node-in-swatch",
-                "type": "box",
-                "style": {
-                  "height": 48,
+                  "height": 40,
                   "borderRadius": 8,
-                  "backgroundGradient": "linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)",
+                  "backgroundImage": "linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)",
                   "display": "flex",
                   "alignItems": "center",
-                  "justifyContent": "center"
+                  "justifyContent": "center",
+                  "color": "#ffffff",
+                  "fontSize": 11,
+                  "fontWeight": 700
                 },
-                "children": [
-                  {
-                    "id": "node-in-stext",
-                    "type": "text",
-                    "content": "Live Render: linear-gradient(135deg, #4f46e5, #06b6d4)",
-                    "style": {
-                      "color": "#ffffff",
-                      "fontSize": 10,
-                      "fontWeight": 700
-                    }
-                  }
-                ]
+                "props": {},
+                "content": "#4f46e5 (Indigo)  →  #06b6d4 (Cyan)",
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "insd-sec-code",
+            "type": "card",
+            "name": "insd-sec-code",
+            "style": {
+              "flex": 1,
+              "backgroundColor": "#040711",
+              "padding": 12,
+              "borderRadius": 10,
+              "borderWidth": 1,
+              "borderColor": "#1e293b",
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": 6
+            },
+            "props": {},
+            "content": "",
+            "children": [
+              {
+                "id": "is-code-title",
+                "type": "text",
+                "name": "is-code-title",
+                "style": {
+                  "color": "#94a3b8",
+                  "fontSize": 10,
+                  "fontWeight": 700
+                },
+                "props": {},
+                "content": "React TSX 실시간 직렬화 프리뷰 (Code Preview)",
+                "children": []
+              },
+              {
+                "id": "is-code-body",
+                "type": "text",
+                "name": "is-code-body",
+                "style": {
+                  "color": "#a5b4fc",
+                  "fontSize": 10,
+                  "fontFamily": "monospace",
+                  "lineHeight": 1.5,
+                  "whiteSpace": "pre-wrap"
+                },
+                "props": {},
+                "content": "<button className=\"bg-indigo-600 text-white px-3 py-2 rounded-lg font-bold shadow-lg\">\n  🔘 컴포넌트 삽입 및 스타일 편집 ★\n</button>",
+                "children": []
               }
             ]
           }

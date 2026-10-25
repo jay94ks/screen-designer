@@ -1,9 +1,7 @@
 {
   "id": "page-design-git",
   "name": "3. Design System & Git Desktop (디자인 & Git)",
-  "number": 3,
-  "version": "1.0.0",
-  "updatedAt": "2026-10-25T05:14:13.926Z",
+  "updatedAt": "2026-10-25T06:18:38.901Z",
   "artboards": [
     {
       "id": "ab-design-system-studio",
@@ -11,320 +9,399 @@
       "viewport": "desktop",
       "width": 1100,
       "height": 780,
-      "x": 60,
-      "y": 60,
+      "x": 40,
+      "y": 40,
       "rootNode": {
-        "id": "node-ds-root",
+        "id": "root-ds-studio",
         "type": "frame",
-        "name": "Design System Studio Window",
+        "name": "root-ds-studio",
         "style": {
           "width": "100%",
           "height": "100%",
-          "backgroundColor": "#030712",
+          "backgroundColor": "#020617",
           "display": "flex",
           "flexDirection": "column",
-          "borderRadius": 14,
-          "overflow": "hidden",
+          "borderRadius": 12,
+          "padding": 20,
+          "gap": 16,
           "borderWidth": 1,
-          "borderColor": "#1f2937",
+          "borderColor": "#1e293b",
           "boxShadow": "0 25px 50px -12px rgba(0, 0, 0, 0.8)"
         },
+        "props": {},
+        "content": "",
         "children": [
           {
-            "id": "node-ds-header",
+            "id": "dss-topbar",
             "type": "box",
-            "name": "Studio Header",
+            "name": "dss-topbar",
             "style": {
-              "height": 48,
-              "backgroundColor": "#0f172a",
-              "borderBottomWidth": 1,
-              "borderColor": "#1e293b",
               "display": "flex",
-              "alignItems": "center",
               "justifyContent": "space-between",
-              "paddingLeft": 18,
-              "paddingRight": 18
+              "alignItems": "center",
+              "paddingBottom": 12,
+              "borderBottomWidth": 1,
+              "borderColor": "#1e293b"
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-ds-hl",
+                "id": "dss-title-grp",
                 "type": "box",
-                "style": {
-                  "display": "flex",
-                  "alignItems": "center",
-                  "gap": 10
-                },
-                "children": [
-                  {
-                    "id": "node-ds-logo",
-                    "type": "badge",
-                    "content": "🎨 디자인 시스템 스튜디오",
-                    "style": {
-                      "backgroundColor": "#4f46e5",
-                      "color": "#ffffff",
-                      "fontSize": 12,
-                      "fontWeight": 700,
-                      "padding": 6,
-                      "borderRadius": 6
-                    }
-                  },
-                  {
-                    "id": "node-ds-sync",
-                    "type": "text",
-                    "content": "docs/ui-boards/design-system.json 실시간 동기화됨 ✓",
-                    "style": {
-                      "color": "#10b981",
-                      "fontSize": 11,
-                      "fontWeight": 600
-                    }
-                  }
-                ]
-              },
-              {
-                "id": "node-ds-hr",
-                "type": "box",
+                "name": "dss-title-grp",
                 "style": {
                   "display": "flex",
                   "alignItems": "center",
                   "gap": 8
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-ds-jsonbtn",
+                    "id": "dss-pill",
                     "type": "badge",
-                    "content": "JSON 스펙 보기",
+                    "name": "dss-pill",
+                    "style": {
+                      "backgroundColor": "#4338ca",
+                      "color": "#ffffff",
+                      "fontSize": 11,
+                      "fontWeight": 700,
+                      "padding": 6,
+                      "borderRadius": 6
+                    },
+                    "props": {},
+                    "content": "🎨 디자인 시스템 스튜디오",
+                    "children": []
+                  },
+                  {
+                    "id": "dss-path",
+                    "type": "text",
+                    "name": "dss-path",
+                    "style": {
+                      "color": "#94a3b8",
+                      "fontSize": 11
+                    },
+                    "props": {},
+                    "content": "docs/ui-boards/design-system.json 실시간 동기화됨 ✓",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "dss-actions",
+                "type": "box",
+                "name": "dss-actions",
+                "style": {
+                  "display": "flex",
+                  "gap": 6
+                },
+                "props": {},
+                "content": "",
+                "children": [
+                  {
+                    "id": "dss-btn-spec",
+                    "type": "button",
+                    "name": "dss-btn-spec",
                     "style": {
                       "backgroundColor": "#1e293b",
                       "color": "#94a3b8",
                       "fontSize": 11,
-                      "padding": 6,
+                      "paddingLeft": 10,
+                      "paddingRight": 10,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "JSON 스펙 보기",
+                    "children": []
                   },
                   {
-                    "id": "node-ds-closebtn",
+                    "id": "dss-btn-close",
                     "type": "button",
-                    "content": "✕ 완료 및 닫기",
+                    "name": "dss-btn-close",
                     "style": {
-                      "backgroundColor": "#334155",
-                      "color": "#ffffff",
+                      "backgroundColor": "#1e293b",
+                      "color": "#f8fafc",
                       "fontSize": 11,
-                      "fontWeight": 600,
-                      "padding": 6,
+                      "paddingLeft": 10,
+                      "paddingRight": 10,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "✕ 완료 및 닫기",
+                    "children": []
                   }
                 ]
               }
             ]
           },
           {
-            "id": "node-ds-body",
+            "id": "dss-body",
             "type": "box",
+            "name": "dss-body",
             "style": {
               "flex": 1,
               "display": "flex",
-              "backgroundColor": "#090d16"
+              "gap": 20,
+              "overflow": "hidden"
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-ds-nav",
+                "id": "dss-left-list",
                 "type": "box",
+                "name": "dss-left-list",
                 "style": {
-                  "width": 220,
-                  "backgroundColor": "#0d1322",
-                  "borderRightWidth": 1,
+                  "width": 200,
+                  "backgroundColor": "#090d16",
+                  "borderRadius": 10,
+                  "padding": 12,
+                  "borderWidth": 1,
                   "borderColor": "#1e293b",
-                  "padding": 14,
                   "display": "flex",
                   "flexDirection": "column",
                   "gap": 6
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-ds-nav-title",
+                    "id": "dsl-head",
                     "type": "text",
-                    "content": "컴포넌트 기본값 (Defaults)",
+                    "name": "dsl-head",
                     "style": {
                       "color": "#94a3b8",
                       "fontSize": 10,
                       "fontWeight": 700,
                       "marginBottom": 4
-                    }
+                    },
+                    "props": {},
+                    "content": "컴포넌트 기본값 (Defaults)",
+                    "children": []
                   },
                   {
-                    "id": "node-nav-card",
+                    "id": "dsl-card",
                     "type": "badge",
-                    "content": "▢ Card (카드)",
+                    "name": "dsl-card",
                     "style": {
                       "backgroundColor": "#1e293b",
                       "color": "#cbd5e1",
                       "fontSize": 11,
                       "padding": 8,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "▢ Card (카드)",
+                    "children": []
                   },
                   {
-                    "id": "node-nav-btn",
+                    "id": "dsl-btn",
                     "type": "badge",
-                    "content": "🔘 Button (CTA 버튼) ★",
+                    "name": "dsl-btn",
                     "style": {
                       "backgroundColor": "#4f46e5",
                       "color": "#ffffff",
                       "fontSize": 11,
+                      "fontWeight": 700,
                       "padding": 8,
-                      "borderRadius": 6,
-                      "fontWeight": 700
-                    }
+                      "borderRadius": 6
+                    },
+                    "props": {},
+                    "content": "🔘 Button (CTA 버튼) ★",
+                    "children": []
                   },
                   {
-                    "id": "node-nav-inp",
+                    "id": "dsl-input",
                     "type": "badge",
-                    "content": "⌨ Input (텍스트 입력)",
+                    "name": "dsl-input",
                     "style": {
                       "backgroundColor": "#1e293b",
                       "color": "#cbd5e1",
                       "fontSize": 11,
                       "padding": 8,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "⊞ Input (텍스트 입력)",
+                    "children": []
                   },
                   {
-                    "id": "node-nav-txt",
+                    "id": "dsl-head2",
                     "type": "badge",
+                    "name": "dsl-head2",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#cbd5e1",
+                      "fontSize": 11,
+                      "padding": 8,
+                      "borderRadius": 6
+                    },
+                    "props": {},
                     "content": "T Heading & Text",
-                    "style": {
-                      "backgroundColor": "#1e293b",
-                      "color": "#cbd5e1",
-                      "fontSize": 11,
-                      "padding": 8,
-                      "borderRadius": 6
-                    }
+                    "children": []
                   },
                   {
-                    "id": "node-nav-badge",
+                    "id": "dsl-badge",
                     "type": "badge",
-                    "content": "🏷 Badge (태그)",
+                    "name": "dsl-badge",
                     "style": {
                       "backgroundColor": "#1e293b",
                       "color": "#cbd5e1",
                       "fontSize": 11,
                       "padding": 8,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "🏷️ Badge (태그)",
+                    "children": []
                   }
                 ]
               },
               {
-                "id": "node-ds-center",
+                "id": "dss-center-prev",
                 "type": "box",
+                "name": "dss-center-prev",
                 "style": {
                   "flex": 1,
-                  "padding": 24,
+                  "backgroundColor": "#090d16",
+                  "borderRadius": 10,
+                  "padding": 20,
+                  "borderWidth": 1,
+                  "borderColor": "#1e293b",
                   "display": "flex",
                   "flexDirection": "column",
-                  "gap": 16,
                   "alignItems": "center",
-                  "justifyContent": "center"
+                  "justifyContent": "center",
+                  "gap": 24
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-dpr-title",
+                    "id": "dsp-title",
                     "type": "text",
-                    "content": "실시간 컴포넌트 프리뷰 (Live Preview)",
+                    "name": "dsp-title",
                     "style": {
                       "color": "#94a3b8",
-                      "fontSize": 12,
+                      "fontSize": 11,
                       "fontWeight": 600
-                    }
+                    },
+                    "props": {},
+                    "content": "실시간 컴포넌트 프리뷰 (Live Preview)",
+                    "children": []
                   },
                   {
-                    "id": "node-dpr-cards",
+                    "id": "dsp-row",
                     "type": "box",
+                    "name": "dsp-row",
                     "style": {
                       "display": "flex",
-                      "gap": 20
+                      "gap": 24
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-dpr-dark",
+                        "id": "prev-dark",
                         "type": "card",
+                        "name": "prev-dark",
                         "style": {
-                          "width": 280,
-                          "backgroundColor": "#0f172a",
-                          "borderRadius": 16,
+                          "width": 260,
                           "padding": 20,
+                          "backgroundColor": "#0d1322",
+                          "borderRadius": 14,
                           "borderWidth": 1,
                           "borderColor": "#1e293b",
                           "display": "flex",
                           "flexDirection": "column",
                           "gap": 12
                         },
+                        "props": {},
+                        "content": "",
                         "children": [
                           {
-                            "id": "node-ddk-h",
-                            "type": "heading",
-                            "content": "다크 테마 기본 버튼",
+                            "id": "pd-t",
+                            "type": "text",
+                            "name": "pd-t",
                             "style": {
-                              "color": "#fff",
-                              "fontSize": 14,
+                              "color": "#f8fafc",
+                              "fontSize": 12,
                               "fontWeight": 700
-                            }
+                            },
+                            "props": {},
+                            "content": "다크 테마 기본 버튼",
+                            "children": []
                           },
                           {
-                            "id": "node-ddk-b",
+                            "id": "pd-b",
                             "type": "button",
-                            "content": "기본 액션 버튼",
+                            "name": "pd-b",
                             "style": {
                               "backgroundColor": "#4f46e5",
                               "color": "#ffffff",
                               "fontSize": 12,
                               "fontWeight": 700,
                               "padding": 10,
-                              "borderRadius": 10,
+                              "borderRadius": 8,
                               "textAlign": "center"
-                            }
+                            },
+                            "props": {},
+                            "content": "기본 액션 버튼",
+                            "children": []
                           }
                         ]
                       },
                       {
-                        "id": "node-dpr-light",
+                        "id": "prev-light",
                         "type": "card",
+                        "name": "prev-light",
                         "style": {
-                          "width": 280,
-                          "backgroundColor": "#ffffff",
-                          "borderRadius": 16,
+                          "width": 260,
                           "padding": 20,
-                          "borderWidth": 1,
-                          "borderColor": "#e2e8f0",
+                          "backgroundColor": "#ffffff",
+                          "borderRadius": 14,
+                          "boxShadow": "0 4px 12px rgba(0,0,0,0.1)",
                           "display": "flex",
                           "flexDirection": "column",
                           "gap": 12
                         },
+                        "props": {},
+                        "content": "",
                         "children": [
                           {
-                            "id": "node-dlt-h",
-                            "type": "heading",
-                            "content": "라이트 테마 기본 버튼",
+                            "id": "pl-t",
+                            "type": "text",
+                            "name": "pl-t",
                             "style": {
                               "color": "#0f172a",
-                              "fontSize": 14,
+                              "fontSize": 12,
                               "fontWeight": 700
-                            }
+                            },
+                            "props": {},
+                            "content": "라이트 테마 기본 버튼",
+                            "children": []
                           },
                           {
-                            "id": "node-dlt-b",
+                            "id": "pl-b",
                             "type": "button",
-                            "content": "기본 액션 버튼",
+                            "name": "pl-b",
                             "style": {
                               "backgroundColor": "#4f46e5",
                               "color": "#ffffff",
                               "fontSize": 12,
                               "fontWeight": 700,
                               "padding": 10,
-                              "borderRadius": 10,
+                              "borderRadius": 8,
                               "textAlign": "center"
-                            }
+                            },
+                            "props": {},
+                            "content": "기본 액션 버튼",
+                            "children": []
                           }
                         ]
                       }
@@ -333,103 +410,166 @@
                 ]
               },
               {
-                "id": "node-ds-tokens",
+                "id": "dss-right-tokens",
                 "type": "box",
+                "name": "dss-right-tokens",
                 "style": {
-                  "width": 280,
-                  "backgroundColor": "#0d1322",
-                  "borderLeftWidth": 1,
+                  "width": 230,
+                  "backgroundColor": "#090d16",
+                  "borderRadius": 10,
+                  "padding": 14,
+                  "borderWidth": 1,
                   "borderColor": "#1e293b",
-                  "padding": 16,
                   "display": "flex",
                   "flexDirection": "column",
-                  "gap": 14
+                  "gap": 12
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-tok-title",
-                    "type": "heading",
-                    "content": "전역 토큰 스타일 편집",
+                    "id": "dst-title",
+                    "type": "text",
+                    "name": "dst-title",
                     "style": {
-                      "color": "#ffffff",
-                      "fontSize": 13,
+                      "color": "#f8fafc",
+                      "fontSize": 12,
                       "fontWeight": 700
-                    }
+                    },
+                    "props": {},
+                    "content": "전역 토큰 스타일 편집",
+                    "children": []
                   },
                   {
-                    "id": "node-tok-card",
+                    "id": "dst-c1",
                     "type": "card",
+                    "name": "dst-c1",
                     "style": {
-                      "backgroundColor": "#131b2e",
-                      "padding": 12,
-                      "borderRadius": 10,
+                      "backgroundColor": "#0d1322",
+                      "padding": 8,
+                      "borderRadius": 6,
                       "display": "flex",
                       "flexDirection": "column",
-                      "gap": 10
+                      "gap": 4
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-tk-1",
+                        "id": "dst-l1",
                         "type": "text",
-                        "content": "Primary Color",
+                        "name": "dst-l1",
                         "style": {
                           "color": "#94a3b8",
-                          "fontSize": 10
-                        }
+                          "fontSize": 9
+                        },
+                        "props": {},
+                        "content": "Primary Color",
+                        "children": []
                       },
                       {
-                        "id": "node-tk-1v",
+                        "id": "dst-v1",
                         "type": "badge",
-                        "content": "#4f46e5 (Indigo 600)",
+                        "name": "dst-v1",
                         "style": {
                           "backgroundColor": "#4f46e5",
-                          "color": "#fff",
-                          "fontSize": 11,
+                          "color": "#ffffff",
+                          "fontSize": 10,
+                          "fontWeight": 600,
                           "padding": 6,
-                          "borderRadius": 6
-                        }
-                      },
+                          "borderRadius": 4
+                        },
+                        "props": {},
+                        "content": "#4f46e5 (Indigo 600)",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "dst-c2",
+                    "type": "card",
+                    "name": "dst-c2",
+                    "style": {
+                      "backgroundColor": "#0d1322",
+                      "padding": 8,
+                      "borderRadius": 6,
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": 4
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": [
                       {
-                        "id": "node-tk-2",
+                        "id": "dst-l2",
                         "type": "text",
-                        "content": "Default Border Radius",
+                        "name": "dst-l2",
                         "style": {
                           "color": "#94a3b8",
-                          "fontSize": 10
-                        }
+                          "fontSize": 9
+                        },
+                        "props": {},
+                        "content": "Default Border Radius",
+                        "children": []
                       },
                       {
-                        "id": "node-tk-2v",
+                        "id": "dst-v2",
                         "type": "badge",
-                        "content": "12px",
+                        "name": "dst-v2",
                         "style": {
                           "backgroundColor": "#1e293b",
                           "color": "#38bdf8",
-                          "fontSize": 11,
+                          "fontSize": 10,
                           "padding": 6,
-                          "borderRadius": 6
-                        }
-                      },
+                          "borderRadius": 4
+                        },
+                        "props": {},
+                        "content": "12px",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "dst-c3",
+                    "type": "card",
+                    "name": "dst-c3",
+                    "style": {
+                      "backgroundColor": "#0d1322",
+                      "padding": 8,
+                      "borderRadius": 6,
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": 4
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": [
                       {
-                        "id": "node-tk-3",
+                        "id": "dst-l3",
                         "type": "text",
-                        "content": "Typography Family",
+                        "name": "dst-l3",
                         "style": {
                           "color": "#94a3b8",
-                          "fontSize": 10
-                        }
+                          "fontSize": 9
+                        },
+                        "props": {},
+                        "content": "Typography Family",
+                        "children": []
                       },
                       {
-                        "id": "node-tk-3v",
+                        "id": "dst-v3",
                         "type": "badge",
-                        "content": "Pretendard / Inter",
+                        "name": "dst-v3",
                         "style": {
                           "backgroundColor": "#1e293b",
-                          "color": "#e2e8f0",
-                          "fontSize": 11,
+                          "color": "#cbd5e1",
+                          "fontSize": 10,
                           "padding": 6,
-                          "borderRadius": 6
-                        }
+                          "borderRadius": 4
+                        },
+                        "props": {},
+                        "content": "Pretendard / Inter",
+                        "children": []
                       }
                     ]
                   }
@@ -446,455 +586,495 @@
       "viewport": "desktop",
       "width": 1080,
       "height": 780,
-      "x": 1200,
-      "y": 60,
+      "x": 1160,
+      "y": 40,
       "rootNode": {
-        "id": "node-git-root",
+        "id": "root-git-modal",
         "type": "frame",
-        "name": "Git Desktop Modal Shell",
+        "name": "root-git-modal",
         "style": {
           "width": "100%",
           "height": "100%",
-          "backgroundColor": "#030712",
+          "backgroundColor": "#020617",
           "display": "flex",
           "flexDirection": "column",
-          "borderRadius": 14,
-          "overflow": "hidden",
+          "borderRadius": 12,
+          "padding": 20,
+          "gap": 16,
           "borderWidth": 1,
-          "borderColor": "#1f2937",
-          "boxShadow": "0 25px 50px -12px rgba(0, 0, 0, 0.9)"
+          "borderColor": "#1e293b",
+          "boxShadow": "0 25px 50px -12px rgba(0, 0, 0, 0.8)"
         },
+        "props": {},
+        "content": "",
         "children": [
           {
-            "id": "node-git-header",
+            "id": "gm-topbar",
             "type": "box",
-            "name": "Git Modal Header",
+            "name": "gm-topbar",
             "style": {
-              "height": 48,
-              "backgroundColor": "#0f172a",
-              "borderBottomWidth": 1,
-              "borderColor": "#1e293b",
               "display": "flex",
-              "alignItems": "center",
               "justifyContent": "space-between",
-              "paddingLeft": 18,
-              "paddingRight": 18
+              "alignItems": "center",
+              "paddingBottom": 12,
+              "borderBottomWidth": 1,
+              "borderColor": "#1e293b"
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-git-hl",
+                "id": "gm-title-grp",
                 "type": "box",
+                "name": "gm-title-grp",
                 "style": {
                   "display": "flex",
                   "alignItems": "center",
-                  "gap": 10
+                  "gap": 8
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-git-badge",
+                    "id": "gm-pill",
                     "type": "badge",
-                    "content": "🌿 Git 데스크톱 관리",
+                    "name": "gm-pill",
                     "style": {
                       "backgroundColor": "#0284c7",
                       "color": "#ffffff",
-                      "fontSize": 12,
+                      "fontSize": 11,
                       "fontWeight": 700,
                       "padding": 6,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "🌿 Git 데스크톱 관리",
+                    "children": []
                   },
                   {
-                    "id": "node-git-branch",
-                    "type": "badge",
-                    "content": "Branch: main  •  Ahead 1 ⬆",
+                    "id": "gm-branch",
+                    "type": "text",
+                    "name": "gm-branch",
                     "style": {
-                      "backgroundColor": "#1e293b",
                       "color": "#38bdf8",
                       "fontSize": 11,
-                      "padding": 4,
-                      "borderRadius": 6
-                    }
+                      "fontWeight": 600
+                    },
+                    "props": {},
+                    "content": "Branch: main • Ahead 1 ↑",
+                    "children": []
                   }
                 ]
               },
               {
-                "id": "node-git-tabs",
+                "id": "gm-tabs",
                 "type": "box",
+                "name": "gm-tabs",
                 "style": {
                   "display": "flex",
                   "gap": 6
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-tab-chg",
+                    "id": "gmt-1",
                     "type": "badge",
-                    "content": "변경 사항 (Changes: 3) ✓",
+                    "name": "gmt-1",
                     "style": {
                       "backgroundColor": "#4f46e5",
                       "color": "#ffffff",
                       "fontSize": 11,
+                      "fontWeight": 700,
                       "padding": 6,
-                      "borderRadius": 6,
-                      "fontWeight": 700
-                    }
+                      "borderRadius": 6
+                    },
+                    "props": {},
+                    "content": "변경 사항 (Changes: 3) ✓",
+                    "children": []
                   },
                   {
-                    "id": "node-tab-his",
+                    "id": "gmt-2",
                     "type": "badge",
-                    "content": "히스토리 (History: 40)",
+                    "name": "gmt-2",
                     "style": {
                       "backgroundColor": "#1e293b",
                       "color": "#94a3b8",
                       "fontSize": 11,
                       "padding": 6,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "히스토리 (History: 40)",
+                    "children": []
                   }
                 ]
               }
             ]
           },
           {
-            "id": "node-git-body",
+            "id": "gm-body",
             "type": "box",
+            "name": "gm-body",
             "style": {
               "flex": 1,
               "display": "flex",
-              "backgroundColor": "#090d16"
+              "gap": 20,
+              "overflow": "hidden"
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-git-files",
+                "id": "gm-files-list",
                 "type": "box",
+                "name": "gm-files-list",
                 "style": {
-                  "width": 320,
-                  "backgroundColor": "#0d1322",
-                  "borderRightWidth": 1,
+                  "width": 280,
+                  "backgroundColor": "#090d16",
+                  "borderRadius": 10,
+                  "padding": 12,
+                  "borderWidth": 1,
                   "borderColor": "#1e293b",
-                  "padding": 14,
                   "display": "flex",
                   "flexDirection": "column",
                   "gap": 8
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-gf-title",
+                    "id": "gfl-head",
                     "type": "text",
-                    "content": "스테이지 파일 선택 (Smart Check)",
+                    "name": "gfl-head",
                     "style": {
                       "color": "#94a3b8",
-                      "fontSize": 11,
+                      "fontSize": 10,
                       "fontWeight": 700
-                    }
+                    },
+                    "props": {},
+                    "content": "스테이지 파일 선택 (Smart Check)",
+                    "children": []
                   },
                   {
-                    "id": "node-gf-1",
-                    "type": "box",
+                    "id": "gfl-item-1",
+                    "type": "card",
+                    "name": "gfl-item-1",
                     "style": {
-                      "backgroundColor": "#1e293b",
                       "padding": 8,
+                      "backgroundColor": "#1e293b",
                       "borderRadius": 6,
                       "display": "flex",
-                      "alignItems": "center",
-                      "gap": 8
+                      "justifyContent": "space-between",
+                      "alignItems": "center"
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-gf-1c",
+                        "id": "gfl-1-n",
                         "type": "text",
-                        "content": "☑",
+                        "name": "gfl-1-n",
                         "style": {
-                          "color": "#38bdf8",
-                          "fontSize": 12
-                        }
+                          "color": "#f8fafc",
+                          "fontSize": 11
+                        },
+                        "props": {},
+                        "content": "☑ docs/ui-boards/project.json",
+                        "children": []
                       },
                       {
-                        "id": "node-gf-1n",
-                        "type": "text",
-                        "content": "docs/ui-boards/project.json",
-                        "style": {
-                          "color": "#ffffff",
-                          "fontSize": 11,
-                          "fontWeight": 600
-                        }
-                      },
-                      {
-                        "id": "node-gf-1t",
+                        "id": "gfl-1-s",
                         "type": "badge",
-                        "content": "M",
+                        "name": "gfl-1-s",
                         "style": {
                           "backgroundColor": "#0284c7",
                           "color": "#fff",
                           "fontSize": 9,
                           "padding": 2,
-                          "borderRadius": 3,
-                          "marginLeft": "auto"
-                        }
+                          "borderRadius": 3
+                        },
+                        "props": {},
+                        "content": "M",
+                        "children": []
                       }
                     ]
                   },
                   {
-                    "id": "node-gf-2",
-                    "type": "box",
+                    "id": "gfl-item-2",
+                    "type": "card",
+                    "name": "gfl-item-2",
                     "style": {
-                      "backgroundColor": "#312e81",
-                      "borderColor": "#6366f1",
-                      "borderWidth": 1,
                       "padding": 8,
+                      "backgroundColor": "#312e81",
                       "borderRadius": 6,
+                      "borderWidth": 1,
+                      "borderColor": "#6366f1",
                       "display": "flex",
-                      "alignItems": "center",
-                      "gap": 8
+                      "justifyContent": "space-between",
+                      "alignItems": "center"
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-gf-2c",
+                        "id": "gfl-2-n",
                         "type": "text",
-                        "content": "☑",
-                        "style": {
-                          "color": "#38bdf8",
-                          "fontSize": 12
-                        }
-                      },
-                      {
-                        "id": "node-gf-2n",
-                        "type": "text",
-                        "content": "docs/ui-boards/pages/1.json (Selected)",
+                        "name": "gfl-2-n",
                         "style": {
                           "color": "#ffffff",
                           "fontSize": 11,
                           "fontWeight": 700
-                        }
+                        },
+                        "props": {},
+                        "content": "☑ docs/ui-boards/pages/1.json (Selected)",
+                        "children": []
                       },
                       {
-                        "id": "node-gf-2t",
+                        "id": "gfl-2-s",
                         "type": "badge",
-                        "content": "M",
+                        "name": "gfl-2-s",
                         "style": {
                           "backgroundColor": "#0284c7",
                           "color": "#fff",
                           "fontSize": 9,
                           "padding": 2,
-                          "borderRadius": 3,
-                          "marginLeft": "auto"
-                        }
+                          "borderRadius": 3
+                        },
+                        "props": {},
+                        "content": "M",
+                        "children": []
                       }
                     ]
                   },
                   {
-                    "id": "node-gf-3",
-                    "type": "box",
+                    "id": "gfl-item-3",
+                    "type": "card",
+                    "name": "gfl-item-3",
                     "style": {
-                      "backgroundColor": "#131b2e",
                       "padding": 8,
+                      "backgroundColor": "#1e293b",
                       "borderRadius": 6,
                       "display": "flex",
-                      "alignItems": "center",
-                      "gap": 8
+                      "justifyContent": "space-between",
+                      "alignItems": "center"
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-gf-3c",
+                        "id": "gfl-3-n",
                         "type": "text",
-                        "content": "☑",
+                        "name": "gfl-3-n",
                         "style": {
-                          "color": "#38bdf8",
-                          "fontSize": 12
-                        }
-                      },
-                      {
-                        "id": "node-gf-3n",
-                        "type": "text",
-                        "content": ".screen-designer/config.json",
-                        "style": {
-                          "color": "#cbd5e1",
+                          "color": "#f8fafc",
                           "fontSize": 11
-                        }
+                        },
+                        "props": {},
+                        "content": "☑ .screen-designer/config.json",
+                        "children": []
                       },
                       {
-                        "id": "node-gf-3t",
+                        "id": "gfl-3-s",
                         "type": "badge",
-                        "content": "M",
+                        "name": "gfl-3-s",
                         "style": {
                           "backgroundColor": "#0284c7",
                           "color": "#fff",
                           "fontSize": 9,
                           "padding": 2,
-                          "borderRadius": 3,
-                          "marginLeft": "auto"
-                        }
+                          "borderRadius": 3
+                        },
+                        "props": {},
+                        "content": "M",
+                        "children": []
                       }
                     ]
                   }
                 ]
               },
               {
-                "id": "node-git-diff",
+                "id": "gm-diff-viewer",
                 "type": "box",
+                "name": "gm-diff-viewer",
                 "style": {
                   "flex": 1,
+                  "backgroundColor": "#090d16",
+                  "borderRadius": 10,
                   "padding": 14,
+                  "borderWidth": 1,
+                  "borderColor": "#1e293b",
                   "display": "flex",
                   "flexDirection": "column",
-                  "gap": 10
+                  "gap": 8
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-diff-hdr",
+                    "id": "diff-head",
                     "type": "box",
+                    "name": "diff-head",
                     "style": {
                       "display": "flex",
                       "justifyContent": "space-between",
                       "alignItems": "center"
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-dh-title",
+                        "id": "diff-title",
                         "type": "text",
-                        "content": "비주얼 Diff: pages/1.json",
+                        "name": "diff-title",
                         "style": {
-                          "color": "#ffffff",
-                          "fontSize": 12,
+                          "color": "#f8fafc",
+                          "fontSize": 11,
                           "fontWeight": 700
-                        }
+                        },
+                        "props": {},
+                        "content": "비주얼 Diff: pages/1.json",
+                        "children": []
                       },
                       {
-                        "id": "node-dh-mode",
+                        "id": "diff-mode",
                         "type": "badge",
-                        "content": "보기: Split (나란히 비교) ▾",
+                        "name": "diff-mode",
                         "style": {
                           "backgroundColor": "#1e293b",
                           "color": "#38bdf8",
-                          "fontSize": 10,
-                          "padding": 4,
+                          "fontSize": 9,
+                          "padding": 3,
                           "borderRadius": 4
-                        }
+                        },
+                        "props": {},
+                        "content": "보기: Split (나란히 비교) ▾",
+                        "children": []
                       }
                     ]
                   },
                   {
-                    "id": "node-diff-code",
+                    "id": "diff-del",
                     "type": "card",
+                    "name": "diff-del",
                     "style": {
-                      "flex": 1,
-                      "backgroundColor": "#020617",
-                      "padding": 12,
-                      "borderRadius": 8,
-                      "borderWidth": 1,
-                      "borderColor": "#1e293b",
+                      "backgroundColor": "rgba(239, 68, 68, 0.15)",
+                      "color": "#fca5a5",
+                      "padding": 8,
+                      "borderRadius": 6,
                       "fontFamily": "monospace",
-                      "fontSize": 11,
-                      "display": "flex",
-                      "flexDirection": "column",
-                      "gap": 4
+                      "fontSize": 11
                     },
-                    "children": [
-                      {
-                        "id": "node-dc-1",
-                        "type": "text",
-                        "content": "- \"updatedAt\": \"2026-10-25T02:06:42.914Z\",",
-                        "style": {
-                          "backgroundColor": "#450a0a",
-                          "color": "#fca5a5",
-                          "padding": 4,
-                          "borderRadius": 4
-                        }
-                      },
-                      {
-                        "id": "node-dc-2",
-                        "type": "text",
-                        "content": "+ \"updatedAt\": \"2026-10-25T05:05:00.000Z\",",
-                        "style": {
-                          "backgroundColor": "#052e16",
-                          "color": "#86efac",
-                          "padding": 4,
-                          "borderRadius": 4
-                        }
-                      },
-                      {
-                        "id": "node-dc-3",
-                        "type": "text",
-                        "content": "+ \"title\": \"1. 메인 무한 캔버스 & 삼분할 워크스페이스\",",
-                        "style": {
-                          "backgroundColor": "#052e16",
-                          "color": "#86efac",
-                          "padding": 4,
-                          "borderRadius": 4
-                        }
-                      }
-                    ]
+                    "props": {},
+                    "content": "- \"updatedAt\": \"2026-10-25T02:06:42.914Z\",",
+                    "children": []
+                  },
+                  {
+                    "id": "diff-add-1",
+                    "type": "card",
+                    "name": "diff-add-1",
+                    "style": {
+                      "backgroundColor": "rgba(16, 185, 129, 0.15)",
+                      "color": "#86efac",
+                      "padding": 8,
+                      "borderRadius": 6,
+                      "fontFamily": "monospace",
+                      "fontSize": 11
+                    },
+                    "props": {},
+                    "content": "+ \"updatedAt\": \"2026-10-25T05:05:00.000Z\",",
+                    "children": []
+                  },
+                  {
+                    "id": "diff-add-2",
+                    "type": "card",
+                    "name": "diff-add-2",
+                    "style": {
+                      "backgroundColor": "rgba(16, 185, 129, 0.15)",
+                      "color": "#86efac",
+                      "padding": 8,
+                      "borderRadius": 6,
+                      "fontFamily": "monospace",
+                      "fontSize": 11
+                    },
+                    "props": {},
+                    "content": "+ \"title\": \"1. 메인 무한 캔버스 & 삼분할 워크스페이스\",",
+                    "children": []
                   }
                 ]
               }
             ]
           },
           {
-            "id": "node-git-footer",
+            "id": "gm-bottom-bar",
             "type": "box",
-            "name": "Commit Action Bar",
+            "name": "gm-bottom-bar",
             "style": {
-              "height": 64,
-              "backgroundColor": "#0d1322",
-              "borderTopWidth": 1,
-              "borderColor": "#1e293b",
               "display": "flex",
+              "gap": 12,
               "alignItems": "center",
-              "justifyContent": "space-between",
-              "paddingLeft": 20,
-              "paddingRight": 20
+              "paddingTop": 8
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-gft-input",
+                "id": "gm-commit-msg",
                 "type": "input",
-                "content": "feat(ui): update storyboard canvas design documents",
+                "name": "gm-commit-msg",
                 "style": {
                   "flex": 1,
-                  "maxWidth": 520,
-                  "backgroundColor": "#1e293b",
+                  "backgroundColor": "#0d1322",
                   "color": "#ffffff",
+                  "fontSize": 11,
                   "padding": 10,
                   "borderRadius": 8,
-                  "fontSize": 12,
                   "borderWidth": 1,
-                  "borderColor": "#334155"
-                }
+                  "borderColor": "#1e293b"
+                },
+                "props": {
+                  "placeholder": "feat(ui): update storyboard canvas design documents"
+                },
+                "content": "",
+                "children": []
               },
               {
-                "id": "node-gft-btns",
-                "type": "box",
+                "id": "gm-btn-commit",
+                "type": "button",
+                "name": "gm-btn-commit",
                 "style": {
-                  "display": "flex",
-                  "gap": 10
+                  "backgroundColor": "#4f46e5",
+                  "color": "#ffffff",
+                  "fontSize": 11,
+                  "fontWeight": 700,
+                  "paddingLeft": 16,
+                  "paddingRight": 16,
+                  "paddingTop": 10,
+                  "paddingBottom": 10,
+                  "borderRadius": 8
                 },
-                "children": [
-                  {
-                    "id": "node-commit-btn",
-                    "type": "button",
-                    "content": "✔ 커밋 실행 (3개 파일)",
-                    "style": {
-                      "backgroundColor": "#4f46e5",
-                      "color": "#ffffff",
-                      "fontSize": 12,
-                      "fontWeight": 700,
-                      "padding": 10,
-                      "borderRadius": 8
-                    }
-                  },
-                  {
-                    "id": "node-push-btn",
-                    "type": "button",
-                    "content": "⬆ 원격 푸시 (Push)",
-                    "style": {
-                      "backgroundColor": "#0284c7",
-                      "color": "#ffffff",
-                      "fontSize": 12,
-                      "fontWeight": 700,
-                      "padding": 10,
-                      "borderRadius": 8
-                    }
-                  }
-                ]
+                "props": {},
+                "content": "✔ 커밋 실행 (3개 파일)",
+                "children": []
+              },
+              {
+                "id": "gm-btn-push",
+                "type": "button",
+                "name": "gm-btn-push",
+                "style": {
+                  "backgroundColor": "#0284c7",
+                  "color": "#ffffff",
+                  "fontSize": 11,
+                  "fontWeight": 700,
+                  "paddingLeft": 16,
+                  "paddingRight": 16,
+                  "paddingTop": 10,
+                  "paddingBottom": 10,
+                  "borderRadius": 8
+                },
+                "props": {},
+                "content": "⬆ 원격 푸시 (Push)",
+                "children": []
               }
             ]
           }

@@ -1,53 +1,32 @@
 {
-  "name": "Screen Designer UI & Storyboard Specification",
-  "version": "1.0.0",
-  "description": "Screen Designer 자체의 메인 캔버스, 프로토타이핑, 디자인 스튜디오, Git 데스크톱 전면 스토리보드",
-  "updatedAt": "2026-10-25T05:05:00.000Z",
+  "name": "Screen Designer Live Storyboard Canvas",
+  "version": "2.0.0",
+  "description": "Screen Designer 도구 자체의 모든 UI 화면과 서브시스템을 자가 수용(Self-hosting)한 VDOM 스토리보드",
   "activePageId": "page-workspace",
-  "pageDocsPath": "docs/ui-boards",
   "pages": [
     {
       "id": "page-workspace",
       "name": "1. Core Canvas Workspace (캔버스 & 워크스페이스)",
-      "number": 1,
-      "fileName": "pages/1.json",
-      "artboardsCount": 3
+      "file": "pages/1.json",
+      "artboardCount": 3
     },
     {
       "id": "page-prototyping",
       "name": "2. Prototyping & Play (프로토타입 & 플레이)",
-      "number": 2,
-      "fileName": "pages/2.json",
-      "artboardsCount": 2
+      "file": "pages/2.json",
+      "artboardCount": 2
     },
     {
       "id": "page-design-git",
       "name": "3. Design System & Git Desktop (디자인 & Git)",
-      "number": 3,
-      "fileName": "pages/3.json",
-      "artboardsCount": 2
+      "file": "pages/3.json",
+      "artboardCount": 2
     },
     {
       "id": "page-modals",
       "name": "4. Modals & Command System (모달 & 커맨드)",
-      "number": 4,
-      "fileName": "pages/4.json",
-      "artboardsCount": 3
+      "file": "pages/4.json",
+      "artboardCount": 3
     }
-  ],
-  "assets": [
-    "assets/preset-avatar.svg",
-    "assets/preset-chart.svg",
-    "assets/preset-gradient.svg",
-    "assets/preset-minimal.svg",
-    "assets/preset-nature.svg",
-    "assets/preset-tech.svg"
-  ],
-  "settings": {
-    "theme": "light",
-    "gridVisible": true,
-    "gridSize": 24,
-    "canvasBackground": "#090d16",
-    "language": "ko"
-  }
+  ]
 }

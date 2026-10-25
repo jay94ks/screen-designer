@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   MousePointer,
   Hand,
@@ -133,6 +133,49 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
   const [isMaximized, setIsMaximized] = useState(false);
   const isElectron = typeof window !== 'undefined' && Boolean((window as any).electronAPI);
 
+  const pageMenuRef = useRef<HTMLDivElement>(null);
+  const langMenuRef = useRef<HTMLDivElement>(null);
+  const menubarRef = useRef<HTMLDivElement>(null);
+  const zoomMenuRef = useRef<HTMLDivElement>(null);
+
+  const closeMenus = () => {
+    setActiveMenu(null);
+    setShowPageMenu(false);
+    setShowZoomMenu(false);
+    setShowLangMenu(false);
+  };
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (activeMenu && menubarRef.current && !menubarRef.current.contains(target)) {
+        setActiveMenu(null);
+      }
+      if (showPageMenu && pageMenuRef.current && !pageMenuRef.current.contains(target)) {
+        setShowPageMenu(false);
+      }
+      if (showLangMenu && langMenuRef.current && !langMenuRef.current.contains(target)) {
+        setShowLangMenu(false);
+      }
+      if (showZoomMenu && zoomMenuRef.current && !zoomMenuRef.current.contains(target)) {
+        setShowZoomMenu(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeMenus();
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [activeMenu, showPageMenu, showLangMenu, showZoomMenu]);
+
   useEffect(() => {
     const api = (window as any).electronAPI;
     if (api?.onMaximizedChange) {
@@ -187,13 +230,6 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
 
   const activePage = pages.find((p) => p.id === activePageId) || pages[0];
 
-  const closeMenus = () => {
-    setActiveMenu(null);
-    setShowPageMenu(false);
-    setShowZoomMenu(false);
-    setShowLangMenu(false);
-  };
-
   return (
     <div className="flex flex-col shrink-0 select-none text-slate-700 text-xs shadow-xs relative z-30">
       {/* =========================================================================
@@ -236,7 +272,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
           <div className="h-3.5 w-px bg-slate-300 mx-1" />
 
           {/* Page Dropdown Menu */}
-          <div className="relative">
+          <div ref={pageMenuRef} className="relative">
             <button
               onClick={() => setShowPageMenu(!showPageMenu)}
               className="flex items-center gap-1 px-2 py-0.5 rounded hover:bg-slate-200/60 text-slate-700 font-medium text-[11px] transition"
@@ -247,7 +283,6 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             </button>
             {showPageMenu && (
               <div
-                onMouseLeave={() => setShowPageMenu(false)}
                 className="absolute left-0 top-full mt-1 w-56 bg-white border border-slate-200 rounded-xl shadow-xl py-1 text-xs z-50 animate-in fade-in duration-75"
               >
                 <div className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
@@ -318,7 +353,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
           )}
 
           {/* Language Switcher Dropdown */}
-          <div className="relative">
+          <div ref={langMenuRef} className="relative">
             <button
               onClick={() => setShowLangMenu(!showLangMenu)}
               className="flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-slate-200/60 text-slate-600 font-medium text-[11px] transition"
@@ -330,7 +365,6 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             </button>
             {showLangMenu && (
               <div
-                onMouseLeave={() => setShowLangMenu(false)}
                 className="absolute right-0 top-full mt-1 w-32 bg-white border border-slate-200 rounded-xl shadow-xl py-1 text-xs z-50 animate-in fade-in duration-75"
               >
                 {languages.map((l) => (
@@ -420,11 +454,14 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
          ========================================================================= */}
       <div className="h-10 border-b border-slate-200 bg-white px-3 flex items-center justify-between select-none">
         {/* 2-1. Left: Desktop Menubar (File, Edit, View, Help) */}
-        <div className="flex items-center text-[11px] font-medium text-slate-600">
+        <div ref={menubarRef} className="flex items-center text-[11px] font-medium text-slate-600">
           {/* File Menu */}
           <div className="relative">
             <button
               onClick={() => setActiveMenu(activeMenu === 'file' ? null : 'file')}
+              onMouseEnter={() => {
+                if (activeMenu) setActiveMenu('file');
+              }}
               className={`px-2 py-1 rounded hover:bg-slate-100 ${
                 activeMenu === 'file' ? 'bg-slate-100 font-bold text-slate-900' : ''
               }`}
@@ -433,7 +470,6 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             </button>
             {activeMenu === 'file' && (
               <div
-                onMouseLeave={closeMenus}
                 className="absolute left-0 top-full mt-1 w-52 bg-white border border-slate-200 rounded-xl shadow-xl py-1 text-xs text-slate-700 z-50 animate-in fade-in duration-75"
               >
                 <button
@@ -487,6 +523,9 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
           <div className="relative">
             <button
               onClick={() => setActiveMenu(activeMenu === 'edit' ? null : 'edit')}
+              onMouseEnter={() => {
+                if (activeMenu) setActiveMenu('edit');
+              }}
               className={`px-2 py-1 rounded hover:bg-slate-100 ${
                 activeMenu === 'edit' ? 'bg-slate-100 font-bold text-slate-900' : ''
               }`}
@@ -495,7 +534,6 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             </button>
             {activeMenu === 'edit' && (
               <div
-                onMouseLeave={closeMenus}
                 className="absolute left-0 top-full mt-1 w-48 bg-white border border-slate-200 rounded-xl shadow-xl py-1 text-xs text-slate-700 z-50 animate-in fade-in duration-75"
               >
                 <button
@@ -528,6 +566,9 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
           <div className="relative">
             <button
               onClick={() => setActiveMenu(activeMenu === 'view' ? null : 'view')}
+              onMouseEnter={() => {
+                if (activeMenu) setActiveMenu('view');
+              }}
               className={`px-2 py-1 rounded hover:bg-slate-100 ${
                 activeMenu === 'view' ? 'bg-slate-100 font-bold text-slate-900' : ''
               }`}
@@ -536,7 +577,6 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             </button>
             {activeMenu === 'view' && (
               <div
-                onMouseLeave={closeMenus}
                 className="absolute left-0 top-full mt-1 w-48 bg-white border border-slate-200 rounded-xl shadow-xl py-1 text-xs text-slate-700 z-50 animate-in fade-in duration-75"
               >
                 <button
@@ -623,6 +663,9 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
           <div className="relative">
             <button
               onClick={() => setActiveMenu(activeMenu === 'help' ? null : 'help')}
+              onMouseEnter={() => {
+                if (activeMenu) setActiveMenu('help');
+              }}
               className={`px-2 py-1 rounded hover:bg-slate-100 ${
                 activeMenu === 'help' ? 'bg-slate-100 font-bold text-slate-900' : ''
               }`}
@@ -631,7 +674,6 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             </button>
             {activeMenu === 'help' && (
               <div
-                onMouseLeave={closeMenus}
                 className="absolute left-0 top-full mt-1 w-48 bg-white border border-slate-200 rounded-xl shadow-xl py-1 text-xs text-slate-700 z-50 animate-in fade-in duration-75"
               >
                 <button
@@ -814,7 +856,7 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
             >
               <ZoomOut size={12} />
             </button>
-            <div className="relative">
+            <div ref={zoomMenuRef} className="relative">
               <button
                 onClick={() => setShowZoomMenu(!showZoomMenu)}
                 className="px-2 text-[11px] font-mono text-slate-700 flex items-center gap-0.5"
@@ -824,7 +866,6 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
               </button>
               {showZoomMenu && (
                 <div
-                  onMouseLeave={() => setShowZoomMenu(false)}
                   className="absolute right-0 top-full mt-1 w-28 bg-white border border-slate-200 rounded-xl shadow-xl py-1 text-xs z-50 animate-in fade-in duration-75"
                 >
                   {[0.5, 0.75, 1.0, 1.25, 1.5, 2.0].map((z) => (

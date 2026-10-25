@@ -1,9 +1,7 @@
 {
   "id": "page-prototyping",
   "name": "2. Prototyping & Play (프로토타입 & 플레이)",
-  "number": 2,
-  "version": "1.0.0",
-  "updatedAt": "2026-10-25T05:13:32.599Z",
+  "updatedAt": "2026-10-25T06:18:38.901Z",
   "artboards": [
     {
       "id": "ab-proto-wires",
@@ -11,463 +9,543 @@
       "viewport": "desktop",
       "width": 1080,
       "height": 760,
-      "x": 60,
-      "y": 60,
+      "x": 40,
+      "y": 40,
       "rootNode": {
-        "id": "node-pw-root",
+        "id": "root-proto-wires",
         "type": "frame",
-        "name": "Prototyping Canvas Shell",
+        "name": "root-proto-wires",
         "style": {
           "width": "100%",
           "height": "100%",
-          "backgroundColor": "#070b14",
+          "backgroundColor": "#020617",
           "display": "flex",
           "flexDirection": "column",
-          "borderRadius": 14,
-          "overflow": "hidden",
+          "borderRadius": 12,
+          "padding": 20,
+          "gap": 16,
           "borderWidth": 1,
           "borderColor": "#1e293b",
-          "boxShadow": "0 25px 50px -12px rgba(0, 0, 0, 0.7)"
+          "boxShadow": "0 25px 50px -12px rgba(0, 0, 0, 0.8)"
         },
+        "props": {},
+        "content": "",
         "children": [
           {
-            "id": "node-pw-top",
+            "id": "pw-topbar",
             "type": "box",
-            "name": "Prototyping Toolbar",
+            "name": "pw-topbar",
             "style": {
-              "height": 44,
-              "backgroundColor": "#0f172a",
-              "borderBottomWidth": 1,
-              "borderColor": "#1e293b",
               "display": "flex",
-              "alignItems": "center",
               "justifyContent": "space-between",
-              "paddingLeft": 16,
-              "paddingRight": 16
+              "alignItems": "center",
+              "paddingBottom": 12,
+              "borderBottomWidth": 1,
+              "borderColor": "#1e293b"
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-pw-tl",
+                "id": "pw-title-grp",
                 "type": "box",
-                "style": {
-                  "display": "flex",
-                  "alignItems": "center",
-                  "gap": 10
-                },
-                "children": [
-                  {
-                    "id": "node-pw-mode",
-                    "type": "badge",
-                    "content": "⚡ 프로토타이핑 모드 (Prototype Flow)",
-                    "style": {
-                      "backgroundColor": "#065f46",
-                      "color": "#6ee7b7",
-                      "fontSize": 11,
-                      "fontWeight": 700,
-                      "padding": 5,
-                      "borderRadius": 6
-                    }
-                  },
-                  {
-                    "id": "node-pw-wire-stat",
-                    "type": "text",
-                    "content": "활성 와이어: 2개 연결됨",
-                    "style": {
-                      "color": "#94a3b8",
-                      "fontSize": 11
-                    }
-                  }
-                ]
-              },
-              {
-                "id": "node-pw-tr",
-                "type": "box",
+                "name": "pw-title-grp",
                 "style": {
                   "display": "flex",
                   "alignItems": "center",
                   "gap": 8
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-pw-playbtn",
-                    "type": "button",
-                    "content": "▶ 실시간 시연 시작",
+                    "id": "pw-pill-mode",
+                    "type": "badge",
+                    "name": "pw-pill-mode",
                     "style": {
-                      "backgroundColor": "#4f46e5",
-                      "color": "#ffffff",
+                      "backgroundColor": "#3b0764",
+                      "color": "#f3e8ff",
                       "fontSize": 11,
                       "fontWeight": 700,
                       "padding": 6,
-                      "borderRadius": 6
-                    }
+                      "borderRadius": 6,
+                      "borderWidth": 1,
+                      "borderColor": "#7e22ce"
+                    },
+                    "props": {},
+                    "content": "⚡ 프로토타이핑 모드 (Prototype Flow Engine)",
+                    "children": []
+                  },
+                  {
+                    "id": "pw-status-info",
+                    "type": "text",
+                    "name": "pw-status-info",
+                    "style": {
+                      "color": "#94a3b8",
+                      "fontSize": 11
+                    },
+                    "props": {},
+                    "content": "활성 인터랙션 와이어: 2개 연결됨 (Bézier Curves)",
+                    "children": []
                   }
                 ]
+              },
+              {
+                "id": "pw-btn-play-run",
+                "type": "button",
+                "name": "pw-btn-play-run",
+                "style": {
+                  "backgroundColor": "#4f46e5",
+                  "color": "#ffffff",
+                  "fontSize": 11,
+                  "fontWeight": 700,
+                  "paddingLeft": 12,
+                  "paddingRight": 12,
+                  "paddingTop": 6,
+                  "paddingBottom": 6,
+                  "borderRadius": 6
+                },
+                "props": {},
+                "content": "▶ 실시간 시연 시작 (PLAY)",
+                "children": []
               }
             ]
           },
           {
-            "id": "node-pw-main",
+            "id": "pw-body",
             "type": "box",
+            "name": "pw-body",
             "style": {
               "flex": 1,
               "display": "flex",
-              "backgroundColor": "#090d16"
+              "gap": 24,
+              "overflow": "hidden"
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-pw-canvas",
+                "id": "pw-canvas",
                 "type": "box",
+                "name": "pw-canvas",
                 "style": {
                   "flex": 1,
+                  "backgroundColor": "#090d16",
+                  "borderRadius": 12,
+                  "borderWidth": 1,
+                  "borderColor": "#1e293b",
+                  "padding": 24,
                   "display": "flex",
                   "alignItems": "center",
                   "justifyContent": "space-around",
-                  "padding": 30,
                   "position": "relative"
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-src-card",
+                    "id": "ab-src",
                     "type": "card",
+                    "name": "ab-src",
                     "style": {
-                      "width": 280,
-                      "height": 500,
-                      "backgroundColor": "#0f172a",
-                      "borderRadius": 20,
+                      "width": 250,
+                      "height": 480,
+                      "backgroundColor": "#020617",
+                      "borderRadius": 16,
                       "borderWidth": 2,
-                      "borderColor": "#4f46e5",
+                      "borderColor": "#6366f1",
                       "padding": 14,
                       "display": "flex",
                       "flexDirection": "column",
-                      "gap": 10
+                      "justifyContent": "space-between"
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-sc-title",
-                        "type": "heading",
-                        "content": "1. 메인 자산 홈",
+                        "id": "src-title",
+                        "type": "text",
+                        "name": "src-title",
                         "style": {
-                          "color": "#fff",
-                          "fontSize": 14,
-                          "fontWeight": 700
-                        }
-                      },
-                      {
-                        "id": "node-sc-badge",
-                        "type": "badge",
-                        "content": "시작 화면 (Home Entry)",
-                        "style": {
-                          "backgroundColor": "#312e81",
-                          "color": "#a5b4fc",
-                          "fontSize": 10,
-                          "padding": 4,
-                          "borderRadius": 4
-                        }
-                      },
-                      {
-                        "id": "node-sc-card",
-                        "type": "card",
-                        "style": {
-                          "backgroundColor": "#1e293b",
-                          "padding": 14,
-                          "borderRadius": 12,
-                          "marginTop": 12
+                          "color": "#f8fafc",
+                          "fontSize": 12,
+                          "fontWeight": 800
                         },
+                        "props": {},
+                        "content": "1. 메인 워크스페이스 (Home)",
+                        "children": []
+                      },
+                      {
+                        "id": "src-card",
+                        "type": "card",
+                        "name": "src-card",
+                        "style": {
+                          "backgroundColor": "#0d1322",
+                          "padding": 10,
+                          "borderRadius": 8
+                        },
+                        "props": {},
+                        "content": "",
                         "children": [
                           {
-                            "id": "node-sc-t1",
+                            "id": "src-c-t",
                             "type": "text",
-                            "content": "스마트 잔액",
+                            "name": "src-c-t",
                             "style": {
-                              "color": "#94a3b8",
-                              "fontSize": 10
-                            }
-                          },
-                          {
-                            "id": "node-sc-t2",
-                            "type": "heading",
-                            "content": "₩ 12,450,000",
-                            "style": {
-                              "color": "#ffffff",
-                              "fontSize": 18,
-                              "fontWeight": 800
-                            }
+                              "color": "#cbd5e1",
+                              "fontSize": 11
+                            },
+                            "props": {},
+                            "content": "Screen Designer Canvas",
+                            "children": []
                           }
                         ]
                       },
                       {
-                        "id": "node-src-trigger",
+                        "id": "src-btn-wire",
                         "type": "button",
-                        "content": "빠른 송금하기 ➔ (Wire Source)",
+                        "name": "src-btn-wire",
                         "style": {
-                          "marginTop": "auto",
-                          "backgroundColor": "#6366f1",
+                          "backgroundColor": "#4f46e5",
                           "color": "#ffffff",
                           "fontSize": 11,
                           "fontWeight": 700,
                           "padding": 10,
-                          "borderRadius": 10,
+                          "borderRadius": 8,
                           "textAlign": "center",
-                          "boxShadow": "0 0 16px rgba(99, 102, 241, 0.8)",
-                          "borderColor": "#a5b4fc",
-                          "borderWidth": 2
-                        }
+                          "boxShadow": "0 0 0 3px #a855f7"
+                        },
+                        "props": {},
+                        "content": "⚡ 빠른 송금하기 → (Wire Source)",
+                        "children": []
                       }
                     ]
                   },
                   {
-                    "id": "node-wire-curve",
+                    "id": "bezier-wire-popover",
                     "type": "card",
-                    "name": "Wire Flow Curve Indicator",
+                    "name": "bezier-wire-popover",
                     "style": {
-                      "padding": 12,
                       "backgroundColor": "#1e1b4b",
                       "borderWidth": 1,
                       "borderColor": "#6366f1",
-                      "borderRadius": 12,
+                      "padding": 12,
+                      "borderRadius": 10,
                       "display": "flex",
                       "flexDirection": "column",
-                      "alignItems": "center",
-                      "gap": 6
+                      "gap": 6,
+                      "boxShadow": "0 10px 25px rgba(0,0,0,0.5)"
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-wc-pulse",
+                        "id": "bw-tag",
                         "type": "badge",
-                        "content": "● 펄스 트리거: 클릭 (onClick)",
+                        "name": "bw-tag",
                         "style": {
                           "backgroundColor": "#4338ca",
-                          "color": "#c7d2fe",
+                          "color": "#e0e7ff",
                           "fontSize": 10,
-                          "padding": 4,
-                          "borderRadius": 6
-                        }
+                          "fontWeight": 600,
+                          "padding": 3,
+                          "borderRadius": 4,
+                          "alignSelf": "center"
+                        },
+                        "props": {},
+                        "content": "● 클릭 트리거 (onClick)",
+                        "children": []
                       },
                       {
-                        "id": "node-wc-bezier",
+                        "id": "bw-curve",
                         "type": "text",
-                        "content": "~~~~~~~~~ 3차 베지어 곡선 연결선 ~~~~~~~~~➔",
+                        "name": "bw-curve",
                         "style": {
                           "color": "#a5b4fc",
-                          "fontSize": 11,
-                          "fontWeight": 700
-                        }
+                          "fontSize": 10,
+                          "textAlign": "center"
+                        },
+                        "props": {},
+                        "content": "~~~~~~~~ 3차 베지에 곡선 연결선 ~~~~~~~~➔",
+                        "children": []
                       },
                       {
-                        "id": "node-wc-action",
+                        "id": "bw-action",
                         "type": "badge",
-                        "content": "Action: navigateToArtboard('빠른 송금')",
+                        "name": "bw-action",
                         "style": {
                           "backgroundColor": "#065f46",
                           "color": "#a7f3d0",
                           "fontSize": 10,
+                          "fontWeight": 700,
                           "padding": 4,
-                          "borderRadius": 6
-                        }
+                          "borderRadius": 4,
+                          "alignSelf": "center"
+                        },
+                        "props": {},
+                        "content": "Action: navigateToArtboard('빠른 송금 모달')",
+                        "children": []
                       }
                     ]
                   },
                   {
-                    "id": "node-dst-card",
+                    "id": "ab-tgt",
                     "type": "card",
+                    "name": "ab-tgt",
                     "style": {
-                      "width": 280,
-                      "height": 500,
-                      "backgroundColor": "#0f172a",
-                      "borderRadius": 20,
+                      "width": 250,
+                      "height": 480,
+                      "backgroundColor": "#020617",
+                      "borderRadius": 16,
                       "borderWidth": 2,
                       "borderColor": "#10b981",
                       "padding": 14,
                       "display": "flex",
                       "flexDirection": "column",
-                      "gap": 10
+                      "justifyContent": "space-between"
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-dc-title",
-                        "type": "heading",
-                        "content": "2. 빠른 송금 모달",
+                        "id": "tgt-title",
+                        "type": "text",
+                        "name": "tgt-title",
                         "style": {
-                          "color": "#fff",
-                          "fontSize": 14,
-                          "fontWeight": 700
-                        }
-                      },
-                      {
-                        "id": "node-dc-badge",
-                        "type": "badge",
-                        "content": "도착 화면 (Target)",
-                        "style": {
-                          "backgroundColor": "#064e3b",
-                          "color": "#6ee7b7",
-                          "fontSize": 10,
-                          "padding": 4,
-                          "borderRadius": 4
-                        }
-                      },
-                      {
-                        "id": "node-dc-body",
-                        "type": "card",
-                        "style": {
-                          "backgroundColor": "#1e293b",
-                          "padding": 14,
-                          "borderRadius": 12,
-                          "marginTop": 12,
-                          "display": "flex",
-                          "flexDirection": "column",
-                          "gap": 8
+                          "color": "#f8fafc",
+                          "fontSize": 12,
+                          "fontWeight": 800
                         },
+                        "props": {},
+                        "content": "2. 빠른 송금 모달 (Target)",
+                        "children": []
+                      },
+                      {
+                        "id": "tgt-card",
+                        "type": "card",
+                        "name": "tgt-card",
+                        "style": {
+                          "backgroundColor": "#0d1322",
+                          "padding": 10,
+                          "borderRadius": 8
+                        },
+                        "props": {},
+                        "content": "",
                         "children": [
                           {
-                            "id": "node-dc-inp",
-                            "type": "input",
-                            "content": "송금 금액 입력...",
+                            "id": "tgt-c-t",
+                            "type": "text",
+                            "name": "tgt-c-t",
                             "style": {
-                              "backgroundColor": "#0b0f19",
-                              "color": "#fff",
-                              "padding": 8,
-                              "borderRadius": 8,
+                              "color": "#cbd5e1",
                               "fontSize": 11
-                            }
-                          },
-                          {
-                            "id": "node-dc-btn",
-                            "type": "button",
-                            "content": "송금 승인",
-                            "style": {
-                              "backgroundColor": "#10b981",
-                              "color": "#000",
-                              "fontWeight": 700,
-                              "padding": 8,
-                              "borderRadius": 8,
-                              "fontSize": 11,
-                              "textAlign": "center"
-                            }
+                            },
+                            "props": {},
+                            "content": "송금 금액 입력 다이얼로그",
+                            "children": []
                           }
                         ]
+                      },
+                      {
+                        "id": "tgt-btn-submit",
+                        "type": "button",
+                        "name": "tgt-btn-submit",
+                        "style": {
+                          "backgroundColor": "#10b981",
+                          "color": "#ffffff",
+                          "fontSize": 11,
+                          "fontWeight": 700,
+                          "padding": 10,
+                          "borderRadius": 8,
+                          "textAlign": "center"
+                        },
+                        "props": {},
+                        "content": "송금 승인 (Complete)",
+                        "children": []
                       }
                     ]
                   }
                 ]
               },
               {
-                "id": "node-pw-right",
+                "id": "pw-insp-panel",
                 "type": "box",
+                "name": "pw-insp-panel",
                 "style": {
-                  "width": 280,
-                  "backgroundColor": "#0d1322",
-                  "borderLeftWidth": 1,
+                  "width": 260,
+                  "backgroundColor": "#090d16",
+                  "borderRadius": 12,
+                  "borderWidth": 1,
                   "borderColor": "#1e293b",
                   "padding": 14,
                   "display": "flex",
                   "flexDirection": "column",
                   "gap": 12
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-ev-title",
-                    "type": "heading",
-                    "content": "⚡ 인터랙션 이벤트 설정",
+                    "id": "pwi-title",
+                    "type": "text",
+                    "name": "pwi-title",
                     "style": {
-                      "color": "#ffffff",
-                      "fontSize": 13,
+                      "color": "#f8fafc",
+                      "fontSize": 12,
                       "fontWeight": 700
-                    }
+                    },
+                    "props": {},
+                    "content": "⚡ 인터랙션 이벤트 설정 (Events)",
+                    "children": []
                   },
                   {
-                    "id": "node-ev-selected",
+                    "id": "pwi-target",
                     "type": "badge",
-                    "content": "선택: #node-src-trigger",
+                    "name": "pwi-target",
                     "style": {
                       "backgroundColor": "#1e293b",
-                      "color": "#818cf8",
+                      "color": "#93c5fd",
                       "fontSize": 10,
-                      "padding": 4,
+                      "padding": 5,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "선택: #src-btn-wire",
+                    "children": []
                   },
                   {
-                    "id": "node-ev-card",
+                    "id": "pwi-grp-1",
                     "type": "card",
+                    "name": "pwi-grp-1",
                     "style": {
-                      "backgroundColor": "#131b2e",
-                      "padding": 12,
-                      "borderRadius": 10,
-                      "borderWidth": 1,
-                      "borderColor": "#27354f",
+                      "backgroundColor": "#0d1322",
+                      "padding": 10,
+                      "borderRadius": 8,
                       "display": "flex",
                       "flexDirection": "column",
-                      "gap": 8
+                      "gap": 6
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-ev-t1",
+                        "id": "pwi-l1",
                         "type": "text",
-                        "content": "1. 트리거 (Trigger)",
+                        "name": "pwi-l1",
                         "style": {
-                          "color": "#cbd5e1",
-                          "fontSize": 11,
-                          "fontWeight": 600
-                        }
-                      },
-                      {
-                        "id": "node-ev-b1",
-                        "type": "badge",
-                        "content": "클릭 시 (Click) ▾",
-                        "style": {
-                          "backgroundColor": "#1e293b",
-                          "color": "#38bdf8",
-                          "padding": 6,
-                          "borderRadius": 6,
-                          "fontSize": 10
-                        }
-                      },
-                      {
-                        "id": "node-ev-t2",
-                        "type": "text",
-                        "content": "2. 액션 (Action)",
-                        "style": {
-                          "color": "#cbd5e1",
-                          "fontSize": 11,
-                          "fontWeight": 600,
-                          "marginTop": 4
-                        }
-                      },
-                      {
-                        "id": "node-ev-b2",
-                        "type": "badge",
-                        "content": "화면 이동 (Navigate) ▾",
-                        "style": {
-                          "backgroundColor": "#1e293b",
-                          "color": "#38bdf8",
-                          "padding": 6,
-                          "borderRadius": 6,
-                          "fontSize": 10
-                        }
-                      },
-                      {
-                        "id": "node-ev-t3",
-                        "type": "text",
-                        "content": "3. 이동할 대상 장표",
-                        "style": {
-                          "color": "#cbd5e1",
-                          "fontSize": 11,
-                          "fontWeight": 600,
-                          "marginTop": 4
-                        }
-                      },
-                      {
-                        "id": "node-ev-b3",
-                        "type": "badge",
-                        "content": "📱 2. 빠른 송금 모달 ▾",
-                        "style": {
-                          "backgroundColor": "#312e81",
-                          "color": "#c7d2fe",
-                          "padding": 6,
-                          "borderRadius": 6,
+                          "color": "#94a3b8",
                           "fontSize": 10,
                           "fontWeight": 700
-                        }
+                        },
+                        "props": {},
+                        "content": "1. 트리거 (Trigger)",
+                        "children": []
+                      },
+                      {
+                        "id": "pwi-v1",
+                        "type": "badge",
+                        "name": "pwi-v1",
+                        "style": {
+                          "backgroundColor": "#1e293b",
+                          "color": "#f8fafc",
+                          "fontSize": 11,
+                          "padding": 6,
+                          "borderRadius": 6
+                        },
+                        "props": {},
+                        "content": "클릭 시 (Click) ▾",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "pwi-grp-2",
+                    "type": "card",
+                    "name": "pwi-grp-2",
+                    "style": {
+                      "backgroundColor": "#0d1322",
+                      "padding": 10,
+                      "borderRadius": 8,
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": 6
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": [
+                      {
+                        "id": "pwi-l2",
+                        "type": "text",
+                        "name": "pwi-l2",
+                        "style": {
+                          "color": "#94a3b8",
+                          "fontSize": 10,
+                          "fontWeight": 700
+                        },
+                        "props": {},
+                        "content": "2. 액션 (Action)",
+                        "children": []
+                      },
+                      {
+                        "id": "pwi-v2",
+                        "type": "badge",
+                        "name": "pwi-v2",
+                        "style": {
+                          "backgroundColor": "#1e293b",
+                          "color": "#f8fafc",
+                          "fontSize": 11,
+                          "padding": 6,
+                          "borderRadius": 6
+                        },
+                        "props": {},
+                        "content": "화면 이동 (Navigate) ▾",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "pwi-grp-3",
+                    "type": "card",
+                    "name": "pwi-grp-3",
+                    "style": {
+                      "backgroundColor": "#0d1322",
+                      "padding": 10,
+                      "borderRadius": 8,
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": 6
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": [
+                      {
+                        "id": "pwi-l3",
+                        "type": "text",
+                        "name": "pwi-l3",
+                        "style": {
+                          "color": "#94a3b8",
+                          "fontSize": 10,
+                          "fontWeight": 700
+                        },
+                        "props": {},
+                        "content": "3. 이동할 대상 장표",
+                        "children": []
+                      },
+                      {
+                        "id": "pwi-v3",
+                        "type": "badge",
+                        "name": "pwi-v3",
+                        "style": {
+                          "backgroundColor": "#312e81",
+                          "color": "#e0e7ff",
+                          "fontSize": 11,
+                          "fontWeight": 600,
+                          "padding": 6,
+                          "borderRadius": 6
+                        },
+                        "props": {},
+                        "content": "🎴 2. 빠른 송금 모달 ▾",
+                        "children": []
                       }
                     ]
                   }
@@ -484,29 +562,32 @@
       "viewport": "desktop",
       "width": 820,
       "height": 940,
-      "x": 1180,
-      "y": 60,
+      "x": 1160,
+      "y": 40,
       "rootNode": {
-        "id": "node-pl-root",
+        "id": "root-play-mockup",
         "type": "frame",
-        "name": "Play Presentation Shell",
+        "name": "root-play-mockup",
         "style": {
           "width": "100%",
           "height": "100%",
-          "backgroundColor": "#030712",
+          "backgroundColor": "#020617",
           "display": "flex",
           "flexDirection": "column",
           "alignItems": "center",
           "borderRadius": 14,
           "padding": 20,
           "borderWidth": 1,
-          "borderColor": "#1f2937",
+          "borderColor": "#1e293b",
           "boxShadow": "0 25px 50px -12px rgba(0, 0, 0, 0.9)"
         },
+        "props": {},
+        "content": "",
         "children": [
           {
-            "id": "node-pl-top",
+            "id": "pm-topbar",
             "type": "box",
+            "name": "pm-topbar",
             "style": {
               "width": "100%",
               "display": "flex",
@@ -514,20 +595,25 @@
               "alignItems": "center",
               "marginBottom": 16
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-pl-tl",
+                "id": "pmt-left",
                 "type": "box",
+                "name": "pmt-left",
                 "style": {
                   "display": "flex",
                   "alignItems": "center",
                   "gap": 8
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-pl-badge",
+                    "id": "pmt-title",
                     "type": "badge",
-                    "content": "▶ PLAY 시연 모드 (Interactive Prototype)",
+                    "name": "pmt-title",
                     "style": {
                       "backgroundColor": "#4f46e5",
                       "color": "#ffffff",
@@ -535,71 +621,89 @@
                       "fontWeight": 700,
                       "padding": 6,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "▶ PLAY 시연 모드 (Interactive Prototype)",
+                    "children": []
                   },
                   {
-                    "id": "node-pl-hint",
+                    "id": "pmt-desc",
                     "type": "text",
-                    "content": "화면 속 요소를 직접 클릭하여 화면 이동 체험 가능",
+                    "name": "pmt-desc",
                     "style": {
-                      "color": "#9ca3af",
+                      "color": "#94a3b8",
                       "fontSize": 11
-                    }
+                    },
+                    "props": {},
+                    "content": "화면 속 요소를 직접 클릭하여 화면 이동 체험 가능",
+                    "children": []
                   }
                 ]
               },
               {
-                "id": "node-pl-tr",
+                "id": "pmt-right",
                 "type": "box",
+                "name": "pmt-right",
                 "style": {
                   "display": "flex",
                   "gap": 6
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-pl-hotspot",
+                    "id": "pmt-hotspot",
                     "type": "badge",
-                    "content": "핫스팟 안내: ON (보라색 테두리)",
+                    "name": "pmt-hotspot",
                     "style": {
                       "backgroundColor": "#581c87",
                       "color": "#e9d5ff",
                       "fontSize": 10,
                       "padding": 6,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "핫스팟 안내: ON (보라색 테두리)",
+                    "children": []
                   },
                   {
-                    "id": "node-pl-reset",
-                    "type": "badge",
-                    "content": "↺ 처음으로",
+                    "id": "pmt-reset",
+                    "type": "button",
+                    "name": "pmt-reset",
                     "style": {
-                      "backgroundColor": "#1f2937",
+                      "backgroundColor": "#1e293b",
                       "color": "#cbd5e1",
                       "fontSize": 10,
                       "padding": 6,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "↺ 처음으로",
+                    "children": []
                   },
                   {
-                    "id": "node-pl-close",
-                    "type": "badge",
-                    "content": "✕ 닫기 (ESC)",
+                    "id": "pmt-close",
+                    "type": "button",
+                    "name": "pmt-close",
                     "style": {
-                      "backgroundColor": "#1f2937",
+                      "backgroundColor": "#1e293b",
                       "color": "#f87171",
                       "fontSize": 10,
                       "padding": 6,
                       "borderRadius": 6
-                    }
+                    },
+                    "props": {},
+                    "content": "✕ 닫기 (ESC)",
+                    "children": []
                   }
                 ]
               }
             ]
           },
           {
-            "id": "node-phone-bezel",
+            "id": "pm-bezel",
             "type": "card",
-            "name": "Smartphone Hardware Bezel",
+            "name": "pm-bezel",
             "style": {
               "width": 380,
               "height": 740,
@@ -613,10 +717,13 @@
               "overflow": "hidden",
               "position": "relative"
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-dyn-island",
+                "id": "pm-dyn-island",
                 "type": "box",
+                "name": "pm-dyn-island",
                 "style": {
                   "width": 96,
                   "height": 24,
@@ -629,108 +736,140 @@
                   "paddingLeft": 8,
                   "paddingRight": 8
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-di-cam",
-                    "type": "box",
+                    "id": "di-cam",
+                    "type": "badge",
+                    "name": "di-cam",
                     "style": {
                       "width": 8,
                       "height": 8,
                       "borderRadius": 4,
                       "backgroundColor": "#1f2937"
-                    }
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": []
                   },
                   {
-                    "id": "node-di-dot",
-                    "type": "box",
+                    "id": "di-dot",
+                    "type": "badge",
+                    "name": "di-dot",
                     "style": {
                       "width": 5,
                       "height": 5,
                       "borderRadius": 2.5,
                       "backgroundColor": "#10b981"
-                    }
+                    },
+                    "props": {},
+                    "content": "",
+                    "children": []
                   }
                 ]
               },
               {
-                "id": "node-screen-inner",
+                "id": "pm-screen-inner",
                 "type": "box",
+                "name": "pm-screen-inner",
                 "style": {
                   "flex": 1,
+                  "width": "100%",
                   "padding": 18,
                   "display": "flex",
                   "flexDirection": "column",
                   "gap": 14,
                   "overflow": "hidden"
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-si-hdr",
+                    "id": "pm-si-hdr",
                     "type": "box",
+                    "name": "pm-si-hdr",
                     "style": {
                       "display": "flex",
                       "justifyContent": "space-between",
                       "alignItems": "center"
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-si-greet",
+                        "id": "pm-greet",
                         "type": "text",
-                        "content": "안녕하세요! 김제이님 👋",
+                        "name": "pm-greet",
                         "style": {
                           "color": "#9ca3af",
                           "fontSize": 12
-                        }
+                        },
+                        "props": {},
+                        "content": "안녕하세요! 김제이님 👋",
+                        "children": []
                       },
                       {
-                        "id": "node-si-bell",
+                        "id": "pm-bell",
                         "type": "badge",
-                        "content": "🔔 (1)",
+                        "name": "pm-bell",
                         "style": {
                           "backgroundColor": "#1f2937",
                           "color": "#fbbf24",
                           "fontSize": 10,
                           "padding": 4,
                           "borderRadius": 6
-                        }
+                        },
+                        "props": {},
+                        "content": "🔔 (1)",
+                        "children": []
                       }
                     ]
                   },
                   {
-                    "id": "node-si-card",
+                    "id": "pm-si-card",
                     "type": "card",
+                    "name": "pm-si-card",
                     "style": {
                       "padding": 18,
                       "borderRadius": 20,
-                      "backgroundGradient": "linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)",
+                      "backgroundImage": "linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)",
                       "color": "#ffffff",
                       "display": "flex",
                       "flexDirection": "column",
                       "gap": 8
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-si-lbl",
+                        "id": "pm-c-sub",
                         "type": "text",
-                        "content": "AI 자산 운용 포트폴리오",
+                        "name": "pm-c-sub",
                         "style": {
                           "fontSize": 11,
                           "fontWeight": 600
-                        }
+                        },
+                        "props": {},
+                        "content": "AI 자산 운용 포트폴리오",
+                        "children": []
                       },
                       {
-                        "id": "node-si-amt",
-                        "type": "heading",
-                        "content": "₩ 48,250,000",
+                        "id": "pm-c-val",
+                        "type": "text",
+                        "name": "pm-c-val",
                         "style": {
                           "fontSize": 22,
                           "fontWeight": 900
-                        }
+                        },
+                        "props": {},
+                        "content": "₩ 48,250,000",
+                        "children": []
                       },
                       {
-                        "id": "node-si-rate",
+                        "id": "pm-c-chip",
                         "type": "badge",
-                        "content": "+18.4% 누적 수익",
+                        "name": "pm-c-chip",
                         "style": {
                           "backgroundColor": "rgba(255,255,255,0.2)",
                           "color": "#fff",
@@ -738,12 +877,15 @@
                           "padding": 4,
                           "borderRadius": 6,
                           "alignSelf": "flex-start"
-                        }
+                        },
+                        "props": {},
+                        "content": "+18.4% 누적 수익",
+                        "children": []
                       },
                       {
-                        "id": "node-si-btn-hotspot",
+                        "id": "pm-btn-hotspot",
                         "type": "button",
-                        "content": "⚡ 빠른 송금하기 (클릭 시 화면 이동)",
+                        "name": "pm-btn-hotspot",
                         "style": {
                           "backgroundColor": "#ffffff",
                           "color": "#4f46e5",
@@ -755,13 +897,17 @@
                           "marginTop": 10,
                           "boxShadow": "0 0 0 3px #a855f7",
                           "cursor": "pointer"
-                        }
+                        },
+                        "props": {},
+                        "content": "⚡ 빠른 송금하기 (클릭 시 화면 이동)",
+                        "children": []
                       }
                     ]
                   },
                   {
-                    "id": "node-si-txlist",
+                    "id": "pm-si-txlist",
                     "type": "card",
+                    "name": "pm-si-txlist",
                     "style": {
                       "backgroundColor": "#1f2937",
                       "padding": 14,
@@ -770,72 +916,95 @@
                       "flexDirection": "column",
                       "gap": 10
                     },
+                    "props": {},
+                    "content": "",
                     "children": [
                       {
-                        "id": "node-tx-h",
+                        "id": "tx-t",
                         "type": "text",
-                        "content": "최근 거래 내역",
+                        "name": "tx-t",
                         "style": {
                           "color": "#e5e7eb",
                           "fontSize": 12,
                           "fontWeight": 700
-                        }
+                        },
+                        "props": {},
+                        "content": "최근 거래 내역",
+                        "children": []
                       },
                       {
-                        "id": "node-tx-1",
+                        "id": "tx-row-1",
                         "type": "box",
+                        "name": "tx-row-1",
                         "style": {
                           "display": "flex",
                           "justifyContent": "space-between"
                         },
+                        "props": {},
+                        "content": "",
                         "children": [
                           {
-                            "id": "node-tx-1n",
+                            "id": "tx-1-n",
                             "type": "text",
-                            "content": "배달의민족 결제",
+                            "name": "tx-1-n",
                             "style": {
                               "color": "#9ca3af",
                               "fontSize": 11
-                            }
+                            },
+                            "props": {},
+                            "content": "배달의민족 결제",
+                            "children": []
                           },
                           {
-                            "id": "node-tx-1a",
+                            "id": "tx-1-p",
                             "type": "text",
-                            "content": "- 24,000원",
+                            "name": "tx-1-p",
                             "style": {
                               "color": "#f87171",
                               "fontSize": 11,
                               "fontWeight": 700
-                            }
+                            },
+                            "props": {},
+                            "content": "- 24,000원",
+                            "children": []
                           }
                         ]
                       },
                       {
-                        "id": "node-tx-2",
+                        "id": "tx-row-2",
                         "type": "box",
+                        "name": "tx-row-2",
                         "style": {
                           "display": "flex",
                           "justifyContent": "space-between"
                         },
+                        "props": {},
+                        "content": "",
                         "children": [
                           {
-                            "id": "node-tx-2n",
+                            "id": "tx-2-n",
                             "type": "text",
-                            "content": "토스 급여 입금",
+                            "name": "tx-2-n",
                             "style": {
                               "color": "#9ca3af",
                               "fontSize": 11
-                            }
+                            },
+                            "props": {},
+                            "content": "토스 급여 입금",
+                            "children": []
                           },
                           {
-                            "id": "node-tx-2a",
+                            "id": "tx-2-p",
                             "type": "text",
-                            "content": "+ 4,500,000원",
+                            "name": "tx-2-p",
                             "style": {
                               "color": "#34d399",
                               "fontSize": 11,
                               "fontWeight": 700
-                            }
+                            },
+                            "props": {},
+                            "content": "+ 4,500,000원",
+                            "children": []
                           }
                         ]
                       }
@@ -844,22 +1013,26 @@
                 ]
               },
               {
-                "id": "node-home-bar",
+                "id": "pm-home-bar",
                 "type": "box",
+                "name": "pm-home-bar",
                 "style": {
                   "width": 120,
                   "height": 4,
                   "backgroundColor": "#4b5563",
                   "borderRadius": 2,
                   "margin": "0 auto 12px auto"
-                }
+                },
+                "props": {},
+                "content": "",
+                "children": []
               }
             ]
           },
           {
-            "id": "node-pl-tweaks",
+            "id": "pm-tweaks-bar",
             "type": "card",
-            "name": "Live Tweak Controller",
+            "name": "pm-tweaks-bar",
             "style": {
               "width": "100%",
               "maxWidth": 580,
@@ -873,100 +1046,129 @@
               "alignItems": "center",
               "marginTop": 16
             },
+            "props": {},
+            "content": "",
             "children": [
               {
-                "id": "node-tw-theme",
+                "id": "twk-g1",
                 "type": "box",
+                "name": "twk-g1",
                 "style": {
                   "display": "flex",
                   "alignItems": "center",
                   "gap": 6
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-tw-tlbl",
+                    "id": "twk-1-l",
                     "type": "text",
+                    "name": "twk-1-l",
+                    "style": {
+                      "color": "#9ca3af",
+                      "fontSize": 11
+                    },
+                    "props": {},
                     "content": "테마:",
-                    "style": {
-                      "color": "#9ca3af",
-                      "fontSize": 11
-                    }
+                    "children": []
                   },
                   {
-                    "id": "node-tw-tval",
+                    "id": "twk-1-v",
                     "type": "badge",
+                    "name": "twk-1-v",
+                    "style": {
+                      "backgroundColor": "#1f2937",
+                      "color": "#38bdf8",
+                      "fontSize": 10,
+                      "padding": 4,
+                      "borderRadius": 4
+                    },
+                    "props": {},
                     "content": "🌙 다크모드 ▾",
-                    "style": {
-                      "backgroundColor": "#1f2937",
-                      "color": "#38bdf8",
-                      "fontSize": 10,
-                      "padding": 4,
-                      "borderRadius": 4
-                    }
+                    "children": []
                   }
                 ]
               },
               {
-                "id": "node-tw-curr",
+                "id": "twk-g2",
                 "type": "box",
+                "name": "twk-g2",
                 "style": {
                   "display": "flex",
                   "alignItems": "center",
                   "gap": 6
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-tw-clbl",
+                    "id": "twk-2-l",
                     "type": "text",
+                    "name": "twk-2-l",
+                    "style": {
+                      "color": "#9ca3af",
+                      "fontSize": 11
+                    },
+                    "props": {},
                     "content": "통화:",
-                    "style": {
-                      "color": "#9ca3af",
-                      "fontSize": 11
-                    }
+                    "children": []
                   },
                   {
-                    "id": "node-tw-cval",
+                    "id": "twk-2-v",
                     "type": "badge",
-                    "content": "KRW (원) ▾",
+                    "name": "twk-2-v",
                     "style": {
                       "backgroundColor": "#1f2937",
                       "color": "#38bdf8",
                       "fontSize": 10,
                       "padding": 4,
                       "borderRadius": 4
-                    }
+                    },
+                    "props": {},
+                    "content": "KRW (원) ▾",
+                    "children": []
                   }
                 ]
               },
               {
-                "id": "node-tw-order",
+                "id": "twk-g3",
                 "type": "box",
+                "name": "twk-g3",
                 "style": {
                   "display": "flex",
                   "alignItems": "center",
                   "gap": 6
                 },
+                "props": {},
+                "content": "",
                 "children": [
                   {
-                    "id": "node-tw-olbl",
+                    "id": "twk-3-l",
                     "type": "text",
-                    "content": "주문 유형:",
+                    "name": "twk-3-l",
                     "style": {
                       "color": "#9ca3af",
                       "fontSize": 11
-                    }
+                    },
+                    "props": {},
+                    "content": "주문 유형:",
+                    "children": []
                   },
                   {
-                    "id": "node-tw-oval",
+                    "id": "twk-3-v",
                     "type": "badge",
-                    "content": "지정가 ▾",
+                    "name": "twk-3-v",
                     "style": {
                       "backgroundColor": "#1f2937",
                       "color": "#38bdf8",
                       "fontSize": 10,
                       "padding": 4,
                       "borderRadius": 4
-                    }
+                    },
+                    "props": {},
+                    "content": "지정가 ▾",
+                    "children": []
                   }
                 ]
               }
