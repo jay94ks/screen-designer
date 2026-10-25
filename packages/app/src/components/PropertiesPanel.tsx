@@ -74,6 +74,13 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   const [use4WayPadding, setUse4WayPadding] = useState(false);
   const [use4WayRadius, setUse4WayRadius] = useState(false);
   const [colorTarget, setColorTarget] = useState<'bg' | 'text'>('bg');
+  // Active Gradient Editor State ('linear-neon' | 'dark-mesh' | null)
+  const [activeGradientType, setActiveGradientType] = useState<GradientType>(null);
+  const [isEditorDismissed, setIsEditorDismissed] = useState(false);
+
+  useEffect(() => {
+    setIsEditorDismissed(false);
+  }, [selectedNode?.id]);
 
   if (!artboard) {
     return (
@@ -179,14 +186,6 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
       setActiveGradientType(null);
     }
   };
-
-  // Active Gradient Editor State ('linear-neon' | 'dark-mesh' | null)
-  const [activeGradientType, setActiveGradientType] = useState<GradientType>(null);
-  const [isEditorDismissed, setIsEditorDismissed] = useState(false);
-
-  useEffect(() => {
-    setIsEditorDismissed(false);
-  }, [selectedNode?.id]);
 
   const currentBg = selectedNode?.style?.backgroundImage || selectedNode?.style?.backgroundGradient || '';
 
