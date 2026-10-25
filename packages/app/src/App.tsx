@@ -78,12 +78,19 @@ const INITIAL_PAGES: PageModel[] = [
 ];
 
 export default function App() {
-  const [docTitle, setDocTitle] = useState('Fintech Service UI Storyboard');
+  const [docTitle, setDocTitle] = useState('Screen Designer - Visual Storyboard Canvas');
   const [settings, setSettings] = useState<ProjectSettings>(DEFAULT_SETTINGS);
 
   // Real Multi-Page State (Each page owns its own independent artboards array)
   const [pages, setPages] = useState<PageModel[]>(INITIAL_PAGES);
-  const [activePageId, setActivePageId] = useState<string>('page-1');
+  const [activePageId, setActivePageId] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const p = params.get('page');
+      if (p) return p.startsWith('page-') ? p : `page-${p}`;
+    }
+    return 'page-1';
+  });
 
   const activePage = pages.find((p) => p.id === activePageId) || pages[0] || {
     id: 'page-1',
@@ -167,11 +174,13 @@ export default function App() {
     setIsSettingsOpen(true);
   };
 
-  const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
+  const [isShortcutsOpen, setIsShortcutsOpen] = useState(() => {
+    return typeof window !== 'undefined' && (window.location.search.includes('shortcuts') || window.location.search.includes('helpModal'));
+  });
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isNewFrameOpen, setIsNewFrameOpen] = useState(false);
   const [isGitModalOpen, setIsGitModalOpen] = useState(() => {
-    return typeof window !== 'undefined' && window.location.search.includes('openGit');
+    return typeof window !== 'undefined' && (window.location.search.includes('openGit') || window.location.search.includes('git'));
   });
 
   // Precision Canvas Rulers & Guides State
@@ -325,10 +334,18 @@ export default function App() {
       const res = await projectClient.loadProject(docsPath, settings.workspacePath);
       if (res && res.success && res.pages && res.pages.length > 0) {
         setPages(res.pages);
-        if (res.project?.activePageId) {
+        const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+        const pageParam = params?.get('page');
+        const targetId = pageParam ? (pageParam.startsWith('page-') ? pageParam : `page-${pageParam}`) : null;
+        if (targetId && res.pages.some((p) => p.id === targetId)) {
+          setActivePageId(targetId);
+        } else if (res.project?.activePageId && res.pages.some((p) => p.id === res.project.activePageId)) {
           setActivePageId(res.project.activePageId);
         } else {
           setActivePageId(res.pages[0].id);
+        }
+        if (res.project?.title) {
+          setDocTitle(res.project.title);
         }
         if (res.designSystem?.componentDefaults) {
           setSettings((prev) => ({
@@ -1227,18 +1244,18 @@ export default function App() {
 
   // Serialized React JSX code
   const activeCode = selectedArtboard?.rootNode
-    ? generateComponentCode(selectedArtboard.title, selectedArtboard.rootNode)
+    ? generateComponentCode((selectedArtboard as any).title || selectedArtboard.name, selectedArtboard.rootNode)
     : '';
 
   const compatibleArtboards: Artboard[] = (artboards || []).map((a) => ({
     id: a.id,
-    title: a.title,
+    title: (a as any).title || a.name || 'Artboard',
     viewport: a.viewport,
     width: a.width,
     height: a.height,
     x: a.x,
     y: a.y,
-    code: a.rootNode ? generateComponentCode(a.title, a.rootNode) : '',
+    code: a.rootNode ? generateComponentCode((a as any).title || a.name, a.rootNode) : '',
     tweaksSchema: a.tweaksSchema as any,
     tweakValues: a.tweakValues
   }));
@@ -1254,13 +1271,13 @@ export default function App() {
       name: p.name,
       artboards: (p.artboards || []).map((a) => ({
         id: a.id,
-        title: a.title,
+        title: (a as any).title || a.name || 'Artboard',
         viewport: a.viewport,
         width: a.width,
         height: a.height,
         x: a.x,
         y: a.y,
-        code: a.rootNode ? generateComponentCode(a.title, a.rootNode) : '',
+        code: a.rootNode ? generateComponentCode((a as any).title || a.name, a.rootNode) : '',
         tweaksSchema: a.tweaksSchema as any,
         tweakValues: a.tweakValues
       }))

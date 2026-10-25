@@ -227,10 +227,24 @@ export async function loadProjectStructure({
         try {
           const raw = await fs.promises.readFile(path.join(pagesDir, pf), 'utf-8');
           const parsed = JSON.parse(raw);
-          if (parsed && parsed.id) {
+          if (Array.isArray(parsed)) {
+            const pageNum = parseInt(pf.replace('.json', ''), 10) || 1;
+            pages.push({
+              id: `page-${pageNum}`,
+              name: `Page ${pageNum}`,
+              number: pageNum,
+              version: '1.0.0',
+              updatedAt: new Date().toISOString(),
+              artboards: parsed
+            });
+          } else if (parsed && (parsed.id || parsed.artboards)) {
             const pageNum = parsed.number || parseInt(pf.replace('.json', ''), 10) || 1;
             pages.push({
-              ...parsed,
+              id: parsed.id || `page-${pageNum}`,
+              name: parsed.name || `Page ${pageNum}`,
+              version: parsed.version || '1.0.0',
+              updatedAt: parsed.updatedAt || new Date().toISOString(),
+              artboards: parsed.artboards || [],
               number: pageNum
             });
           }

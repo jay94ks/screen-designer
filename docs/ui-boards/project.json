@@ -1,32 +1,29 @@
 {
-  "name": "Screen Designer Live Storyboard Canvas",
   "version": "2.0.0",
-  "description": "Screen Designer 도구 자체의 모든 UI 화면과 서브시스템을 자가 수용(Self-hosting)한 VDOM 스토리보드",
-  "activePageId": "page-workspace",
+  "title": "Screen Designer - Official UI Storyboard (Live Captures)",
+  "description": "Screen Designer 도구 자체의 실제 구동 화면 스크린샷으로 100% 동일하게 구성된 공식 UI 시안 및 스토리보드",
+  "activePageId": "page-1",
   "pages": [
     {
-      "id": "page-workspace",
-      "name": "1. Core Canvas Workspace (캔버스 & 워크스페이스)",
-      "file": "pages/1.json",
-      "artboardCount": 3
+      "id": "page-1",
+      "name": "1. 핵심 작업 공간 & 인스펙터",
+      "artboardCount": 4
     },
     {
-      "id": "page-prototyping",
-      "name": "2. Prototyping & Play (프로토타입 & 플레이)",
-      "file": "pages/2.json",
+      "id": "page-2",
+      "name": "2. 프로토타이핑 & 동적 트윅",
+      "artboardCount": 4
+    },
+    {
+      "id": "page-3",
+      "name": "3. 디자인 시스템 & Git 데스크톱",
       "artboardCount": 2
     },
     {
-      "id": "page-design-git",
-      "name": "3. Design System & Git Desktop (디자인 & Git)",
-      "file": "pages/3.json",
-      "artboardCount": 2
-    },
-    {
-      "id": "page-modals",
-      "name": "4. Modals & Command System (모달 & 커맨드)",
-      "file": "pages/4.json",
-      "artboardCount": 3
+      "id": "page-4",
+      "name": "4. 커맨드 팔레트 & 환경설정",
+      "artboardCount": 4
     }
-  ]
+  ],
+  "updatedAt": "2026-10-25T06:42:35.662Z"
 }

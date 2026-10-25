@@ -287,8 +287,9 @@ ${textContent ? `${indent}  ${textContent}\n` : ''}${childrenJsx}
 ${indent}</${tag}>`;
 }
 
-export function generateReactCode(componentName: string, rootNode?: VNode | null): string {
-  let safeName = componentName.replace(/[^a-zA-Z0-9가-힣]/g, '') || 'ScreenComponent';
+export function generateReactCode(componentName?: string, rootNode?: VNode | null): string {
+  const nameStr = String(componentName || 'ScreenComponent');
+  let safeName = nameStr.replace(/[^a-zA-Z0-9가-힣]/g, '') || 'ScreenComponent';
   if (/^[0-9]/.test(safeName)) {
     safeName = `Screen_${safeName}`;
   }

@@ -126,7 +126,14 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
   hasSelectedElement = false
 }) => {
   const { t, language, setLanguage, languages } = useTranslation();
-  const [activeMenu, setActiveMenu] = useState<'file' | 'edit' | 'view' | 'help' | null>(null);
+  const [activeMenu, setActiveMenu] = useState<'file' | 'edit' | 'view' | 'help' | null>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const m = params.get('menu');
+      if (m === 'file' || m === 'edit' || m === 'view' || m === 'help') return m;
+    }
+    return null;
+  });
   const [showPageMenu, setShowPageMenu] = useState(false);
   const [showZoomMenu, setShowZoomMenu] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
