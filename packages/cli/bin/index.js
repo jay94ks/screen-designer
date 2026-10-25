@@ -60,6 +60,10 @@ function getHtmlTag(type, props) {
 
 function normalizeStyle(style = {}) {
   const norm = { ...style };
+  if (norm.backgroundGradient && !norm.backgroundImage) {
+    norm.backgroundImage = norm.backgroundGradient;
+    delete norm.backgroundGradient;
+  }
   if (norm.backgroundImage && !norm.backgroundImage.startsWith('url(') && !norm.backgroundImage.startsWith('linear-gradient(') && !norm.backgroundImage.startsWith('radial-gradient(')) {
     norm.backgroundImage = `url("${norm.backgroundImage}")`;
   }
@@ -112,8 +116,13 @@ function vnodeToJsx(node, indentLevel = 2) {
   const textContent = node.content || '';
   const hasChildren = node.children && node.children.length > 0;
 
+  const VOID_TAGS = ['img', 'input', 'hr', 'br', 'area', 'base', 'col', 'embed', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
+
   if (!hasChildren && !textContent) {
-    return `${indent}<${tag}${classAttr}${styleAttr} />`;
+    if (VOID_TAGS.includes(tag)) {
+      return `${indent}<${tag}${classAttr}${styleAttr} />`;
+    }
+    return `${indent}<${tag}${classAttr}${styleAttr}></${tag}>`;
   }
 
   if (!hasChildren && textContent) {
@@ -156,7 +165,7 @@ function vnodeToVueTemplate(node, indentLevel = 2) {
   const classAttr = node.className ? ` class="${node.className}"` : '';
   const inlineStyles = Object.entries(style)
     .filter(([_, v]) => v !== undefined)
-    .map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${typeof v === 'number' && !['zIndex', 'opacity', 'fontWeight', 'flexGrow', 'flexShrink'].includes(k) ? `${v}px` : v}`)
+    .map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${typeof v === 'number' && !['zIndex', 'opacity', 'fontWeight', 'flex', 'flexGrow', 'flexShrink', 'order', 'lineHeight', 'scale'].includes(k) ? `${v}px` : v}`)
     .join('; ');
 
   const styleAttr = inlineStyles ? ` style="${inlineStyles}"` : '';
@@ -180,8 +189,13 @@ function vnodeToVueTemplate(node, indentLevel = 2) {
   const textContent = node.content || '';
   const hasChildren = node.children && node.children.length > 0;
 
+  const VOID_TAGS = ['img', 'input', 'hr', 'br', 'area', 'base', 'col', 'embed', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
+
   if (!hasChildren && !textContent) {
-    return `${indent}<${tag}${classAttr}${styleAttr} />`;
+    if (VOID_TAGS.includes(tag)) {
+      return `${indent}<${tag}${classAttr}${styleAttr} />`;
+    }
+    return `${indent}<${tag}${classAttr}${styleAttr}></${tag}>`;
   }
 
   if (!hasChildren && textContent) {
@@ -232,7 +246,7 @@ function vnodeToHtml(node, indentLevel = 2) {
   const classAttr = node.className ? ` class="${node.className}"` : '';
   const inlineStyles = Object.entries(style)
     .filter(([_, v]) => v !== undefined)
-    .map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${typeof v === 'number' && !['zIndex', 'opacity', 'fontWeight', 'flexGrow', 'flexShrink'].includes(k) ? `${v}px` : v}`)
+    .map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${typeof v === 'number' && !['zIndex', 'opacity', 'fontWeight', 'flex', 'flexGrow', 'flexShrink', 'order', 'lineHeight', 'scale'].includes(k) ? `${v}px` : v}`)
     .join('; ');
 
   const styleAttr = inlineStyles ? ` style="${inlineStyles}"` : '';
@@ -256,8 +270,13 @@ function vnodeToHtml(node, indentLevel = 2) {
   const textContent = node.content || '';
   const hasChildren = node.children && node.children.length > 0;
 
+  const VOID_TAGS = ['img', 'input', 'hr', 'br', 'area', 'base', 'col', 'embed', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
+
   if (!hasChildren && !textContent) {
-    return `${indent}<${tag}${classAttr}${styleAttr} />`;
+    if (VOID_TAGS.includes(tag)) {
+      return `${indent}<${tag}${classAttr}${styleAttr} />`;
+    }
+    return `${indent}<${tag}${classAttr}${styleAttr}></${tag}>`;
   }
 
   if (!hasChildren && textContent) {
@@ -1342,19 +1361,21 @@ async function renderImage() {
   }
 
   // 3. Select target artboard
-  let artboard = artboards[0];
+  let artboard = null;
   if (artboardId !== undefined && artboardId !== '') {
     const query = artboardId.trim();
-    const isIndex = /^\d+$/.test(query);
-    if (isIndex) {
+    if (/^\d+$/.test(query)) {
       const idx = parseInt(query, 10);
       if (idx >= 0 && idx < artboards.length) {
         artboard = artboards[idx];
       }
     }
-    if (!artboard || (isIndex && !artboards[parseInt(query, 10)])) {
-      artboard = artboards.find(a => a.id === query || a.title === query || (a.title && a.title.includes(query))) || artboards[0];
+    if (!artboard) {
+      artboard = artboards.find(a => a.id === query || a.title === query || (a.title && a.title.includes(query)));
     }
+  }
+  if (!artboard) {
+    artboard = artboards[0];
   }
 
   const width = customWidth || artboard.width || 375;
@@ -1427,15 +1448,20 @@ ${contentHtml}
   await fs.writeFile(tempHtmlFile, htmlDoc, 'utf-8');
 
   // 6. Execute Chrome Headless
+  const profileDir = path.join(tempDir, 'chrome-profile');
+  await fs.mkdir(profileDir, { recursive: true });
+
   let chromeHtmlUrl = `file://${tempHtmlFile}`;
   let chromeScreenshotArg = tempPngFile;
+  let chromeProfileArg = profileDir;
 
   if (isWslWithWinBrowser) {
     chromeHtmlUrl = `file:///${toWindowsPath(tempHtmlFile).replace(/\\/g, '/')}`;
     chromeScreenshotArg = toWindowsPath(tempPngFile);
+    chromeProfileArg = toWindowsPath(profileDir);
   }
 
-  const chromeCmd = `"${browserBin}" --headless --disable-gpu --virtual-time-budget=1500 --hide-scrollbars --window-size=${width},${height} --screenshot="${chromeScreenshotArg}" "${chromeHtmlUrl}"`;
+  const chromeCmd = `"${browserBin}" --headless=new --user-data-dir="${chromeProfileArg}" --no-first-run --no-default-browser-check --disable-gpu --virtual-time-budget=2000 --hide-scrollbars --window-size=${width},${height} --screenshot="${chromeScreenshotArg}" "${chromeHtmlUrl}"`;
   execSync(chromeCmd, { stdio: ['ignore', 'pipe', 'pipe'] });
 
   // 7. Target Destination File

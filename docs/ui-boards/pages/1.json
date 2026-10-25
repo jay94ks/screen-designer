@@ -417,6 +417,7 @@
             "name": "Three-Pane Layout",
             "style": {
               "flex": 1,
+              "height": "calc(100% - 82px)",
               "display": "flex",
               "backgroundColor": "#090d16",
               "overflow": "hidden"
