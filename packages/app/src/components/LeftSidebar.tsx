@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { VDomArtboard, VNode, NodeType } from '../types/vdom';
 import {
   inferCanvasRoleFromArtboard,
@@ -99,10 +99,43 @@ const LeftSidebarComponent: React.FC<LeftSidebarProps> = ({
   const [editingName, setEditingName] = useState('');
   const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>({
     'node-s1-root': true,
-    'node-s1-top': true,
     'node-s2-root': true,
-    'node-s3-root': true
+    'node-s3-root': true,
+    'node-s4-root': true
   });
+
+  // Automatically expand ancestor path when a node is selected so it is visible in the tree
+  useEffect(() => {
+    if (!selectedNodeId) return;
+    const findAncestors = (current: VNode, targetId: string, path: string[] = []): string[] | null => {
+      if (current.id === targetId) return path;
+      if (current.children) {
+        for (const child of current.children) {
+          const res = findAncestors(child, targetId, [...path, current.id]);
+          if (res) return res;
+        }
+      }
+      return null;
+    };
+
+    for (const artboard of artboards) {
+      const ancestors = findAncestors(artboard.rootNode, selectedNodeId);
+      if (ancestors && ancestors.length > 0) {
+        setExpandedNodes((prev) => {
+          let changed = false;
+          const next = { ...prev };
+          for (const ancId of ancestors) {
+            if (!next[ancId]) {
+              next[ancId] = true;
+              changed = true;
+            }
+          }
+          return changed ? next : prev;
+        });
+        break;
+      }
+    }
+  }, [selectedNodeId, artboards]);
 
   if (!isOpen) return null;
 
@@ -177,7 +210,11 @@ const LeftSidebarComponent: React.FC<LeftSidebarProps> = ({
   const renderNodeTree = (node: VNode, depth = 0) => {
     const isSelected = selectedNodeId === node.id;
     const hasChildren = node.children && node.children.length > 0;
-    const isExpanded = expandedNodes[node.id] !== false;
+    const isExpanded = layerSearch.trim()
+      ? true
+      : depth === 0
+      ? expandedNodes[node.id] !== false
+      : Boolean(expandedNodes[node.id]);
     const isEditing = editingNodeId === node.id;
 
     if (layerSearch.trim() && !nodeMatchesSearch(node, layerSearch.trim())) {
@@ -683,10 +720,12 @@ const LeftSidebarComponent: React.FC<LeftSidebarProps> = ({
                       </div>
                     </div>
 
-                    {/* Recursive Virtual DOM Node Tree */}
-                    <div className="pl-1 space-y-0.5">
-                      {renderNodeTree(artboard.rootNode)}
-                    </div>
+                    {/* Recursive Virtual DOM Node Tree: Render active artboard or searched/expanded */}
+                    {(isSelected || expandedNodes[artboard.id] || layerSearch.trim()) && (
+                      <div className="pl-1 space-y-0.5">
+                        {renderNodeTree(artboard.rootNode)}
+                      </div>
+                    )}
                   </div>
                 );
               })

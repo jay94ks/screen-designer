@@ -429,6 +429,12 @@ export const DEFAULT_COMPONENT_STYLES: ComponentDefaultStyles = {
     size: 40,
     width: 40,
     height: 40
+  },
+  icon: {
+    color: '#6366f1',
+    size: 20,
+    width: 20,
+    height: 20
   }
 };
 

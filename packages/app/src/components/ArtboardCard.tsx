@@ -111,7 +111,7 @@ export const ArtboardCard: React.FC<ArtboardCardProps> = ({
   }, [onSelectElement]);
 
   return (
-    <div className="flex flex-col bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl transition-all duration-200">
+    <div className="flex flex-col bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
       {/* Artboard Header */}
       <div className="h-10 px-4 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">

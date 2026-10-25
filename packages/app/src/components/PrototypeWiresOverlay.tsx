@@ -230,7 +230,7 @@ const PrototypeWiresOverlayComponent: React.FC<PrototypeWiresOverlayProps> = ({
         const marker = coord.isHighlighted ? 'url(#wire-arrow-active)' : 'url(#wire-arrow-default)';
 
         return (
-          <g key={coord.wire.id} className="transition-all duration-150">
+          <g key={coord.wire.id}>
             {/* Background Halo for legibility */}
             <path
               d={pathData}

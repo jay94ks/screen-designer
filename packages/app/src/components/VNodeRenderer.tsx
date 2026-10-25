@@ -599,7 +599,7 @@ const VNodeRendererComponent: React.FC<VNodeRendererProps> = ({
       onContextMenu={handleContextMenu}
       onMouseEnter={handleMouseEnter}
       style={cssStyle}
-      className={`${cssStyle.position ? '' : 'relative'} transition-all duration-75 group ${
+      className={`${cssStyle.position ? '' : 'relative'} group ${
         node.className || ''
       } ${
         interactive && isSelected

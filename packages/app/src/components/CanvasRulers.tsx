@@ -150,24 +150,36 @@ export const CanvasRulers: React.FC<CanvasRulersProps> = ({
 
   if (!showRulers) return null;
 
-  // Calculate ticks
-  // Choose step based on zoom: at zoom 0.5 step is 100, at 1.0 step is 50, at 2.0 step is 20
-  const majorStep = zoom < 0.6 ? 200 : zoom < 1.2 ? 100 : 50;
+  // Calculate ticks strictly bounded to container viewport to prevent DOM node explosion
+  // Adapt step based on zoom so there are never more than 30-40 major divisions
+  let majorStep = zoom < 0.4 ? 400 : zoom < 0.7 ? 200 : zoom < 1.3 ? 100 : 50;
+  while ((containerWidth / (majorStep * zoom)) > 30) {
+    majorStep *= 2;
+  }
   const minorStep = majorStep / 5;
 
-  // Canvas bounds currently visible
+  // Canvas bounds currently visible in container
   const visibleStartCanvasX = clientToCanvasX(canvasRect ? canvasRect.left + RULER_SIZE : 0);
   const visibleEndCanvasX = clientToCanvasX(canvasRect ? canvasRect.left + containerWidth : containerWidth);
   const firstTickX = Math.floor(visibleStartCanvasX / majorStep) * majorStep;
   const lastTickX = Math.ceil(visibleEndCanvasX / majorStep) * majorStep;
 
-  const horizontalTicks: Array<{ pos: number; label?: number; isMajor: boolean }> = [];
-  for (let x = firstTickX; x <= lastTickX; x += minorStep) {
-    horizontalTicks.push({
-      pos: x,
-      label: x % majorStep === 0 ? x : undefined,
-      isMajor: x % majorStep === 0
-    });
+  let hTicksPath = '';
+  const hLabels: Array<{ x: number; text: number }> = [];
+  const maxHTicks = 250;
+  let hCount = 0;
+
+  for (let x = firstTickX; x <= lastTickX && hCount < maxHTicks; x += minorStep) {
+    hCount++;
+    const screenX = Math.round((x * zoom) + pan.x);
+    if (screenX >= 0 && screenX <= containerWidth) {
+      const isMajor = Math.abs(x % majorStep) < 0.001 || Math.abs(Math.round(x) % majorStep) === 0;
+      const y1 = isMajor ? 10 : 17;
+      hTicksPath += `M ${screenX} ${y1} L ${screenX} ${RULER_SIZE} `;
+      if (isMajor) {
+        hLabels.push({ x: screenX + 3, text: Math.round(x) });
+      }
+    }
   }
 
   const visibleStartCanvasY = clientToCanvasY(canvasRect ? canvasRect.top + RULER_SIZE : 0);
@@ -175,13 +187,22 @@ export const CanvasRulers: React.FC<CanvasRulersProps> = ({
   const firstTickY = Math.floor(visibleStartCanvasY / majorStep) * majorStep;
   const lastTickY = Math.ceil(visibleEndCanvasY / majorStep) * majorStep;
 
-  const verticalTicks: Array<{ pos: number; label?: number; isMajor: boolean }> = [];
-  for (let y = firstTickY; y <= lastTickY; y += minorStep) {
-    verticalTicks.push({
-      pos: y,
-      label: y % majorStep === 0 ? y : undefined,
-      isMajor: y % majorStep === 0
-    });
+  let vTicksPath = '';
+  const vLabels: Array<{ y: number; text: number }> = [];
+  const maxVTicks = 250;
+  let vCount = 0;
+
+  for (let y = firstTickY; y <= lastTickY && vCount < maxVTicks; y += minorStep) {
+    vCount++;
+    const screenY = Math.round((y * zoom) + pan.y);
+    if (screenY >= 0 && screenY <= containerHeight) {
+      const isMajor = Math.abs(y % majorStep) < 0.001 || Math.abs(Math.round(y) % majorStep) === 0;
+      const x1 = isMajor ? 10 : 17;
+      vTicksPath += `M ${x1} ${screenY} L ${RULER_SIZE} ${screenY} `;
+      if (isMajor) {
+        vLabels.push({ y: screenY - 3, text: Math.round(y) });
+      }
+    }
   }
 
   const handleStartDragTopRuler = (e: React.MouseEvent) => {
@@ -221,33 +242,19 @@ export const CanvasRulers: React.FC<CanvasRulersProps> = ({
         title="아래로 드래그하여 수평 가이드라인 생성"
       >
         <svg className="w-full h-full">
-          {horizontalTicks.map((t, idx) => {
-            const screenX = (t.pos * zoom) + pan.x;
-            if (screenX < 0 || screenX > containerWidth) return null;
-            return (
-              <g key={`ht-${idx}`}>
-                <line
-                  x1={screenX}
-                  y1={t.isMajor ? 10 : 16}
-                  x2={screenX}
-                  y2={RULER_SIZE}
-                  stroke="#94a3b8"
-                  strokeWidth="1"
-                />
-                {t.isMajor && (
-                  <text
-                    x={screenX + 3}
-                    y={11}
-                    fill="#64748b"
-                    fontSize="9"
-                    fontFamily="monospace"
-                  >
-                    {t.label}
-                  </text>
-                )}
-              </g>
-            );
-          })}
+          {hTicksPath && <path d={hTicksPath} stroke="#94a3b8" strokeWidth="1" />}
+          {hLabels.map((lbl, idx) => (
+            <text
+              key={idx}
+              x={lbl.x}
+              y={11}
+              fill="#64748b"
+              fontSize="9"
+              fontFamily="monospace"
+            >
+              {lbl.text}
+            </text>
+          ))}
           {/* Mouse Coordinate Hairline Indicator */}
           <line
             ref={topHairlineRef}
@@ -268,34 +275,20 @@ export const CanvasRulers: React.FC<CanvasRulersProps> = ({
         title="우측으로 드래그하여 수직 가이드라인 생성"
       >
         <svg className="w-full h-full">
-          {verticalTicks.map((t, idx) => {
-            const screenY = (t.pos * zoom) + pan.y;
-            if (screenY < 0 || screenY > containerHeight) return null;
-            return (
-              <g key={`vt-${idx}`}>
-                <line
-                  x1={t.isMajor ? 10 : 16}
-                  y1={screenY}
-                  x2={RULER_SIZE}
-                  y2={screenY}
-                  stroke="#94a3b8"
-                  strokeWidth="1"
-                />
-                {t.isMajor && (
-                  <text
-                    x={2}
-                    y={screenY - 3}
-                    fill="#64748b"
-                    fontSize="8"
-                    fontFamily="monospace"
-                    transform={`rotate(-90 2 ${screenY - 3})`}
-                  >
-                    {t.label}
-                  </text>
-                )}
-              </g>
-            );
-          })}
+          {vTicksPath && <path d={vTicksPath} stroke="#94a3b8" strokeWidth="1" />}
+          {vLabels.map((lbl, idx) => (
+            <text
+              key={idx}
+              x={2}
+              y={lbl.y}
+              fill="#64748b"
+              fontSize="8"
+              fontFamily="monospace"
+              transform={`rotate(-90 2 ${lbl.y})`}
+            >
+              {lbl.text}
+            </text>
+          ))}
           {/* Mouse Coordinate Hairline Indicator */}
           <line
             ref={leftHairlineRef}
