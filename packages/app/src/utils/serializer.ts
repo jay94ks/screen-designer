@@ -233,6 +233,7 @@ export function getHtmlTag(type: string, props?: any): string {
 }
 
 export function vnodeToJsx(node: VNode, indentLevel = 2): string {
+  if (!node || !node.type) return '';
   const indent = ' '.repeat(indentLevel);
   const tag = getHtmlTag(node.type, node.props);
 
@@ -286,12 +287,12 @@ ${textContent ? `${indent}  ${textContent}\n` : ''}${childrenJsx}
 ${indent}</${tag}>`;
 }
 
-export function generateReactCode(componentName: string, rootNode: VNode): string {
+export function generateReactCode(componentName: string, rootNode?: VNode | null): string {
   let safeName = componentName.replace(/[^a-zA-Z0-9가-힣]/g, '') || 'ScreenComponent';
   if (/^[0-9]/.test(safeName)) {
     safeName = `Screen_${safeName}`;
   }
-  const jsxBody = vnodeToJsx(rootNode, 4);
+  const jsxBody = rootNode ? vnodeToJsx(rootNode, 4) : '    <div>Empty Screen</div>';
   return `import React from 'react';
 
 // Auto-generated React Component by Screen Designer VDOM Engine
@@ -307,7 +308,8 @@ ${jsxBody}
 
 export const generateComponentCode = generateReactCode;
 
-export function vnodeToVueTemplate(node: VNode, indentLevel = 2): string {
+export function vnodeToVueTemplate(node?: VNode | null, indentLevel = 2): string {
+  if (!node || !node.type) return '';
   const indent = ' '.repeat(indentLevel);
   const tag = getHtmlTag(node.type, node.props);
 

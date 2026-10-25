@@ -1226,11 +1226,11 @@ export default function App() {
   }, [selectedArtboard, selectedNodeId, selectedNode, artboards]);
 
   // Serialized React JSX code
-  const activeCode = selectedArtboard
+  const activeCode = selectedArtboard?.rootNode
     ? generateComponentCode(selectedArtboard.title, selectedArtboard.rootNode)
     : '';
 
-  const compatibleArtboards: Artboard[] = artboards.map((a) => ({
+  const compatibleArtboards: Artboard[] = (artboards || []).map((a) => ({
     id: a.id,
     title: a.title,
     viewport: a.viewport,
@@ -1238,7 +1238,7 @@ export default function App() {
     height: a.height,
     x: a.x,
     y: a.y,
-    code: generateComponentCode(a.title, a.rootNode),
+    code: a.rootNode ? generateComponentCode(a.title, a.rootNode) : '',
     tweaksSchema: a.tweaksSchema as any,
     tweakValues: a.tweakValues
   }));
@@ -1249,10 +1249,10 @@ export default function App() {
     version: '2.0.0',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    pages: pages.map((p) => ({
+    pages: (pages || []).map((p) => ({
       id: p.id,
       name: p.name,
-      artboards: p.artboards.map((a) => ({
+      artboards: (p.artboards || []).map((a) => ({
         id: a.id,
         title: a.title,
         viewport: a.viewport,
@@ -1260,7 +1260,7 @@ export default function App() {
         height: a.height,
         x: a.x,
         y: a.y,
-        code: generateComponentCode(a.title, a.rootNode),
+        code: a.rootNode ? generateComponentCode(a.title, a.rootNode) : '',
         tweaksSchema: a.tweaksSchema as any,
         tweakValues: a.tweakValues
       }))

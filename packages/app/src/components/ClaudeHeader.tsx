@@ -165,37 +165,10 @@ export const ClaudeHeader: React.FC<ClaudeHeaderProps> = ({
     }
   };
 
-  const handleHeaderMouseDown = (e: React.MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (
-      target.closest('button') ||
-      target.closest('input') ||
-      target.closest('select') ||
-      target.closest('.app-region-no-drag')
-    ) {
-      return;
-    }
-    const api = (window as any).electronAPI;
-    if (!api?.dragWindow) return;
-
-    let lastX = e.screenX;
-    let lastY = e.screenY;
-
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      const dx = moveEvent.screenX - lastX;
-      const dy = moveEvent.screenY - lastY;
-      lastX = moveEvent.screenX;
-      lastY = moveEvent.screenY;
-      api.dragWindow(dx, dy);
-    };
-
-    const handleMouseUp = () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+  const handleHeaderMouseDown = (_e: React.MouseEvent) => {
+    // In Electron with frame: false, CSS -webkit-app-region: drag natively handles OS-level window movement.
+    // Attaching JavaScript mousemove setPosition listeners while native drag is active causes
+    // Windows DWM message deadlocks and renderer whiteout/freeze.
   };
 
   const handleHeaderDoubleClick = (e: React.MouseEvent) => {

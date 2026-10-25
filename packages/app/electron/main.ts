@@ -22,6 +22,13 @@ import {
   migrateProjectFolder
 } from './projectService';
 
+// Windows Whiteout / DWM GPU Crash Prevention
+app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
+if (process.platform === 'win32' || process.env.DISABLE_HARDWARE_ACCELERATION === 'true') {
+  // Prevent GPU process crash / whiteout on Windows Intel/AMD/Nvidia drivers
+  app.disableHardwareAcceleration();
+}
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -55,6 +62,30 @@ function createWindow() {
 
   win.on('unmaximize', () => {
     win?.webContents.send('window:maximized-change', false);
+  });
+
+  // Watch for renderer crash / GPU whiteout and recover gracefully
+  win.webContents.on('render-process-gone', (_event, details) => {
+    console.error('[Electron Main] Render process gone (crash/whiteout detected):', details);
+    if (details.reason !== 'clean-exit') {
+      console.warn('[Electron Main] Attempting to reload crashed window...');
+      win?.reload();
+    }
+  });
+
+  win.webContents.on('unresponsive', () => {
+    console.warn('[Electron Main] Window became unresponsive');
+  });
+
+  // Global F12 and Ctrl+Shift+I shortcut to toggle DevTools on Windows/Linux
+  win.webContents.on('before-input-event', (event, input) => {
+    if (
+      input.type === 'keyDown' &&
+      (input.key === 'F12' || (input.control && input.shift && input.key.toLowerCase() === 'i'))
+    ) {
+      win?.webContents.toggleDevTools();
+      event.preventDefault();
+    }
   });
 
   if (process.env.VITE_DEV_SERVER_URL) {
@@ -126,14 +157,22 @@ ipcMain.on('window:close', () => {
   win?.close();
 });
 
+ipcMain.on('window:toggle-devtools', () => {
+  win?.webContents.toggleDevTools();
+});
+
 ipcMain.handle('window:isMaximized', () => {
   return win ? win.isMaximized() : false;
 });
 
 ipcMain.on('window:drag-by', (_, { dx, dy }) => {
-  if (win && !win.isMaximized()) {
-    const [x, y] = win.getPosition();
-    win.setPosition(Math.round(x + dx), Math.round(y + dy));
+  if (win && !win.isMaximized() && (dx !== 0 || dy !== 0)) {
+    try {
+      const [x, y] = win.getPosition();
+      win.setPosition(Math.round(x + dx), Math.round(y + dy));
+    } catch (e) {
+      console.warn('[Electron Main] Error dragging window:', e);
+    }
   }
 });
 

@@ -21,6 +21,9 @@ import { ipcRenderer } from 'electron';
   closeWindow: () => {
     ipcRenderer.send('window:close');
   },
+  toggleDevTools: () => {
+    ipcRenderer.send('window:toggle-devtools');
+  },
   isMaximized: () => ipcRenderer.invoke('window:isMaximized'),
   onMaximizedChange: (callback: (maximized: boolean) => void) => {
     ipcRenderer.on('window:maximized-change', (_, val) => callback(val));
