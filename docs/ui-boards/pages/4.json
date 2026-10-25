@@ -1,0 +1,928 @@
+{
+  "id": "page-modals",
+  "name": "4. Modals & Command System (모달 & 커맨드)",
+  "number": 4,
+  "version": "1.0.0",
+  "updatedAt": "2026-10-25T05:15:18.480Z",
+  "artboards": [
+    {
+      "id": "ab-modal-command-palette",
+      "title": "8. 통합 커맨드 팔레트 모달 (Ctrl+K / Cmd+K 빠른 실행)",
+      "viewport": "desktop",
+      "width": 720,
+      "height": 580,
+      "x": 60,
+      "y": 60,
+      "rootNode": {
+        "id": "node-cp-root",
+        "type": "frame",
+        "name": "Command Palette Modal Overlay",
+        "style": {
+          "width": "100%",
+          "height": "100%",
+          "backgroundColor": "rgba(2, 6, 23, 0.85)",
+          "display": "flex",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "padding": 24
+        },
+        "children": [
+          {
+            "id": "node-cp-dialog",
+            "type": "card",
+            "name": "Palette Window",
+            "style": {
+              "width": 580,
+              "backgroundColor": "#0f172a",
+              "borderWidth": 1,
+              "borderColor": "#334155",
+              "borderRadius": 16,
+              "boxShadow": "0 25px 60px -15px rgba(0, 0, 0, 0.9)",
+              "overflow": "hidden",
+              "display": "flex",
+              "flexDirection": "column"
+            },
+            "children": [
+              {
+                "id": "node-cp-searchbox",
+                "type": "box",
+                "style": {
+                  "padding": 16,
+                  "borderBottomWidth": 1,
+                  "borderColor": "#1e293b",
+                  "display": "flex",
+                  "alignItems": "center",
+                  "gap": 12
+                },
+                "children": [
+                  {
+                    "id": "node-cp-sicon",
+                    "type": "text",
+                    "content": "🔍",
+                    "style": {
+                      "fontSize": 16
+                    }
+                  },
+                  {
+                    "id": "node-cp-input",
+                    "type": "input",
+                    "content": "디자인 시스템",
+                    "style": {
+                      "flex": 1,
+                      "backgroundColor": "transparent",
+                      "borderWidth": 0,
+                      "color": "#ffffff",
+                      "fontSize": 14,
+                      "fontWeight": 600
+                    }
+                  },
+                  {
+                    "id": "node-cp-esc",
+                    "type": "badge",
+                    "content": "ESC",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#94a3b8",
+                      "fontSize": 10,
+                      "padding": 4,
+                      "borderRadius": 4
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "node-cp-results",
+                "type": "box",
+                "style": {
+                  "padding": 10,
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": 4
+                },
+                "children": [
+                  {
+                    "id": "node-cp-item1",
+                    "type": "box",
+                    "style": {
+                      "backgroundColor": "#4f46e5",
+                      "color": "#ffffff",
+                      "padding": 10,
+                      "borderRadius": 10,
+                      "display": "flex",
+                      "justifyContent": "space-between",
+                      "alignItems": "center"
+                    },
+                    "children": [
+                      {
+                        "id": "node-cp-i1l",
+                        "type": "box",
+                        "style": {
+                          "display": "flex",
+                          "alignItems": "center",
+                          "gap": 10
+                        },
+                        "children": [
+                          {
+                            "id": "node-cp-i1ic",
+                            "type": "text",
+                            "content": "🎨",
+                            "style": {
+                              "fontSize": 14
+                            }
+                          },
+                          {
+                            "id": "node-cp-i1tx",
+                            "type": "text",
+                            "content": "디자인 시스템 스튜디오 열기",
+                            "style": {
+                              "fontSize": 12,
+                              "fontWeight": 700
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node-cp-i1sc",
+                        "type": "badge",
+                        "content": "Enter ⏎",
+                        "style": {
+                          "backgroundColor": "#4338ca",
+                          "color": "#ffffff",
+                          "fontSize": 10,
+                          "padding": 4,
+                          "borderRadius": 4
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-cp-item2",
+                    "type": "box",
+                    "style": {
+                      "padding": 10,
+                      "borderRadius": 10,
+                      "display": "flex",
+                      "justifyContent": "space-between",
+                      "alignItems": "center"
+                    },
+                    "children": [
+                      {
+                        "id": "node-cp-i2l",
+                        "type": "box",
+                        "style": {
+                          "display": "flex",
+                          "alignItems": "center",
+                          "gap": 10
+                        },
+                        "children": [
+                          {
+                            "id": "node-cp-i2ic",
+                            "type": "text",
+                            "content": "🌿",
+                            "style": {
+                              "fontSize": 14
+                            }
+                          },
+                          {
+                            "id": "node-cp-i2tx",
+                            "type": "text",
+                            "content": "Git 데스크톱 관리 및 커밋 열기",
+                            "style": {
+                              "color": "#cbd5e1",
+                              "fontSize": 12
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node-cp-i2sc",
+                        "type": "badge",
+                        "content": "Ctrl+G",
+                        "style": {
+                          "backgroundColor": "#1e293b",
+                          "color": "#94a3b8",
+                          "fontSize": 10,
+                          "padding": 4,
+                          "borderRadius": 4
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-cp-item3",
+                    "type": "box",
+                    "style": {
+                      "padding": 10,
+                      "borderRadius": 10,
+                      "display": "flex",
+                      "justifyContent": "space-between",
+                      "alignItems": "center"
+                    },
+                    "children": [
+                      {
+                        "id": "node-cp-i3l",
+                        "type": "box",
+                        "style": {
+                          "display": "flex",
+                          "alignItems": "center",
+                          "gap": 10
+                        },
+                        "children": [
+                          {
+                            "id": "node-cp-i3ic",
+                            "type": "text",
+                            "content": "▶",
+                            "style": {
+                              "fontSize": 14
+                            }
+                          },
+                          {
+                            "id": "node-cp-i3tx",
+                            "type": "text",
+                            "content": "인터랙티브 플레이 모드 실행",
+                            "style": {
+                              "color": "#cbd5e1",
+                              "fontSize": 12
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node-cp-i3sc",
+                        "type": "badge",
+                        "content": "PLAY",
+                        "style": {
+                          "backgroundColor": "#1e293b",
+                          "color": "#94a3b8",
+                          "fontSize": 10,
+                          "padding": 4,
+                          "borderRadius": 4
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-cp-item4",
+                    "type": "box",
+                    "style": {
+                      "padding": 10,
+                      "borderRadius": 10,
+                      "display": "flex",
+                      "justifyContent": "space-between",
+                      "alignItems": "center"
+                    },
+                    "children": [
+                      {
+                        "id": "node-cp-i4l",
+                        "type": "box",
+                        "style": {
+                          "display": "flex",
+                          "alignItems": "center",
+                          "gap": 10
+                        },
+                        "children": [
+                          {
+                            "id": "node-cp-i4ic",
+                            "type": "text",
+                            "content": "📐",
+                            "style": {
+                              "fontSize": 14
+                            }
+                          },
+                          {
+                            "id": "node-cp-i4tx",
+                            "type": "text",
+                            "content": "캔버스 눈금자 및 가이드라인 토글",
+                            "style": {
+                              "color": "#cbd5e1",
+                              "fontSize": 12
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node-cp-i4sc",
+                        "type": "badge",
+                        "content": "Shift+R",
+                        "style": {
+                          "backgroundColor": "#1e293b",
+                          "color": "#94a3b8",
+                          "fontSize": 10,
+                          "padding": 4,
+                          "borderRadius": 4
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "node-cp-footer",
+                "type": "box",
+                "style": {
+                  "backgroundColor": "#0b0f19",
+                  "padding": 12,
+                  "borderTopWidth": 1,
+                  "borderColor": "#1e293b",
+                  "display": "flex",
+                  "justifyContent": "space-between",
+                  "color": "#64748b",
+                  "fontSize": 10
+                },
+                "children": [
+                  {
+                    "id": "node-cf-1",
+                    "type": "text",
+                    "content": "↑↓ 이동  •  Enter 실행  •  Esc 닫기"
+                  },
+                  {
+                    "id": "node-cf-2",
+                    "type": "badge",
+                    "content": "Screen Designer Spotlight",
+                    "style": {
+                      "color": "#4f46e5"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ab-modal-settings",
+      "title": "9. 환경 설정 다이얼로그 (Settings & 마이그레이션 & 언어)",
+      "viewport": "desktop",
+      "width": 760,
+      "height": 680,
+      "x": 820,
+      "y": 60,
+      "rootNode": {
+        "id": "node-st-root",
+        "type": "frame",
+        "name": "Settings Modal Shell",
+        "style": {
+          "width": "100%",
+          "height": "100%",
+          "backgroundColor": "#030712",
+          "display": "flex",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "padding": 24
+        },
+        "children": [
+          {
+            "id": "node-st-card",
+            "type": "card",
+            "style": {
+              "width": 640,
+              "backgroundColor": "#0f172a",
+              "borderWidth": 1,
+              "borderColor": "#334155",
+              "borderRadius": 16,
+              "overflow": "hidden",
+              "display": "flex",
+              "flexDirection": "column",
+              "boxShadow": "0 25px 60px -15px rgba(0, 0, 0, 0.9)"
+            },
+            "children": [
+              {
+                "id": "node-st-header",
+                "type": "box",
+                "style": {
+                  "padding": 18,
+                  "borderBottomWidth": 1,
+                  "borderColor": "#1e293b",
+                  "display": "flex",
+                  "justifyContent": "space-between",
+                  "alignItems": "center"
+                },
+                "children": [
+                  {
+                    "id": "node-st-title",
+                    "type": "heading",
+                    "content": "⚙️ 환경 설정 (Settings)",
+                    "style": {
+                      "color": "#ffffff",
+                      "fontSize": 15,
+                      "fontWeight": 700
+                    }
+                  },
+                  {
+                    "id": "node-st-close",
+                    "type": "badge",
+                    "content": "✕",
+                    "style": {
+                      "color": "#94a3b8",
+                      "fontSize": 13,
+                      "cursor": "pointer"
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "node-st-body",
+                "type": "box",
+                "style": {
+                  "padding": 20,
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": 16
+                },
+                "children": [
+                  {
+                    "id": "node-st-path-sec",
+                    "type": "card",
+                    "style": {
+                      "backgroundColor": "#141c2e",
+                      "padding": 14,
+                      "borderRadius": 10,
+                      "borderWidth": 1,
+                      "borderColor": "#27354f",
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": 8
+                    },
+                    "children": [
+                      {
+                        "id": "node-sps-title",
+                        "type": "heading",
+                        "content": "📁 문서 저장 경로 (Page Docs Path)",
+                        "style": {
+                          "color": "#ffffff",
+                          "fontSize": 12,
+                          "fontWeight": 700
+                        }
+                      },
+                      {
+                        "id": "node-sps-desc",
+                        "type": "text",
+                        "content": "프로젝트 내에서 UI 스토리보드 파일이 저장될 상대 경로입니다. 경로 변경 시 기존 데이터가 자동 이동됩니다.",
+                        "style": {
+                          "color": "#94a3b8",
+                          "fontSize": 11
+                        }
+                      },
+                      {
+                        "id": "node-sps-inprow",
+                        "type": "box",
+                        "style": {
+                          "display": "flex",
+                          "gap": 8,
+                          "marginTop": 4
+                        },
+                        "children": [
+                          {
+                            "id": "node-sps-input",
+                            "type": "input",
+                            "content": "docs/ui-boards",
+                            "style": {
+                              "flex": 1,
+                              "backgroundColor": "#0b0f19",
+                              "color": "#ffffff",
+                              "padding": 8,
+                              "borderRadius": 6,
+                              "fontSize": 11,
+                              "borderWidth": 1,
+                              "borderColor": "#334155"
+                            }
+                          },
+                          {
+                            "id": "node-sps-btn",
+                            "type": "button",
+                            "content": "경로 변경 및 자동 이동",
+                            "style": {
+                              "backgroundColor": "#4f46e5",
+                              "color": "#ffffff",
+                              "fontSize": 11,
+                              "fontWeight": 700,
+                              "padding": 8,
+                              "borderRadius": 6
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-st-lang-sec",
+                    "type": "card",
+                    "style": {
+                      "backgroundColor": "#141c2e",
+                      "padding": 14,
+                      "borderRadius": 10,
+                      "borderWidth": 1,
+                      "borderColor": "#27354f",
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": 8
+                    },
+                    "children": [
+                      {
+                        "id": "node-sls-title",
+                        "type": "heading",
+                        "content": "🌐 인터페이스 언어 (Language)",
+                        "style": {
+                          "color": "#ffffff",
+                          "fontSize": 12,
+                          "fontWeight": 700
+                        }
+                      },
+                      {
+                        "id": "node-sls-cards",
+                        "type": "box",
+                        "style": {
+                          "display": "flex",
+                          "gap": 10
+                        },
+                        "children": [
+                          {
+                            "id": "node-lang-ko",
+                            "type": "badge",
+                            "content": "🇰🇷 한국어 (기본) ✓",
+                            "style": {
+                              "backgroundColor": "#4f46e5",
+                              "color": "#ffffff",
+                              "fontSize": 11,
+                              "padding": 8,
+                              "borderRadius": 8,
+                              "fontWeight": 700,
+                              "flex": 1,
+                              "textAlign": "center"
+                            }
+                          },
+                          {
+                            "id": "node-lang-en",
+                            "type": "badge",
+                            "content": "🇺🇸 English",
+                            "style": {
+                              "backgroundColor": "#0b0f19",
+                              "color": "#94a3b8",
+                              "fontSize": 11,
+                              "padding": 8,
+                              "borderRadius": 8,
+                              "flex": 1,
+                              "textAlign": "center"
+                            }
+                          },
+                          {
+                            "id": "node-lang-ja",
+                            "type": "badge",
+                            "content": "🇯🇵 日本語",
+                            "style": {
+                              "backgroundColor": "#0b0f19",
+                              "color": "#94a3b8",
+                              "fontSize": 11,
+                              "padding": 8,
+                              "borderRadius": 8,
+                              "flex": 1,
+                              "textAlign": "center"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-st-canvas-sec",
+                    "type": "card",
+                    "style": {
+                      "backgroundColor": "#141c2e",
+                      "padding": 14,
+                      "borderRadius": 10,
+                      "borderWidth": 1,
+                      "borderColor": "#27354f",
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": 8
+                    },
+                    "children": [
+                      {
+                        "id": "node-scs-title",
+                        "type": "heading",
+                        "content": "🎨 캔버스 옵션",
+                        "style": {
+                          "color": "#ffffff",
+                          "fontSize": 12,
+                          "fontWeight": 700
+                        }
+                      },
+                      {
+                        "id": "node-scs-toggles",
+                        "type": "box",
+                        "style": {
+                          "display": "flex",
+                          "gap": 14
+                        },
+                        "children": [
+                          {
+                            "id": "node-tg-grid",
+                            "type": "badge",
+                            "content": "도트 그리드 표시: ON ✓",
+                            "style": {
+                              "backgroundColor": "#1e293b",
+                              "color": "#38bdf8",
+                              "fontSize": 10,
+                              "padding": 6,
+                              "borderRadius": 6
+                            }
+                          },
+                          {
+                            "id": "node-tg-rulers",
+                            "type": "badge",
+                            "content": "눈금자 가이드: ON ✓",
+                            "style": {
+                              "backgroundColor": "#1e293b",
+                              "color": "#38bdf8",
+                              "fontSize": 10,
+                              "padding": 6,
+                              "borderRadius": 6
+                            }
+                          },
+                          {
+                            "id": "node-tg-auto",
+                            "type": "badge",
+                            "content": "자동 저장 (Auto-Save): ON ✓",
+                            "style": {
+                              "backgroundColor": "#065f46",
+                              "color": "#a7f3d0",
+                              "fontSize": 10,
+                              "padding": 6,
+                              "borderRadius": 6
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ab-modal-shortcuts",
+      "title": "10. 키보드 단축키 & 치트시트 가이드 (Shortcuts)",
+      "viewport": "desktop",
+      "width": 680,
+      "height": 640,
+      "x": 1620,
+      "y": 60,
+      "rootNode": {
+        "id": "node-sh-root",
+        "type": "frame",
+        "name": "Shortcuts Guide Shell",
+        "style": {
+          "width": "100%",
+          "height": "100%",
+          "backgroundColor": "#030712",
+          "display": "flex",
+          "alignItems": "center",
+          "justifyContent": "center",
+          "padding": 24
+        },
+        "children": [
+          {
+            "id": "node-sh-card",
+            "type": "card",
+            "style": {
+              "width": 560,
+              "backgroundColor": "#0f172a",
+              "borderWidth": 1,
+              "borderColor": "#334155",
+              "borderRadius": 16,
+              "overflow": "hidden",
+              "display": "flex",
+              "flexDirection": "column",
+              "boxShadow": "0 25px 60px -15px rgba(0, 0, 0, 0.9)"
+            },
+            "children": [
+              {
+                "id": "node-sh-header",
+                "type": "box",
+                "style": {
+                  "padding": 18,
+                  "borderBottomWidth": 1,
+                  "borderColor": "#1e293b",
+                  "display": "flex",
+                  "justifyContent": "space-between",
+                  "alignItems": "center"
+                },
+                "children": [
+                  {
+                    "id": "node-sh-title",
+                    "type": "heading",
+                    "content": "⌨️ 키보드 단축키 가이드",
+                    "style": {
+                      "color": "#ffffff",
+                      "fontSize": 15,
+                      "fontWeight": 700
+                    }
+                  },
+                  {
+                    "id": "node-sh-close",
+                    "type": "badge",
+                    "content": "Ctrl+/",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#94a3b8",
+                      "fontSize": 10,
+                      "padding": 4,
+                      "borderRadius": 4
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "node-sh-list",
+                "type": "box",
+                "style": {
+                  "padding": 18,
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": 10
+                },
+                "children": [
+                  {
+                    "id": "node-sh-row1",
+                    "type": "box",
+                    "style": {
+                      "display": "flex",
+                      "justifyContent": "space-between",
+                      "padding": 8,
+                      "backgroundColor": "#141c2e",
+                      "borderRadius": 6
+                    },
+                    "children": [
+                      {
+                        "id": "node-s1-n",
+                        "type": "text",
+                        "content": "통합 커맨드 팔레트 검색",
+                        "style": {
+                          "color": "#ffffff",
+                          "fontSize": 12,
+                          "fontWeight": 600
+                        }
+                      },
+                      {
+                        "id": "node-s1-k",
+                        "type": "badge",
+                        "content": "Ctrl + K / Cmd + K",
+                        "style": {
+                          "backgroundColor": "#4f46e5",
+                          "color": "#fff",
+                          "fontSize": 10,
+                          "padding": 4,
+                          "borderRadius": 4
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-sh-row2",
+                    "type": "box",
+                    "style": {
+                      "display": "flex",
+                      "justifyContent": "space-between",
+                      "padding": 8,
+                      "backgroundColor": "#141c2e",
+                      "borderRadius": 6
+                    },
+                    "children": [
+                      {
+                        "id": "node-s2-n",
+                        "type": "text",
+                        "content": "선택 도구 (Select) / 손 도구 (Pan)",
+                        "style": {
+                          "color": "#cbd5e1",
+                          "fontSize": 12
+                        }
+                      },
+                      {
+                        "id": "node-s2-k",
+                        "type": "badge",
+                        "content": "V  /  H (또는 Space)",
+                        "style": {
+                          "backgroundColor": "#1e293b",
+                          "color": "#38bdf8",
+                          "fontSize": 10,
+                          "padding": 4,
+                          "borderRadius": 4
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-sh-row3",
+                    "type": "box",
+                    "style": {
+                      "display": "flex",
+                      "justifyContent": "space-between",
+                      "padding": 8,
+                      "backgroundColor": "#141c2e",
+                      "borderRadius": 6
+                    },
+                    "children": [
+                      {
+                        "id": "node-s3-n",
+                        "type": "text",
+                        "content": "새 사각형(Frame) / 텍스트 추가",
+                        "style": {
+                          "color": "#cbd5e1",
+                          "fontSize": 12
+                        }
+                      },
+                      {
+                        "id": "node-s3-k",
+                        "type": "badge",
+                        "content": "R  /  T",
+                        "style": {
+                          "backgroundColor": "#1e293b",
+                          "color": "#38bdf8",
+                          "fontSize": 10,
+                          "padding": 4,
+                          "borderRadius": 4
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-sh-row4",
+                    "type": "box",
+                    "style": {
+                      "display": "flex",
+                      "justifyContent": "space-between",
+                      "padding": 8,
+                      "backgroundColor": "#141c2e",
+                      "borderRadius": 6
+                    },
+                    "children": [
+                      {
+                        "id": "node-s4-n",
+                        "type": "text",
+                        "content": "실행 취소 (Undo) / 다시 실행 (Redo)",
+                        "style": {
+                          "color": "#cbd5e1",
+                          "fontSize": 12
+                        }
+                      },
+                      {
+                        "id": "node-s4-k",
+                        "type": "badge",
+                        "content": "Ctrl + Z  /  Ctrl + Y",
+                        "style": {
+                          "backgroundColor": "#1e293b",
+                          "color": "#38bdf8",
+                          "fontSize": 10,
+                          "padding": 4,
+                          "borderRadius": 4
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-sh-row5",
+                    "type": "box",
+                    "style": {
+                      "display": "flex",
+                      "justifyContent": "space-between",
+                      "padding": 8,
+                      "backgroundColor": "#141c2e",
+                      "borderRadius": 6
+                    },
+                    "children": [
+                      {
+                        "id": "node-s5-n",
+                        "type": "text",
+                        "content": "전체 화면 맞춤 (Fit to Screen)",
+                        "style": {
+                          "color": "#cbd5e1",
+                          "fontSize": 12
+                        }
+                      },
+                      {
+                        "id": "node-s5-k",
+                        "type": "badge",
+                        "content": "Shift + 1  (줌 100%: Ctrl+0)",
+                        "style": {
+                          "backgroundColor": "#1e293b",
+                          "color": "#38bdf8",
+                          "fontSize": 10,
+                          "padding": 4,
+                          "borderRadius": 4
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

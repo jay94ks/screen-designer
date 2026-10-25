@@ -1,411 +1,205 @@
 {
-  "id": "page-1",
-  "name": "Page 1 (핀테크 가상 DOM)",
+  "id": "page-workspace",
+  "name": "1. Core Canvas Workspace (캔버스 & 워크스페이스)",
   "number": 1,
   "version": "1.0.0",
-  "updatedAt": "2026-10-25T04:34:10.493Z",
+  "updatedAt": "2026-10-25T05:07:26.960Z",
   "artboards": [
     {
-      "id": "artboard-1",
-      "title": "1. AI 자산 관리 홈 (Home)",
-      "viewport": "mobile",
-      "x": 0,
-      "y": 0,
-      "width": 390,
-      "height": 844,
+      "id": "ab-sd-full-workspace",
+      "title": "1. 메인 무한 캔버스 & 삼분할 워크스페이스 (Full UI)",
+      "viewport": "desktop",
+      "width": 1380,
+      "height": 860,
+      "x": 60,
+      "y": 60,
       "rootNode": {
-        "id": "node-s1-root",
+        "id": "node-ws-root",
         "type": "frame",
-        "name": "Home Frame Container",
+        "name": "Screen Designer Window Shell",
         "style": {
-          "display": "flex",
-          "flexDirection": "column",
-          "justifyContent": "space-between",
           "width": "100%",
           "height": "100%",
-          "backgroundColor": "#090d16",
-          "color": "#ffffff",
-          "padding": 20
+          "backgroundColor": "#020617",
+          "display": "flex",
+          "flexDirection": "column",
+          "borderRadius": 14,
+          "overflow": "hidden",
+          "borderWidth": 1,
+          "borderColor": "#1e293b",
+          "boxShadow": "0 25px 50px -12px rgba(0, 0, 0, 0.7)"
         },
         "children": [
           {
-            "id": "node-s1-top",
+            "id": "node-ws-caption",
             "type": "box",
-            "name": "Top Header & Cards",
+            "name": "Window Caption Bar",
             "style": {
+              "height": 38,
+              "backgroundColor": "#0b0f19",
+              "borderBottomWidth": 1,
+              "borderColor": "#1e293b",
               "display": "flex",
-              "flexDirection": "column",
-              "gap": 16
+              "alignItems": "center",
+              "justifyContent": "space-between",
+              "paddingLeft": 14,
+              "paddingRight": 14
             },
             "children": [
               {
-                "id": "node-s1-header",
+                "id": "node-ws-cap-left",
                 "type": "box",
-                "name": "Profile Header Bar",
+                "name": "Logo & Title",
                 "style": {
                   "display": "flex",
                   "alignItems": "center",
-                  "justifyContent": "space-between"
+                  "gap": 10
                 },
                 "children": [
                   {
-                    "id": "node-s1-title-box",
-                    "type": "box",
-                    "name": "Title Group",
+                    "id": "node-ws-logo",
+                    "type": "badge",
+                    "name": "App Brand Badge",
+                    "content": "🎨 Screen Designer",
                     "style": {
-                      "display": "flex",
-                      "flexDirection": "column"
-                    },
-                    "children": [
-                      {
-                        "id": "node-s1-greeting",
-                        "type": "text",
-                        "name": "Greeting Subtext",
-                        "content": "반가워요, 서윤님",
-                        "style": {
-                          "fontSize": 11,
-                          "color": "#94a3b8"
-                        }
-                      },
-                      {
-                        "id": "node-s1-heading",
-                        "type": "text",
-                        "name": "Main App Heading",
-                        "content": "스마트 포트폴리오",
-                        "style": {
-                          "fontSize": 18,
-                          "fontWeight": "bold",
-                          "color": "#ffffff"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "id": "node-s1-avatar",
-                    "type": "box",
-                    "name": "User Avatar Badge",
-                    "content": "SY",
-                    "style": {
-                      "width": 36,
-                      "height": 36,
-                      "borderRadius": 18,
-                      "backgroundColor": "#6366f1",
+                      "backgroundColor": "#4f46e5",
                       "color": "#ffffff",
-                      "display": "flex",
-                      "alignItems": "center",
-                      "justifyContent": "center",
-                      "fontWeight": "bold",
-                      "fontSize": 12
-                    }
-                  }
-                ]
-              },
-              {
-                "id": "node-s1-hero",
-                "type": "card",
-                "name": "Hero Balance Card",
-                "style": {
-                  "display": "flex",
-                  "flexDirection": "column",
-                  "gap": 8,
-                  "padding": 20,
-                  "borderRadius": 24,
-                  "backgroundImage": "assets/preset-gradient.svg",
-                  "boxShadow": "0 20px 25px -5px rgba(79, 70, 229, 0.3)"
-                },
-                "children": [
-                  {
-                    "id": "node-s1-badge-row",
-                    "type": "box",
-                    "name": "Badge Header Row",
-                    "style": {
-                      "display": "flex",
-                      "justifyContent": "space-between",
-                      "alignItems": "center"
-                    },
-                    "children": [
-                      {
-                        "id": "node-s1-balance-label",
-                        "type": "text",
-                        "name": "Balance Label",
-                        "content": "총 평가 자산",
-                        "style": {
-                          "fontSize": 11,
-                          "color": "#e0e7ff"
-                        }
-                      },
-                      {
-                        "id": "node-s1-ai-badge",
-                        "type": "badge",
-                        "name": "AI Rebalance Badge",
-                        "content": "✨ AI 자동 운용 중",
-                        "condition": {
-                          "enabled": true,
-                          "matchType": "and",
-                          "rules": [
-                            {
-                              "id": "rule-theme-multi",
-                              "tweakId": "theme",
-                              "operator": "in",
-                              "values": [
-                                "dark",
-                                "cyber"
-                              ]
-                            },
-                            {
-                              "id": "rule-badge-toggle",
-                              "tweakId": "showAiBadge",
-                              "operator": "in",
-                              "values": [
-                                true
-                              ]
-                            }
-                          ]
-                        },
-                        "style": {
-                          "fontSize": 10,
-                          "fontWeight": "bold",
-                          "padding": "3px 8px",
-                          "borderRadius": 12,
-                          "backgroundColor": "rgba(255, 255, 255, 0.2)"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "id": "node-s1-balance-val",
-                    "type": "text",
-                    "name": "Total Balance Text",
-                    "content": "₩ 34,820,000",
-                    "style": {
-                      "fontSize": 28,
-                      "fontWeight": "900",
-                      "color": "#ffffff"
-                    }
-                  },
-                  {
-                    "id": "node-s1-profit",
-                    "type": "text",
-                    "name": "Profit Indicator Text",
-                    "content": "▲ +18.4% 이번 달 수익 (+₩5,420,000)",
-                    "style": {
                       "fontSize": 11,
-                      "fontWeight": "bold",
-                      "color": "#6ee7b7"
+                      "fontWeight": 700,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
+                      "paddingTop": 3,
+                      "paddingBottom": 3,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-ws-proj-title",
+                    "type": "text",
+                    "name": "Project Title",
+                    "content": "Fintech Mobile App Storyboard",
+                    "style": {
+                      "color": "#e2e8f0",
+                      "fontSize": 12,
+                      "fontWeight": 600
+                    }
+                  },
+                  {
+                    "id": "node-ws-page-badge",
+                    "type": "badge",
+                    "name": "Active Page",
+                    "content": "Page 1: 온보딩 플로우 ▾",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#94a3b8",
+                      "fontSize": 11,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
+                      "paddingTop": 3,
+                      "paddingBottom": 3,
+                      "borderRadius": 6
                     }
                   }
                 ]
               },
               {
-                "id": "node-s1-promo-img",
-                "type": "image",
-                "name": "투자 마켓 분석 배너",
-                "content": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80",
-                "props": {
-                  "alt": "AI Market Analysis"
-                },
+                "id": "node-ws-cap-center",
+                "type": "box",
+                "name": "Center Drag Bar",
                 "style": {
-                  "width": "100%",
-                  "height": 85,
-                  "borderRadius": 16,
-                  "objectFit": "cover",
-                  "boxShadow": "0 4px 10px rgba(0,0,0,0.3)"
+                  "width": 80,
+                  "height": 4,
+                  "backgroundColor": "#334155",
+                  "borderRadius": 2
                 }
               },
               {
-                "id": "node-s1-alloc-card",
-                "type": "card",
-                "name": "Asset Allocation Card",
+                "id": "node-ws-cap-right",
+                "type": "box",
+                "name": "Right Actions",
                 "style": {
                   "display": "flex",
-                  "flexDirection": "column",
-                  "gap": 8,
-                  "padding": 14,
-                  "borderRadius": 20,
-                  "backgroundColor": "#111827",
-                  "borderWidth": 1,
-                  "borderColor": "#1f2937"
+                  "alignItems": "center",
+                  "gap": 8
                 },
                 "children": [
                   {
-                    "id": "node-s1-scroll-list",
-                    "type": "scroll-container",
-                    "name": "보유 자산 스크롤 목록",
+                    "id": "node-ws-lang-btn",
+                    "type": "badge",
+                    "name": "Lang Switcher",
+                    "content": "🌐 KO ▾",
                     "style": {
-                      "maxHeight": 120,
-                      "overflowY": "auto",
+                      "backgroundColor": "#1e293b",
+                      "color": "#cbd5e1",
+                      "fontSize": 11,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
+                      "paddingTop": 3,
+                      "paddingBottom": 3,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-ws-ds-btn",
+                    "type": "button",
+                    "name": "Design System Studio Button",
+                    "content": "🎨 디자인 시스템",
+                    "style": {
+                      "backgroundColor": "#312e81",
+                      "color": "#c7d2fe",
+                      "borderColor": "#4338ca",
+                      "borderWidth": 1,
+                      "fontSize": 11,
+                      "fontWeight": 600,
+                      "paddingLeft": 10,
+                      "paddingRight": 10,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-ws-os-controls",
+                    "type": "box",
+                    "name": "OS Window Controls",
+                    "style": {
                       "display": "flex",
-                      "flexDirection": "column",
-                      "gap": 8,
-                      "paddingRight": 4
+                      "gap": 6,
+                      "marginLeft": 8
                     },
                     "children": [
                       {
-                        "id": "node-s1-asset-1",
-                        "type": "box",
-                        "name": "S&P 500 Item Row",
+                        "id": "node-ws-min",
+                        "type": "badge",
+                        "content": "—",
                         "style": {
-                          "display": "flex",
-                          "justifyContent": "space-between",
-                          "alignItems": "center",
-                          "padding": "4px 0"
-                        },
-                        "children": [
-                          {
-                            "id": "node-s1-asset1-title",
-                            "type": "text",
-                            "name": "Asset Name",
-                            "content": "미국 대형 기술주 ETF (52%)",
-                            "style": {
-                              "fontSize": 12,
-                              "fontWeight": "bold",
-                              "color": "#f3f4f6"
-                            }
-                          },
-                          {
-                            "id": "node-s1-asset1-val",
-                            "type": "text",
-                            "name": "Asset Value",
-                            "content": "₩ 18,100,000",
-                            "style": {
-                              "fontSize": 12,
-                              "fontWeight": "bold",
-                              "color": "#60a5fa"
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "id": "node-s1-divider",
-                        "type": "divider",
-                        "name": "Separator Line",
-                        "style": {
-                          "height": 1,
-                          "backgroundColor": "#1f2937"
+                          "color": "#94a3b8",
+                          "fontSize": 10,
+                          "width": 20,
+                          "textAlign": "center"
                         }
                       },
                       {
-                        "id": "node-s1-asset-2",
-                        "type": "box",
-                        "name": "Bitcoin Item Row",
+                        "id": "node-ws-max",
+                        "type": "badge",
+                        "content": "▢",
                         "style": {
-                          "display": "flex",
-                          "justifyContent": "space-between",
-                          "alignItems": "center",
-                          "padding": "4px 0"
-                        },
-                        "children": [
-                          {
-                            "id": "node-s1-asset2-title",
-                            "type": "text",
-                            "name": "Asset Name",
-                            "content": "비트코인 디지털 자산 (28%)",
-                            "style": {
-                              "fontSize": 12,
-                              "fontWeight": "bold",
-                              "color": "#f3f4f6"
-                            }
-                          },
-                          {
-                            "id": "node-s1-asset2-val",
-                            "type": "text",
-                            "name": "Asset Value",
-                            "content": "₩ 9,750,000",
-                            "style": {
-                              "fontSize": 12,
-                              "fontWeight": "bold",
-                              "color": "#f59e0b"
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "id": "node-s1-divider-2",
-                        "type": "divider",
-                        "name": "Separator Line 2",
-                        "style": {
-                          "height": 1,
-                          "backgroundColor": "#1f2937"
+                          "color": "#94a3b8",
+                          "fontSize": 10,
+                          "width": 20,
+                          "textAlign": "center"
                         }
                       },
                       {
-                        "id": "node-s1-asset-3",
-                        "type": "box",
-                        "name": "Ethereum Item Row",
+                        "id": "node-ws-close",
+                        "type": "badge",
+                        "content": "✕",
                         "style": {
-                          "display": "flex",
-                          "justifyContent": "space-between",
-                          "alignItems": "center",
-                          "padding": "4px 0"
-                        },
-                        "children": [
-                          {
-                            "id": "node-s1-asset3-title",
-                            "type": "text",
-                            "name": "Asset Name",
-                            "content": "이더리움 스테이킹 자산 (12%)",
-                            "style": {
-                              "fontSize": 12,
-                              "fontWeight": "bold",
-                              "color": "#f3f4f6"
-                            }
-                          },
-                          {
-                            "id": "node-s1-asset3-val",
-                            "type": "text",
-                            "name": "Asset Value",
-                            "content": "₩ 4,180,000",
-                            "style": {
-                              "fontSize": 12,
-                              "fontWeight": "bold",
-                              "color": "#a855f7"
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "id": "node-s1-divider-3",
-                        "type": "divider",
-                        "name": "Separator Line 3",
-                        "style": {
-                          "height": 1,
-                          "backgroundColor": "#1f2937"
+                          "color": "#f87171",
+                          "fontSize": 10,
+                          "width": 20,
+                          "textAlign": "center"
                         }
-                      },
-                      {
-                        "id": "node-s1-asset-4",
-                        "type": "box",
-                        "name": "Cash Item Row",
-                        "style": {
-                          "display": "flex",
-                          "justifyContent": "space-between",
-                          "alignItems": "center",
-                          "padding": "4px 0"
-                        },
-                        "children": [
-                          {
-                            "id": "node-s1-asset4-title",
-                            "type": "text",
-                            "name": "Asset Name",
-                            "content": "원화 현금성 예치금 (8%)",
-                            "style": {
-                              "fontSize": 12,
-                              "fontWeight": "bold",
-                              "color": "#f3f4f6"
-                            }
-                          },
-                          {
-                            "id": "node-s1-asset4-val",
-                            "type": "text",
-                            "name": "Asset Value",
-                            "content": "₩ 2,790,000",
-                            "style": {
-                              "fontSize": 12,
-                              "fontWeight": "bold",
-                              "color": "#10b981"
-                            }
-                          }
-                        ]
                       }
                     ]
                   }
@@ -414,122 +208,1542 @@
             ]
           },
           {
-            "id": "node-s1-btn",
-            "type": "button",
-            "name": "Order CTA Button",
-            "content": "+ 즉시 매수 주문하기",
-            "events": [
-              {
-                "id": "evt-s1-order-nav",
-                "trigger": "click",
-                "action": {
-                  "type": "navigate",
-                  "targetArtboardId": "artboard-2"
-                },
-                "description": "클릭 시 간편 주문 모달 화면으로 이동"
-              },
-              {
-                "id": "evt-s1-theme-cycle",
-                "trigger": "contextmenu",
-                "action": {
-                  "type": "change_tweak",
-                  "tweakId": "theme",
-                  "operation": "cycle"
-                },
-                "description": "우클릭 시 컬러 모드 테마 순환 (dark -> light -> cyber)"
-              }
-            ],
+            "id": "node-ws-topbar",
+            "type": "box",
+            "name": "Editor Toolbar",
             "style": {
-              "width": "100%",
-              "padding": 16,
-              "borderRadius": 18,
-              "backgroundColor": "#4f46e5",
-              "color": "#ffffff",
-              "fontSize": 14,
-              "fontWeight": "bold",
-              "textAlign": "center",
-              "boxShadow": "0 10px 15px -3px rgba(79, 70, 229, 0.4)"
-            }
-          }
-        ]
-      },
-      "tweaksSchema": [
-        {
-          "id": "theme",
-          "label": "컬러 모드",
-          "control": "buttons",
-          "options": [
-            "dark",
-            "light",
-            "cyber"
-          ],
-          "defaultValue": "dark"
-        },
-        {
-          "id": "showAiBadge",
-          "label": "AI 추천 뱃지",
-          "control": "boolean",
-          "defaultValue": true
-        }
-      ],
-      "tweakValues": {
-        "theme": "dark",
-        "showAiBadge": true
-      }
-    },
-    {
-      "id": "artboard-2",
-      "title": "2. 간편 주문 모달 (Order)",
-      "viewport": "mobile",
-      "x": 440,
-      "y": 0,
-      "width": 390,
-      "height": 844,
-      "rootNode": {
-        "id": "node-s2-root",
-        "type": "frame",
-        "name": "Order Modal Container",
-        "style": {
-          "display": "flex",
-          "flexDirection": "column",
-          "justifyContent": "flex-end",
-          "width": "100%",
-          "height": "100%",
-          "backgroundColor": "#090d16",
-          "padding": 16
-        },
-        "children": [
-          {
-            "id": "node-s2-sheet",
-            "type": "card",
-            "name": "Bottom Order Sheet",
-            "style": {
+              "height": 44,
+              "backgroundColor": "#0f172a",
+              "borderBottomWidth": 1,
+              "borderColor": "#1e293b",
               "display": "flex",
-              "flexDirection": "column",
-              "gap": 16,
-              "padding": 24,
-              "borderRadius": 28,
-              "backgroundColor": "#111827",
-              "borderWidth": 1,
-              "borderColor": "#1f2937"
+              "alignItems": "center",
+              "justifyContent": "space-between",
+              "paddingLeft": 14,
+              "paddingRight": 14
             },
             "children": [
               {
-                "id": "node-s2-handle",
+                "id": "node-ws-tools",
                 "type": "box",
-                "name": "Handle Indicator",
+                "name": "Toolbox Buttons",
                 "style": {
-                  "width": 40,
-                  "height": 4,
-                  "borderRadius": 2,
-                  "backgroundColor": "#374151",
-                  "margin": "0 auto 8px auto"
+                  "display": "flex",
+                  "alignItems": "center",
+                  "gap": 4
+                },
+                "children": [
+                  {
+                    "id": "node-tool-select",
+                    "type": "button",
+                    "name": "Select Tool",
+                    "content": "↖ 선택 (V)",
+                    "style": {
+                      "backgroundColor": "#4f46e5",
+                      "color": "#ffffff",
+                      "fontSize": 11,
+                      "fontWeight": 600,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
+                      "paddingTop": 5,
+                      "paddingBottom": 5,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-tool-hand",
+                    "type": "button",
+                    "name": "Hand Tool",
+                    "content": "✋ 손 (H)",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#94a3b8",
+                      "fontSize": 11,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
+                      "paddingTop": 5,
+                      "paddingBottom": 5,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-tool-frame",
+                    "type": "button",
+                    "name": "Frame Tool",
+                    "content": "▢ 프레임 (R)",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#94a3b8",
+                      "fontSize": 11,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
+                      "paddingTop": 5,
+                      "paddingBottom": 5,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-tool-text",
+                    "type": "button",
+                    "name": "Text Tool",
+                    "content": "T 텍스트 (T)",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#94a3b8",
+                      "fontSize": 11,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
+                      "paddingTop": 5,
+                      "paddingBottom": 5,
+                      "borderRadius": 6
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "node-ws-searchbar",
+                "type": "box",
+                "name": "Command Palette Trigger",
+                "style": {
+                  "backgroundColor": "#1e293b",
+                  "borderWidth": 1,
+                  "borderColor": "#334155",
+                  "borderRadius": 8,
+                  "paddingLeft": 12,
+                  "paddingRight": 12,
+                  "paddingTop": 5,
+                  "paddingBottom": 5,
+                  "display": "flex",
+                  "alignItems": "center",
+                  "gap": 8,
+                  "width": 280,
+                  "justifyContent": "space-between"
+                },
+                "children": [
+                  {
+                    "id": "node-cmd-placeholder",
+                    "type": "text",
+                    "content": "🔍 명령 검색, 컴포넌트 삽입...",
+                    "style": {
+                      "color": "#64748b",
+                      "fontSize": 11
+                    }
+                  },
+                  {
+                    "id": "node-cmd-shortcut",
+                    "type": "badge",
+                    "content": "Ctrl + K",
+                    "style": {
+                      "backgroundColor": "#334155",
+                      "color": "#94a3b8",
+                      "fontSize": 9,
+                      "paddingLeft": 4,
+                      "paddingRight": 4,
+                      "paddingTop": 2,
+                      "paddingBottom": 2,
+                      "borderRadius": 4
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "node-ws-actions",
+                "type": "box",
+                "name": "Header Actions",
+                "style": {
+                  "display": "flex",
+                  "alignItems": "center",
+                  "gap": 8
+                },
+                "children": [
+                  {
+                    "id": "node-act-flow",
+                    "type": "button",
+                    "content": "플로우 ● On",
+                    "style": {
+                      "backgroundColor": "#065f46",
+                      "color": "#a7f3d0",
+                      "fontSize": 11,
+                      "fontWeight": 600,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
+                      "paddingTop": 5,
+                      "paddingBottom": 5,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-act-play",
+                    "type": "button",
+                    "content": "▶ PLAY 시연",
+                    "style": {
+                      "backgroundColor": "#4f46e5",
+                      "color": "#ffffff",
+                      "fontSize": 11,
+                      "fontWeight": 700,
+                      "paddingLeft": 12,
+                      "paddingRight": 12,
+                      "paddingTop": 5,
+                      "paddingBottom": 5,
+                      "borderRadius": 6,
+                      "boxShadow": "0 2px 8px rgba(79, 70, 229, 0.4)"
+                    }
+                  },
+                  {
+                    "id": "node-act-git",
+                    "type": "badge",
+                    "content": "🌿 main  •  커밋 (2)",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "borderColor": "#475569",
+                      "borderWidth": 1,
+                      "color": "#38bdf8",
+                      "fontSize": 11,
+                      "fontWeight": 600,
+                      "paddingLeft": 8,
+                      "paddingRight": 8,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
+                      "borderRadius": 6
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "node-ws-body",
+            "type": "box",
+            "name": "Three-Pane Layout",
+            "style": {
+              "flex": 1,
+              "display": "flex",
+              "backgroundColor": "#090d16",
+              "overflow": "hidden"
+            },
+            "children": [
+              {
+                "id": "node-pane-left",
+                "type": "box",
+                "name": "Left Sidebar (Layers)",
+                "style": {
+                  "width": 250,
+                  "backgroundColor": "#0d1322",
+                  "borderRightWidth": 1,
+                  "borderColor": "#1e293b",
+                  "display": "flex",
+                  "flexDirection": "column"
+                },
+                "children": [
+                  {
+                    "id": "node-left-hdr",
+                    "type": "box",
+                    "style": {
+                      "padding": 12,
+                      "borderBottomWidth": 1,
+                      "borderColor": "#1e293b",
+                      "display": "flex",
+                      "justifyContent": "space-between",
+                      "alignItems": "center"
+                    },
+                    "children": [
+                      {
+                        "id": "node-left-title",
+                        "type": "text",
+                        "content": "계층 레이어 (Layers)",
+                        "style": {
+                          "color": "#cbd5e1",
+                          "fontSize": 11,
+                          "fontWeight": 700
+                        }
+                      },
+                      {
+                        "id": "node-left-add-btn",
+                        "type": "badge",
+                        "content": "+ 추가",
+                        "style": {
+                          "backgroundColor": "#4f46e5",
+                          "color": "#ffffff",
+                          "fontSize": 10,
+                          "paddingLeft": 6,
+                          "paddingRight": 6,
+                          "paddingTop": 2,
+                          "paddingBottom": 2,
+                          "borderRadius": 4
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-layer-list",
+                    "type": "box",
+                    "style": {
+                      "padding": 8,
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": 4
+                    },
+                    "children": [
+                      {
+                        "id": "node-layer-1",
+                        "type": "box",
+                        "style": {
+                          "backgroundColor": "#1e293b",
+                          "padding": 6,
+                          "borderRadius": 6,
+                          "display": "flex",
+                          "alignItems": "center",
+                          "gap": 6
+                        },
+                        "children": [
+                          {
+                            "id": "node-l1-icon",
+                            "type": "text",
+                            "content": "📱",
+                            "style": {
+                              "fontSize": 11
+                            }
+                          },
+                          {
+                            "id": "node-l1-name",
+                            "type": "text",
+                            "content": "1. AI 자산 관리 홈",
+                            "style": {
+                              "color": "#ffffff",
+                              "fontSize": 11,
+                              "fontWeight": 600
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node-layer-2",
+                        "type": "box",
+                        "style": {
+                          "paddingLeft": 20,
+                          "paddingTop": 4,
+                          "paddingBottom": 4,
+                          "display": "flex",
+                          "alignItems": "center",
+                          "gap": 6
+                        },
+                        "children": [
+                          {
+                            "id": "node-l2-icon",
+                            "type": "text",
+                            "content": "▢",
+                            "style": {
+                              "color": "#818cf8",
+                              "fontSize": 10
+                            }
+                          },
+                          {
+                            "id": "node-l2-name",
+                            "type": "text",
+                            "content": "Hero Card Container",
+                            "style": {
+                              "color": "#94a3b8",
+                              "fontSize": 11
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node-layer-3",
+                        "type": "box",
+                        "style": {
+                          "backgroundColor": "#312e81",
+                          "borderColor": "#6366f1",
+                          "borderWidth": 1,
+                          "paddingLeft": 30,
+                          "paddingTop": 4,
+                          "paddingBottom": 4,
+                          "paddingRight": 6,
+                          "borderRadius": 6,
+                          "display": "flex",
+                          "alignItems": "center",
+                          "gap": 6
+                        },
+                        "children": [
+                          {
+                            "id": "node-l3-icon",
+                            "type": "text",
+                            "content": "🔘",
+                            "style": {
+                              "fontSize": 10
+                            }
+                          },
+                          {
+                            "id": "node-l3-name",
+                            "type": "text",
+                            "content": "CTA 즉시 입금 버튼 (Selected)",
+                            "style": {
+                              "color": "#ffffff",
+                              "fontSize": 11,
+                              "fontWeight": 700
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node-layer-4",
+                        "type": "box",
+                        "style": {
+                          "backgroundColor": "#131b2e",
+                          "padding": 6,
+                          "borderRadius": 6,
+                          "display": "flex",
+                          "alignItems": "center",
+                          "gap": 6,
+                          "marginTop": 6
+                        },
+                        "children": [
+                          {
+                            "id": "node-l4-icon",
+                            "type": "text",
+                            "content": "📱",
+                            "style": {
+                              "fontSize": 11
+                            }
+                          },
+                          {
+                            "id": "node-l4-name",
+                            "type": "text",
+                            "content": "2. 빠른 송금 모달",
+                            "style": {
+                              "color": "#cbd5e1",
+                              "fontSize": 11,
+                              "fontWeight": 600
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "node-pane-canvas",
+                "type": "box",
+                "name": "Infinite Canvas Workspace",
+                "style": {
+                  "flex": 1,
+                  "backgroundColor": "#090d16",
+                  "display": "flex",
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                  "gap": 36,
+                  "padding": 24,
+                  "position": "relative"
+                },
+                "children": [
+                  {
+                    "id": "node-mock-artboard-1",
+                    "type": "card",
+                    "name": "Artboard 1: Mobile Home",
+                    "style": {
+                      "width": 320,
+                      "height": 600,
+                      "backgroundColor": "#0f172a",
+                      "borderRadius": 24,
+                      "borderWidth": 2,
+                      "borderColor": "#4f46e5",
+                      "boxShadow": "0 20px 40px rgba(0,0,0,0.6)",
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "overflow": "hidden"
+                    },
+                    "children": [
+                      {
+                        "id": "node-m1-status",
+                        "type": "box",
+                        "style": {
+                          "height": 28,
+                          "display": "flex",
+                          "justifyContent": "space-between",
+                          "paddingLeft": 16,
+                          "paddingRight": 16,
+                          "paddingTop": 6
+                        },
+                        "children": [
+                          {
+                            "id": "node-m1-time",
+                            "type": "text",
+                            "content": "9:41",
+                            "style": {
+                              "color": "#ffffff",
+                              "fontSize": 10,
+                              "fontWeight": 700
+                            }
+                          },
+                          {
+                            "id": "node-m1-icons",
+                            "type": "text",
+                            "content": "5G 100%",
+                            "style": {
+                              "color": "#94a3b8",
+                              "fontSize": 9
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node-m1-header",
+                        "type": "box",
+                        "style": {
+                          "padding": 16
+                        },
+                        "children": [
+                          {
+                            "id": "node-m1-greeting",
+                            "type": "text",
+                            "content": "환영합니다, 김제이님 👋",
+                            "style": {
+                              "color": "#94a3b8",
+                              "fontSize": 11
+                            }
+                          },
+                          {
+                            "id": "node-m1-balance",
+                            "type": "heading",
+                            "content": "₩ 48,250,000",
+                            "style": {
+                              "color": "#ffffff",
+                              "fontSize": 20,
+                              "fontWeight": 800,
+                              "marginTop": 4
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node-m1-card",
+                        "type": "card",
+                        "style": {
+                          "margin": 14,
+                          "padding": 16,
+                          "borderRadius": 16,
+                          "backgroundGradient": "linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)",
+                          "color": "#ffffff"
+                        },
+                        "children": [
+                          {
+                            "id": "node-m1-ctitle",
+                            "type": "text",
+                            "content": "AI 자율 스마트 투자",
+                            "style": {
+                              "fontSize": 11,
+                              "fontWeight": 600
+                            }
+                          },
+                          {
+                            "id": "node-m1-cstat",
+                            "type": "heading",
+                            "content": "+18.4% 연간 수익률",
+                            "style": {
+                              "fontSize": 16,
+                              "fontWeight": 800,
+                              "marginTop": 4
+                            }
+                          },
+                          {
+                            "id": "node-m1-cbtn",
+                            "type": "button",
+                            "content": "수익금 즉시 입금하기",
+                            "style": {
+                              "backgroundColor": "#ffffff",
+                              "color": "#4f46e5",
+                              "fontSize": 11,
+                              "fontWeight": 700,
+                              "marginTop": 12,
+                              "padding": 8,
+                              "borderRadius": 10,
+                              "textAlign": "center"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-mock-artboard-2",
+                    "type": "card",
+                    "name": "Artboard 2: Quick Transfer",
+                    "style": {
+                      "width": 320,
+                      "height": 600,
+                      "backgroundColor": "#0f172a",
+                      "borderRadius": 24,
+                      "borderWidth": 1,
+                      "borderColor": "#334155",
+                      "boxShadow": "0 20px 40px rgba(0,0,0,0.4)",
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "overflow": "hidden"
+                    },
+                    "children": [
+                      {
+                        "id": "node-m2-status",
+                        "type": "box",
+                        "style": {
+                          "height": 28,
+                          "display": "flex",
+                          "justifyContent": "space-between",
+                          "paddingLeft": 16,
+                          "paddingRight": 16,
+                          "paddingTop": 6
+                        },
+                        "children": [
+                          {
+                            "id": "node-m2-time",
+                            "type": "text",
+                            "content": "9:41",
+                            "style": {
+                              "color": "#ffffff",
+                              "fontSize": 10,
+                              "fontWeight": 700
+                            }
+                          },
+                          {
+                            "id": "node-m2-icons",
+                            "type": "text",
+                            "content": "5G 100%",
+                            "style": {
+                              "color": "#94a3b8",
+                              "fontSize": 9
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node-m2-title",
+                        "type": "box",
+                        "style": {
+                          "padding": 16
+                        },
+                        "children": [
+                          {
+                            "id": "node-m2-t1",
+                            "type": "heading",
+                            "content": "빠른 송금",
+                            "style": {
+                              "color": "#ffffff",
+                              "fontSize": 16,
+                              "fontWeight": 700
+                            }
+                          },
+                          {
+                            "id": "node-m2-t2",
+                            "type": "text",
+                            "content": "최근 보낸 계좌로 1초 송금",
+                            "style": {
+                              "color": "#94a3b8",
+                              "fontSize": 11,
+                              "marginTop": 2
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node-m2-form",
+                        "type": "box",
+                        "style": {
+                          "padding": 14,
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": 10
+                        },
+                        "children": [
+                          {
+                            "id": "node-m2-inp1",
+                            "type": "input",
+                            "content": "보낼 금액 입력 (원)",
+                            "style": {
+                              "backgroundColor": "#1e293b",
+                              "color": "#ffffff",
+                              "borderWidth": 1,
+                              "borderColor": "#334155",
+                              "padding": 10,
+                              "borderRadius": 10,
+                              "fontSize": 12
+                            }
+                          },
+                          {
+                            "id": "node-m2-btn",
+                            "type": "button",
+                            "content": "송금 확인",
+                            "style": {
+                              "backgroundColor": "#06b6d4",
+                              "color": "#ffffff",
+                              "padding": 10,
+                              "borderRadius": 10,
+                              "fontSize": 12,
+                              "fontWeight": 700,
+                              "textAlign": "center"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "node-pane-right",
+                "type": "box",
+                "name": "Right Sidebar (Inspector)",
+                "style": {
+                  "width": 290,
+                  "backgroundColor": "#0d1322",
+                  "borderLeftWidth": 1,
+                  "borderColor": "#1e293b",
+                  "display": "flex",
+                  "flexDirection": "column"
+                },
+                "children": [
+                  {
+                    "id": "node-ins-tabs",
+                    "type": "box",
+                    "style": {
+                      "display": "flex",
+                      "borderBottomWidth": 1,
+                      "borderColor": "#1e293b"
+                    },
+                    "children": [
+                      {
+                        "id": "node-tab-style",
+                        "type": "button",
+                        "content": "스타일 (Style)",
+                        "style": {
+                          "flex": 1,
+                          "padding": 8,
+                          "fontSize": 11,
+                          "fontWeight": 700,
+                          "backgroundColor": "#1e293b",
+                          "color": "#ffffff",
+                          "textAlign": "center"
+                        }
+                      },
+                      {
+                        "id": "node-tab-layout",
+                        "type": "button",
+                        "content": "레이아웃",
+                        "style": {
+                          "flex": 1,
+                          "padding": 8,
+                          "fontSize": 11,
+                          "color": "#94a3b8",
+                          "backgroundColor": "transparent",
+                          "textAlign": "center"
+                        }
+                      },
+                      {
+                        "id": "node-tab-event",
+                        "type": "button",
+                        "content": "이벤트",
+                        "style": {
+                          "flex": 1,
+                          "padding": 8,
+                          "fontSize": 11,
+                          "color": "#94a3b8",
+                          "backgroundColor": "transparent",
+                          "textAlign": "center"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-ins-sections",
+                    "type": "box",
+                    "style": {
+                      "padding": 14,
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": 14,
+                      "overflow": "auto"
+                    },
+                    "children": [
+                      {
+                        "id": "node-ins-meta",
+                        "type": "card",
+                        "style": {
+                          "backgroundColor": "#141c2e",
+                          "padding": 10,
+                          "borderRadius": 8,
+                          "borderWidth": 1,
+                          "borderColor": "#27354f"
+                        },
+                        "children": [
+                          {
+                            "id": "node-im-name",
+                            "type": "heading",
+                            "content": "CTA 즉시 입금 버튼",
+                            "style": {
+                              "color": "#ffffff",
+                              "fontSize": 12,
+                              "fontWeight": 700
+                            }
+                          },
+                          {
+                            "id": "node-im-type",
+                            "type": "badge",
+                            "content": "type: button  •  id: #node-m1-cbtn",
+                            "style": {
+                              "color": "#818cf8",
+                              "fontSize": 9,
+                              "marginTop": 4
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node-ins-radius",
+                        "type": "box",
+                        "style": {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": 6
+                        },
+                        "children": [
+                          {
+                            "id": "node-ir-hdr",
+                            "type": "box",
+                            "style": {
+                              "display": "flex",
+                              "justifyContent": "space-between"
+                            },
+                            "children": [
+                              {
+                                "id": "node-ir-title",
+                                "type": "text",
+                                "content": "테두리 곡률 (Radius)",
+                                "style": {
+                                  "color": "#cbd5e1",
+                                  "fontSize": 11,
+                                  "fontWeight": 600
+                                }
+                              },
+                              {
+                                "id": "node-ir-val",
+                                "type": "badge",
+                                "content": "10px (4모서리)",
+                                "style": {
+                                  "color": "#38bdf8",
+                                  "fontSize": 10
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "id": "node-ir-slider",
+                            "type": "box",
+                            "style": {
+                              "height": 6,
+                              "backgroundColor": "#334155",
+                              "borderRadius": 3,
+                              "position": "relative"
+                            },
+                            "children": [
+                              {
+                                "id": "node-ir-fill",
+                                "type": "box",
+                                "style": {
+                                  "width": "35%",
+                                  "height": "100%",
+                                  "backgroundColor": "#4f46e5",
+                                  "borderRadius": 3
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node-ins-bg",
+                        "type": "card",
+                        "style": {
+                          "backgroundColor": "#141c2e",
+                          "padding": 10,
+                          "borderRadius": 8,
+                          "borderWidth": 1,
+                          "borderColor": "#27354f",
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": 8
+                        },
+                        "children": [
+                          {
+                            "id": "node-ibg-title",
+                            "type": "text",
+                            "content": "🎨 실시간 그라데이션 제어판",
+                            "style": {
+                              "color": "#e2e8f0",
+                              "fontSize": 11,
+                              "fontWeight": 700
+                            }
+                          },
+                          {
+                            "id": "node-ibg-chips",
+                            "type": "box",
+                            "style": {
+                              "display": "flex",
+                              "gap": 4
+                            },
+                            "children": [
+                              {
+                                "id": "node-c1",
+                                "type": "badge",
+                                "content": "선형 네온",
+                                "style": {
+                                  "backgroundColor": "#4f46e5",
+                                  "color": "#fff",
+                                  "fontSize": 9,
+                                  "padding": 3,
+                                  "borderRadius": 4
+                                }
+                              },
+                              {
+                                "id": "node-c2",
+                                "type": "badge",
+                                "content": "다크 메쉬",
+                                "style": {
+                                  "backgroundColor": "#1e293b",
+                                  "color": "#94a3b8",
+                                  "fontSize": 9,
+                                  "padding": 3,
+                                  "borderRadius": 4
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "id": "node-ibg-preview",
+                            "type": "box",
+                            "style": {
+                              "height": 36,
+                              "borderRadius": 6,
+                              "backgroundGradient": "linear-gradient(90deg, #4f46e5 0%, #06b6d4 100%)",
+                              "display": "flex",
+                              "alignItems": "center",
+                              "justifyContent": "center"
+                            },
+                            "children": [
+                              {
+                                "id": "node-ibg-text",
+                                "type": "text",
+                                "content": "Angle: 90°  •  #4f46e5 → #06b6d4",
+                                "style": {
+                                  "color": "#ffffff",
+                                  "fontSize": 9,
+                                  "fontWeight": 700
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ab-sd-layers-detail",
+      "title": "2. 좌측 레이어 트리 & 컴포넌트 라이브러리 (Left Panel Detail)",
+      "viewport": "mobile",
+      "width": 440,
+      "height": 860,
+      "x": 1480,
+      "y": 60,
+      "rootNode": {
+        "id": "node-ly-root",
+        "type": "frame",
+        "name": "Left Sidebar Panel Deep Dive",
+        "style": {
+          "width": "100%",
+          "height": "100%",
+          "backgroundColor": "#0d1322",
+          "borderWidth": 1,
+          "borderColor": "#1e293b",
+          "borderRadius": 14,
+          "padding": 16,
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": 14
+        },
+        "children": [
+          {
+            "id": "node-ly-header",
+            "type": "box",
+            "style": {
+              "display": "flex",
+              "justifyContent": "space-between",
+              "alignItems": "center"
+            },
+            "children": [
+              {
+                "id": "node-ly-title",
+                "type": "heading",
+                "content": "📑 페이지 및 VDOM 레이어",
+                "style": {
+                  "color": "#ffffff",
+                  "fontSize": 14,
+                  "fontWeight": 700
                 }
               },
               {
-                "id": "node-s2-title-row",
+                "id": "node-ly-filter",
+                "type": "badge",
+                "content": "필터: 전체 (14개 요소)",
+                "style": {
+                  "backgroundColor": "#1e293b",
+                  "color": "#38bdf8",
+                  "fontSize": 10,
+                  "padding": 4,
+                  "borderRadius": 6
+                }
+              }
+            ]
+          },
+          {
+            "id": "node-ly-pages",
+            "type": "box",
+            "style": {
+              "display": "flex",
+              "gap": 6,
+              "backgroundColor": "#080c14",
+              "padding": 6,
+              "borderRadius": 8
+            },
+            "children": [
+              {
+                "id": "node-p1-tab",
+                "type": "badge",
+                "content": "1. 메인 홈 (Active)",
+                "style": {
+                  "backgroundColor": "#4f46e5",
+                  "color": "#ffffff",
+                  "fontSize": 11,
+                  "padding": 6,
+                  "borderRadius": 6,
+                  "fontWeight": 600
+                }
+              },
+              {
+                "id": "node-p2-tab",
+                "type": "badge",
+                "content": "2. 결제 플로우",
+                "style": {
+                  "backgroundColor": "transparent",
+                  "color": "#64748b",
+                  "fontSize": 11,
+                  "padding": 6
+                }
+              },
+              {
+                "id": "node-p3-tab",
+                "type": "badge",
+                "content": "+ 새 페이지",
+                "style": {
+                  "backgroundColor": "transparent",
+                  "color": "#818cf8",
+                  "fontSize": 11,
+                  "padding": 6
+                }
+              }
+            ]
+          },
+          {
+            "id": "node-ly-insert-grid",
+            "type": "card",
+            "name": "Component Insertion Drawer",
+            "style": {
+              "backgroundColor": "#131b2e",
+              "padding": 12,
+              "borderRadius": 10,
+              "borderWidth": 1,
+              "borderColor": "#27354f",
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": 8
+            },
+            "children": [
+              {
+                "id": "node-ig-title",
+                "type": "text",
+                "content": "🧩 VDOM 컴포넌트 원클릭 삽입",
+                "style": {
+                  "color": "#cbd5e1",
+                  "fontSize": 11,
+                  "fontWeight": 700
+                }
+              },
+              {
+                "id": "node-ig-buttons",
                 "type": "box",
-                "name": "Sheet Title Row",
+                "style": {
+                  "display": "flex",
+                  "flexWrap": "wrap",
+                  "gap": 6
+                },
+                "children": [
+                  {
+                    "id": "node-b-btn",
+                    "type": "badge",
+                    "content": "+ CTA 버튼",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#e2e8f0",
+                      "fontSize": 10,
+                      "padding": 6,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-b-card",
+                    "type": "badge",
+                    "content": "+ 정보 카드",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#e2e8f0",
+                      "fontSize": 10,
+                      "padding": 6,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-b-inp",
+                    "type": "badge",
+                    "content": "+ 입력 필드",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#e2e8f0",
+                      "fontSize": 10,
+                      "padding": 6,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-b-img",
+                    "type": "badge",
+                    "content": "+ 로컬 이미지",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#e2e8f0",
+                      "fontSize": 10,
+                      "padding": 6,
+                      "borderRadius": 6
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "node-ly-tree",
+            "type": "card",
+            "name": "Tree Hierarchy",
+            "style": {
+              "flex": 1,
+              "backgroundColor": "#0b0f19",
+              "padding": 12,
+              "borderRadius": 10,
+              "borderWidth": 1,
+              "borderColor": "#1e293b",
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": 6
+            },
+            "children": [
+              {
+                "id": "node-tr-root",
+                "type": "box",
+                "style": {
+                  "backgroundColor": "#1e293b",
+                  "padding": 8,
+                  "borderRadius": 6,
+                  "display": "flex",
+                  "justifyContent": "space-between"
+                },
+                "children": [
+                  {
+                    "id": "node-tr-rname",
+                    "type": "text",
+                    "content": "▼ 📱 Artboard: AI 홈",
+                    "style": {
+                      "color": "#ffffff",
+                      "fontSize": 11,
+                      "fontWeight": 700
+                    }
+                  },
+                  {
+                    "id": "node-tr-raction",
+                    "type": "text",
+                    "content": "복제 | 삭제",
+                    "style": {
+                      "color": "#64748b",
+                      "fontSize": 10
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "node-tr-n1",
+                "type": "box",
+                "style": {
+                  "paddingLeft": 16,
+                  "paddingTop": 4,
+                  "paddingBottom": 4,
+                  "display": "flex",
+                  "justifyContent": "space-between"
+                },
+                "children": [
+                  {
+                    "id": "node-tr-n1t",
+                    "type": "text",
+                    "content": "├─ ▢ Header Container",
+                    "style": {
+                      "color": "#94a3b8",
+                      "fontSize": 11
+                    }
+                  },
+                  {
+                    "id": "node-tr-n1c",
+                    "type": "badge",
+                    "content": "flex-col",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#818cf8",
+                      "fontSize": 9
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "node-tr-n2",
+                "type": "box",
+                "style": {
+                  "paddingLeft": 30,
+                  "paddingTop": 4,
+                  "paddingBottom": 4,
+                  "display": "flex",
+                  "justifyContent": "space-between"
+                },
+                "children": [
+                  {
+                    "id": "node-tr-n2t",
+                    "type": "text",
+                    "content": "├─ T '환영합니다, 김제이님'",
+                    "style": {
+                      "color": "#cbd5e1",
+                      "fontSize": 11
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "node-tr-n3",
+                "type": "box",
+                "style": {
+                  "backgroundColor": "#312e81",
+                  "borderColor": "#6366f1",
+                  "borderWidth": 1,
+                  "paddingLeft": 30,
+                  "paddingRight": 8,
+                  "paddingTop": 6,
+                  "paddingBottom": 6,
+                  "borderRadius": 6,
+                  "display": "flex",
+                  "justifyContent": "space-between"
+                },
+                "children": [
+                  {
+                    "id": "node-tr-n3t",
+                    "type": "text",
+                    "content": "└─ 🔘 CTA 입금 버튼 ★",
+                    "style": {
+                      "color": "#ffffff",
+                      "fontSize": 11,
+                      "fontWeight": 700
+                    }
+                  },
+                  {
+                    "id": "node-tr-n3c",
+                    "type": "badge",
+                    "content": "Selected",
+                    "style": {
+                      "backgroundColor": "#4f46e5",
+                      "color": "#ffffff",
+                      "fontSize": 9,
+                      "padding": 2,
+                      "borderRadius": 4
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ab-sd-inspector-detail",
+      "title": "3. 정밀 속성 인스펙터 & 네온/메쉬 배경 엔진 (Inspector Deep Dive)",
+      "viewport": "mobile",
+      "width": 440,
+      "height": 860,
+      "x": 1960,
+      "y": 60,
+      "rootNode": {
+        "id": "node-in-root",
+        "type": "frame",
+        "name": "Inspector Panel Deep Dive",
+        "style": {
+          "width": "100%",
+          "height": "100%",
+          "backgroundColor": "#0d1322",
+          "borderWidth": 1,
+          "borderColor": "#1e293b",
+          "borderRadius": 14,
+          "padding": 16,
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": 14
+        },
+        "children": [
+          {
+            "id": "node-in-header",
+            "type": "box",
+            "style": {
+              "display": "flex",
+              "justifyContent": "space-between",
+              "alignItems": "center"
+            },
+            "children": [
+              {
+                "id": "node-in-title",
+                "type": "heading",
+                "content": "🎛️ 속성 인스펙터 (Inspector)",
+                "style": {
+                  "color": "#ffffff",
+                  "fontSize": 14,
+                  "fontWeight": 700
+                }
+              },
+              {
+                "id": "node-in-tag",
+                "type": "badge",
+                "content": "button #node-m1-cbtn",
+                "style": {
+                  "backgroundColor": "#312e81",
+                  "color": "#c7d2fe",
+                  "fontSize": 10,
+                  "padding": 4,
+                  "borderRadius": 6
+                }
+              }
+            ]
+          },
+          {
+            "id": "node-in-flex",
+            "type": "card",
+            "name": "Flexbox Layout Controls",
+            "style": {
+              "backgroundColor": "#131b2e",
+              "padding": 12,
+              "borderRadius": 10,
+              "borderWidth": 1,
+              "borderColor": "#27354f",
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": 8
+            },
+            "children": [
+              {
+                "id": "node-if-title",
+                "type": "text",
+                "content": "플렉스 레이아웃 (Flexbox)",
+                "style": {
+                  "color": "#cbd5e1",
+                  "fontSize": 11,
+                  "fontWeight": 700
+                }
+              },
+              {
+                "id": "node-if-chips",
+                "type": "box",
+                "style": {
+                  "display": "flex",
+                  "gap": 6
+                },
+                "children": [
+                  {
+                    "id": "node-fc-row",
+                    "type": "badge",
+                    "content": "가로 (Row)",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#94a3b8",
+                      "fontSize": 10,
+                      "padding": 4,
+                      "borderRadius": 4
+                    }
+                  },
+                  {
+                    "id": "node-fc-col",
+                    "type": "badge",
+                    "content": "세로 (Col) ✓",
+                    "style": {
+                      "backgroundColor": "#4f46e5",
+                      "color": "#ffffff",
+                      "fontSize": 10,
+                      "padding": 4,
+                      "borderRadius": 4,
+                      "fontWeight": 600
+                    }
+                  },
+                  {
+                    "id": "node-fc-center",
+                    "type": "badge",
+                    "content": "중앙 정렬 ✓",
+                    "style": {
+                      "backgroundColor": "#4f46e5",
+                      "color": "#ffffff",
+                      "fontSize": 10,
+                      "padding": 4,
+                      "borderRadius": 4,
+                      "fontWeight": 600
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "node-in-4radius",
+            "type": "card",
+            "name": "4-Way Radius Controller",
+            "style": {
+              "backgroundColor": "#131b2e",
+              "padding": 12,
+              "borderRadius": 10,
+              "borderWidth": 1,
+              "borderColor": "#27354f",
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": 8
+            },
+            "children": [
+              {
+                "id": "node-i4r-title",
+                "type": "text",
+                "content": "4모서리 독립 라운딩 (Corner Radius)",
+                "style": {
+                  "color": "#cbd5e1",
+                  "fontSize": 11,
+                  "fontWeight": 700
+                }
+              },
+              {
+                "id": "node-i4r-boxes",
+                "type": "box",
+                "style": {
+                  "display": "flex",
+                  "gap": 6
+                },
+                "children": [
+                  {
+                    "id": "node-r-tl",
+                    "type": "badge",
+                    "content": "TL: 12px",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#38bdf8",
+                      "fontSize": 10,
+                      "padding": 6,
+                      "borderRadius": 6,
+                      "flex": 1,
+                      "textAlign": "center"
+                    }
+                  },
+                  {
+                    "id": "node-r-tr",
+                    "type": "badge",
+                    "content": "TR: 12px",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#38bdf8",
+                      "fontSize": 10,
+                      "padding": 6,
+                      "borderRadius": 6,
+                      "flex": 1,
+                      "textAlign": "center"
+                    }
+                  },
+                  {
+                    "id": "node-r-br",
+                    "type": "badge",
+                    "content": "BR: 4px",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#38bdf8",
+                      "fontSize": 10,
+                      "padding": 6,
+                      "borderRadius": 6,
+                      "flex": 1,
+                      "textAlign": "center"
+                    }
+                  },
+                  {
+                    "id": "node-r-bl",
+                    "type": "badge",
+                    "content": "BL: 4px",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#38bdf8",
+                      "fontSize": 10,
+                      "padding": 6,
+                      "borderRadius": 6,
+                      "flex": 1,
+                      "textAlign": "center"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "node-in-neon",
+            "type": "card",
+            "name": "Linear Neon Gradient Studio",
+            "style": {
+              "backgroundColor": "#131b2e",
+              "padding": 12,
+              "borderRadius": 10,
+              "borderWidth": 1,
+              "borderColor": "#27354f",
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": 10
+            },
+            "children": [
+              {
+                "id": "node-in-title",
+                "type": "text",
+                "content": "⚡ 네온 선형 그라데이션 실시간 제어",
+                "style": {
+                  "color": "#38bdf8",
+                  "fontSize": 11,
+                  "fontWeight": 700
+                }
+              },
+              {
+                "id": "node-in-angle",
+                "type": "box",
                 "style": {
                   "display": "flex",
                   "justifyContent": "space-between",
@@ -537,328 +1751,103 @@
                 },
                 "children": [
                   {
-                    "id": "node-s2-title",
+                    "id": "node-in-albl",
                     "type": "text",
-                    "name": "Order Target Title",
-                    "content": "비트코인 (BTC) 매수",
+                    "content": "회전 각도 (Angle)",
                     "style": {
-                      "fontSize": 18,
-                      "fontWeight": "900",
-                      "color": "#ffffff"
+                      "color": "#94a3b8",
+                      "fontSize": 10
                     }
                   },
                   {
-                    "id": "node-s2-badge",
+                    "id": "node-in-aval",
                     "type": "badge",
-                    "name": "Order Type Badge",
-                    "content": "시장가 주문",
+                    "content": "135°",
                     "style": {
-                      "fontSize": 11,
-                      "fontWeight": "bold",
-                      "padding": "4px 10px",
-                      "borderRadius": 12,
-                      "backgroundColor": "rgba(99, 102, 241, 0.2)",
-                      "color": "#818cf8"
-                    }
-                  }
-                ]
-              },
-              {
-                "id": "node-s2-display-box",
-                "type": "box",
-                "name": "Amount Display Box",
-                "style": {
-                  "display": "flex",
-                  "flexDirection": "column",
-                  "alignItems": "center",
-                  "padding": 16,
-                  "borderRadius": 18,
-                  "backgroundColor": "#030712",
-                  "borderWidth": 1,
-                  "borderColor": "#1f2937"
-                },
-                "children": [
-                  {
-                    "id": "node-s2-display-label",
-                    "type": "text",
-                    "name": "Amount Label",
-                    "content": "주문 금액",
-                    "style": {
-                      "fontSize": 11,
-                      "color": "#6b7280"
-                    }
-                  },
-                  {
-                    "id": "node-s2-display-val",
-                    "type": "text",
-                    "name": "Amount Value",
-                    "content": "₩ 1,000,000",
-                    "style": {
-                      "fontSize": 26,
-                      "fontWeight": "900",
-                      "color": "#818cf8",
-                      "margin": "4px 0"
-                    }
-                  },
-                  {
-                    "id": "node-s2-btc-sub",
-                    "type": "text",
-                    "name": "BTC Equivalent",
-                    "content": "≈ 0.007225 BTC",
-                    "style": {
+                      "backgroundColor": "#4f46e5",
+                      "color": "#fff",
                       "fontSize": 10,
-                      "color": "#9ca3af"
+                      "padding": 3,
+                      "borderRadius": 4
                     }
                   }
                 ]
               },
               {
-                "id": "node-s2-submit-btn",
-                "type": "button",
-                "name": "Biometric Confirm Button",
-                "content": "지문 인식으로 즉시 체결",
-                "events": [
-                  {
-                    "id": "evt-s2-submit-nav",
-                    "trigger": "click",
-                    "action": {
-                      "type": "navigate",
-                      "targetArtboardId": "artboard-3"
-                    },
-                    "description": "클릭 시 체결 완료 & 영수증 화면으로 이동"
-                  }
-                ],
+                "id": "node-in-colors",
+                "type": "box",
                 "style": {
-                  "width": "100%",
-                  "padding": 16,
-                  "borderRadius": 18,
-                  "backgroundColor": "#4f46e5",
-                  "color": "#ffffff",
-                  "fontSize": 14,
-                  "fontWeight": "bold",
-                  "textAlign": "center"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "tweaksSchema": [
-        {
-          "id": "orderType",
-          "label": "주문 방식",
-          "control": "buttons",
-          "options": [
-            "시장가",
-            "지정가"
-          ],
-          "defaultValue": "시장가"
-        }
-      ],
-      "tweakValues": {
-        "orderType": "시장가"
-      }
-    },
-    {
-      "id": "artboard-3",
-      "title": "3. 체결 완료 & 영수증 (Success)",
-      "viewport": "mobile",
-      "x": 880,
-      "y": 0,
-      "width": 390,
-      "height": 844,
-      "rootNode": {
-        "id": "node-s3-root",
-        "type": "frame",
-        "name": "Success Frame Container",
-        "style": {
-          "display": "flex",
-          "flexDirection": "column",
-          "justifyContent": "space-between",
-          "width": "100%",
-          "height": "100%",
-          "backgroundColor": "#090d16",
-          "color": "#ffffff",
-          "padding": 24
-        },
-        "children": [
-          {
-            "id": "node-s3-center",
-            "type": "box",
-            "name": "Center Content Group",
-            "style": {
-              "display": "flex",
-              "flexDirection": "column",
-              "alignItems": "center",
-              "paddingTop": 48,
-              "gap": 16
-            },
-            "children": [
-              {
-                "id": "node-s3-icon",
-                "type": "circle",
-                "name": "Success Check Icon",
-                "content": "✓",
-                "style": {
-                  "width": 72,
-                  "height": 72,
-                  "borderRadius": 36,
-                  "backgroundColor": "rgba(16, 185, 129, 0.2)",
-                  "color": "#10b981",
-                  "borderWidth": 2,
-                  "borderColor": "rgba(16, 185, 129, 0.4)",
                   "display": "flex",
-                  "alignItems": "center",
-                  "justifyContent": "center",
-                  "fontSize": 32,
-                  "fontWeight": "bold"
-                }
-              },
-              {
-                "id": "node-s3-title",
-                "type": "text",
-                "name": "Success Heading",
-                "content": "주문이 체결되었습니다!",
-                "style": {
-                  "fontSize": 22,
-                  "fontWeight": "900",
-                  "color": "#ffffff"
-                }
-              },
-              {
-                "id": "node-s3-desc",
-                "type": "text",
-                "name": "Success Subtitle",
-                "content": "블록체인 네트워크 승인 완료 (0.4초)",
-                "style": {
-                  "fontSize": 11,
-                  "color": "#9ca3af"
-                }
-              },
-              {
-                "id": "node-s3-receipt",
-                "type": "card",
-                "name": "Receipt Details Card",
-                "style": {
-                  "width": "100%",
-                  "padding": 18,
-                  "borderRadius": 20,
-                  "backgroundColor": "#111827",
-                  "borderWidth": 1,
-                  "borderColor": "#1f2937",
-                  "display": "flex",
-                  "flexDirection": "column",
-                  "gap": 10,
-                  "marginTop": 12
+                  "gap": 8,
+                  "alignItems": "center"
                 },
                 "children": [
                   {
-                    "id": "node-s3-r1",
-                    "type": "box",
-                    "name": "Row 1",
+                    "id": "node-in-c1",
+                    "type": "badge",
+                    "content": "#4f46e5 (Indigo)",
                     "style": {
-                      "display": "flex",
-                      "justifyContent": "space-between"
-                    },
-                    "children": [
-                      {
-                        "id": "node-s3-r1-k",
-                        "type": "text",
-                        "name": "Key",
-                        "content": "체결 시각",
-                        "style": {
-                          "fontSize": 11,
-                          "color": "#6b7280"
-                        }
-                      },
-                      {
-                        "id": "node-s3-r1-v",
-                        "type": "text",
-                        "name": "Val",
-                        "content": "2026.10.25 00:55",
-                        "style": {
-                          "fontSize": 11,
-                          "color": "#ffffff",
-                          "fontWeight": "bold"
-                        }
-                      }
-                    ]
+                      "backgroundColor": "#4f46e5",
+                      "color": "#fff",
+                      "fontSize": 10,
+                      "padding": 6,
+                      "borderRadius": 6,
+                      "flex": 1,
+                      "textAlign": "center"
+                    }
                   },
                   {
-                    "id": "node-s3-r2",
-                    "type": "box",
-                    "name": "Row 2",
+                    "id": "node-in-arrow",
+                    "type": "text",
+                    "content": "➔",
                     "style": {
-                      "display": "flex",
-                      "justifyContent": "space-between"
-                    },
-                    "children": [
-                      {
-                        "id": "node-s3-r2-k",
-                        "type": "text",
-                        "name": "Key",
-                        "content": "총 결제 금액",
-                        "style": {
-                          "fontSize": 11,
-                          "color": "#6b7280"
-                        }
-                      },
-                      {
-                        "id": "node-s3-r2-v",
-                        "type": "text",
-                        "name": "Val",
-                        "content": "₩ 1,000,000",
-                        "style": {
-                          "fontSize": 13,
-                          "color": "#818cf8",
-                          "fontWeight": "900"
-                        }
-                      }
-                    ]
+                      "color": "#94a3b8",
+                      "fontSize": 12
+                    }
+                  },
+                  {
+                    "id": "node-in-c2",
+                    "type": "badge",
+                    "content": "#06b6d4 (Cyan)",
+                    "style": {
+                      "backgroundColor": "#06b6d4",
+                      "color": "#fff",
+                      "fontSize": 10,
+                      "padding": 6,
+                      "borderRadius": 6,
+                      "flex": 1,
+                      "textAlign": "center"
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "node-in-swatch",
+                "type": "box",
+                "style": {
+                  "height": 48,
+                  "borderRadius": 8,
+                  "backgroundGradient": "linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)",
+                  "display": "flex",
+                  "alignItems": "center",
+                  "justifyContent": "center"
+                },
+                "children": [
+                  {
+                    "id": "node-in-stext",
+                    "type": "text",
+                    "content": "Live Render: linear-gradient(135deg, #4f46e5, #06b6d4)",
+                    "style": {
+                      "color": "#ffffff",
+                      "fontSize": 10,
+                      "fontWeight": 700
+                    }
                   }
                 ]
               }
             ]
-          },
-          {
-            "id": "node-s3-btn",
-            "type": "button",
-            "name": "Back to Portfolio Button",
-            "content": "포트폴리오로 돌아가기",
-            "events": [
-              {
-                "id": "evt-s3-back-nav",
-                "trigger": "click",
-                "action": {
-                  "type": "navigate",
-                  "targetArtboardId": "artboard-1"
-                },
-                "description": "클릭 시 포트폴리오 메인 화면으로 복귀"
-              }
-            ],
-            "style": {
-              "width": "100%",
-              "padding": 16,
-              "borderRadius": 18,
-              "backgroundColor": "#1f2937",
-              "color": "#ffffff",
-              "fontSize": 14,
-              "fontWeight": "bold",
-              "textAlign": "center"
-            }
           }
         ]
-      },
-      "tweaksSchema": [
-        {
-          "id": "showShareCard",
-          "label": "SNS 카드 표시",
-          "control": "boolean",
-          "defaultValue": true
-        }
-      ],
-      "tweakValues": {
-        "showShareCard": true
       }
     }
   ]

@@ -1,0 +1,905 @@
+{
+  "id": "page-design-git",
+  "name": "3. Design System & Git Desktop (디자인 & Git)",
+  "number": 3,
+  "version": "1.0.0",
+  "updatedAt": "2026-10-25T05:14:13.926Z",
+  "artboards": [
+    {
+      "id": "ab-design-system-studio",
+      "title": "6. 디자인 시스템 스튜디오 (전역 토큰 & 컴포넌트 스타일 규격)",
+      "viewport": "desktop",
+      "width": 1100,
+      "height": 780,
+      "x": 60,
+      "y": 60,
+      "rootNode": {
+        "id": "node-ds-root",
+        "type": "frame",
+        "name": "Design System Studio Window",
+        "style": {
+          "width": "100%",
+          "height": "100%",
+          "backgroundColor": "#030712",
+          "display": "flex",
+          "flexDirection": "column",
+          "borderRadius": 14,
+          "overflow": "hidden",
+          "borderWidth": 1,
+          "borderColor": "#1f2937",
+          "boxShadow": "0 25px 50px -12px rgba(0, 0, 0, 0.8)"
+        },
+        "children": [
+          {
+            "id": "node-ds-header",
+            "type": "box",
+            "name": "Studio Header",
+            "style": {
+              "height": 48,
+              "backgroundColor": "#0f172a",
+              "borderBottomWidth": 1,
+              "borderColor": "#1e293b",
+              "display": "flex",
+              "alignItems": "center",
+              "justifyContent": "space-between",
+              "paddingLeft": 18,
+              "paddingRight": 18
+            },
+            "children": [
+              {
+                "id": "node-ds-hl",
+                "type": "box",
+                "style": {
+                  "display": "flex",
+                  "alignItems": "center",
+                  "gap": 10
+                },
+                "children": [
+                  {
+                    "id": "node-ds-logo",
+                    "type": "badge",
+                    "content": "🎨 디자인 시스템 스튜디오",
+                    "style": {
+                      "backgroundColor": "#4f46e5",
+                      "color": "#ffffff",
+                      "fontSize": 12,
+                      "fontWeight": 700,
+                      "padding": 6,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-ds-sync",
+                    "type": "text",
+                    "content": "docs/ui-boards/design-system.json 실시간 동기화됨 ✓",
+                    "style": {
+                      "color": "#10b981",
+                      "fontSize": 11,
+                      "fontWeight": 600
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "node-ds-hr",
+                "type": "box",
+                "style": {
+                  "display": "flex",
+                  "alignItems": "center",
+                  "gap": 8
+                },
+                "children": [
+                  {
+                    "id": "node-ds-jsonbtn",
+                    "type": "badge",
+                    "content": "JSON 스펙 보기",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#94a3b8",
+                      "fontSize": 11,
+                      "padding": 6,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-ds-closebtn",
+                    "type": "button",
+                    "content": "✕ 완료 및 닫기",
+                    "style": {
+                      "backgroundColor": "#334155",
+                      "color": "#ffffff",
+                      "fontSize": 11,
+                      "fontWeight": 600,
+                      "padding": 6,
+                      "borderRadius": 6
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "node-ds-body",
+            "type": "box",
+            "style": {
+              "flex": 1,
+              "display": "flex",
+              "backgroundColor": "#090d16"
+            },
+            "children": [
+              {
+                "id": "node-ds-nav",
+                "type": "box",
+                "style": {
+                  "width": 220,
+                  "backgroundColor": "#0d1322",
+                  "borderRightWidth": 1,
+                  "borderColor": "#1e293b",
+                  "padding": 14,
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": 6
+                },
+                "children": [
+                  {
+                    "id": "node-ds-nav-title",
+                    "type": "text",
+                    "content": "컴포넌트 기본값 (Defaults)",
+                    "style": {
+                      "color": "#94a3b8",
+                      "fontSize": 10,
+                      "fontWeight": 700,
+                      "marginBottom": 4
+                    }
+                  },
+                  {
+                    "id": "node-nav-card",
+                    "type": "badge",
+                    "content": "▢ Card (카드)",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#cbd5e1",
+                      "fontSize": 11,
+                      "padding": 8,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-nav-btn",
+                    "type": "badge",
+                    "content": "🔘 Button (CTA 버튼) ★",
+                    "style": {
+                      "backgroundColor": "#4f46e5",
+                      "color": "#ffffff",
+                      "fontSize": 11,
+                      "padding": 8,
+                      "borderRadius": 6,
+                      "fontWeight": 700
+                    }
+                  },
+                  {
+                    "id": "node-nav-inp",
+                    "type": "badge",
+                    "content": "⌨ Input (텍스트 입력)",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#cbd5e1",
+                      "fontSize": 11,
+                      "padding": 8,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-nav-txt",
+                    "type": "badge",
+                    "content": "T Heading & Text",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#cbd5e1",
+                      "fontSize": 11,
+                      "padding": 8,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-nav-badge",
+                    "type": "badge",
+                    "content": "🏷 Badge (태그)",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#cbd5e1",
+                      "fontSize": 11,
+                      "padding": 8,
+                      "borderRadius": 6
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "node-ds-center",
+                "type": "box",
+                "style": {
+                  "flex": 1,
+                  "padding": 24,
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "justifyContent": "center"
+                },
+                "children": [
+                  {
+                    "id": "node-dpr-title",
+                    "type": "text",
+                    "content": "실시간 컴포넌트 프리뷰 (Live Preview)",
+                    "style": {
+                      "color": "#94a3b8",
+                      "fontSize": 12,
+                      "fontWeight": 600
+                    }
+                  },
+                  {
+                    "id": "node-dpr-cards",
+                    "type": "box",
+                    "style": {
+                      "display": "flex",
+                      "gap": 20
+                    },
+                    "children": [
+                      {
+                        "id": "node-dpr-dark",
+                        "type": "card",
+                        "style": {
+                          "width": 280,
+                          "backgroundColor": "#0f172a",
+                          "borderRadius": 16,
+                          "padding": 20,
+                          "borderWidth": 1,
+                          "borderColor": "#1e293b",
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": 12
+                        },
+                        "children": [
+                          {
+                            "id": "node-ddk-h",
+                            "type": "heading",
+                            "content": "다크 테마 기본 버튼",
+                            "style": {
+                              "color": "#fff",
+                              "fontSize": 14,
+                              "fontWeight": 700
+                            }
+                          },
+                          {
+                            "id": "node-ddk-b",
+                            "type": "button",
+                            "content": "기본 액션 버튼",
+                            "style": {
+                              "backgroundColor": "#4f46e5",
+                              "color": "#ffffff",
+                              "fontSize": 12,
+                              "fontWeight": 700,
+                              "padding": 10,
+                              "borderRadius": 10,
+                              "textAlign": "center"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "node-dpr-light",
+                        "type": "card",
+                        "style": {
+                          "width": 280,
+                          "backgroundColor": "#ffffff",
+                          "borderRadius": 16,
+                          "padding": 20,
+                          "borderWidth": 1,
+                          "borderColor": "#e2e8f0",
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": 12
+                        },
+                        "children": [
+                          {
+                            "id": "node-dlt-h",
+                            "type": "heading",
+                            "content": "라이트 테마 기본 버튼",
+                            "style": {
+                              "color": "#0f172a",
+                              "fontSize": 14,
+                              "fontWeight": 700
+                            }
+                          },
+                          {
+                            "id": "node-dlt-b",
+                            "type": "button",
+                            "content": "기본 액션 버튼",
+                            "style": {
+                              "backgroundColor": "#4f46e5",
+                              "color": "#ffffff",
+                              "fontSize": 12,
+                              "fontWeight": 700,
+                              "padding": 10,
+                              "borderRadius": 10,
+                              "textAlign": "center"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "node-ds-tokens",
+                "type": "box",
+                "style": {
+                  "width": 280,
+                  "backgroundColor": "#0d1322",
+                  "borderLeftWidth": 1,
+                  "borderColor": "#1e293b",
+                  "padding": 16,
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": 14
+                },
+                "children": [
+                  {
+                    "id": "node-tok-title",
+                    "type": "heading",
+                    "content": "전역 토큰 스타일 편집",
+                    "style": {
+                      "color": "#ffffff",
+                      "fontSize": 13,
+                      "fontWeight": 700
+                    }
+                  },
+                  {
+                    "id": "node-tok-card",
+                    "type": "card",
+                    "style": {
+                      "backgroundColor": "#131b2e",
+                      "padding": 12,
+                      "borderRadius": 10,
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": 10
+                    },
+                    "children": [
+                      {
+                        "id": "node-tk-1",
+                        "type": "text",
+                        "content": "Primary Color",
+                        "style": {
+                          "color": "#94a3b8",
+                          "fontSize": 10
+                        }
+                      },
+                      {
+                        "id": "node-tk-1v",
+                        "type": "badge",
+                        "content": "#4f46e5 (Indigo 600)",
+                        "style": {
+                          "backgroundColor": "#4f46e5",
+                          "color": "#fff",
+                          "fontSize": 11,
+                          "padding": 6,
+                          "borderRadius": 6
+                        }
+                      },
+                      {
+                        "id": "node-tk-2",
+                        "type": "text",
+                        "content": "Default Border Radius",
+                        "style": {
+                          "color": "#94a3b8",
+                          "fontSize": 10
+                        }
+                      },
+                      {
+                        "id": "node-tk-2v",
+                        "type": "badge",
+                        "content": "12px",
+                        "style": {
+                          "backgroundColor": "#1e293b",
+                          "color": "#38bdf8",
+                          "fontSize": 11,
+                          "padding": 6,
+                          "borderRadius": 6
+                        }
+                      },
+                      {
+                        "id": "node-tk-3",
+                        "type": "text",
+                        "content": "Typography Family",
+                        "style": {
+                          "color": "#94a3b8",
+                          "fontSize": 10
+                        }
+                      },
+                      {
+                        "id": "node-tk-3v",
+                        "type": "badge",
+                        "content": "Pretendard / Inter",
+                        "style": {
+                          "backgroundColor": "#1e293b",
+                          "color": "#e2e8f0",
+                          "fontSize": 11,
+                          "padding": 6,
+                          "borderRadius": 6
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ab-git-desktop-modal",
+      "title": "7. 내장 Git 데스크톱 버전 관리 모달 (Side-by-Side Diff & 커밋)",
+      "viewport": "desktop",
+      "width": 1080,
+      "height": 780,
+      "x": 1200,
+      "y": 60,
+      "rootNode": {
+        "id": "node-git-root",
+        "type": "frame",
+        "name": "Git Desktop Modal Shell",
+        "style": {
+          "width": "100%",
+          "height": "100%",
+          "backgroundColor": "#030712",
+          "display": "flex",
+          "flexDirection": "column",
+          "borderRadius": 14,
+          "overflow": "hidden",
+          "borderWidth": 1,
+          "borderColor": "#1f2937",
+          "boxShadow": "0 25px 50px -12px rgba(0, 0, 0, 0.9)"
+        },
+        "children": [
+          {
+            "id": "node-git-header",
+            "type": "box",
+            "name": "Git Modal Header",
+            "style": {
+              "height": 48,
+              "backgroundColor": "#0f172a",
+              "borderBottomWidth": 1,
+              "borderColor": "#1e293b",
+              "display": "flex",
+              "alignItems": "center",
+              "justifyContent": "space-between",
+              "paddingLeft": 18,
+              "paddingRight": 18
+            },
+            "children": [
+              {
+                "id": "node-git-hl",
+                "type": "box",
+                "style": {
+                  "display": "flex",
+                  "alignItems": "center",
+                  "gap": 10
+                },
+                "children": [
+                  {
+                    "id": "node-git-badge",
+                    "type": "badge",
+                    "content": "🌿 Git 데스크톱 관리",
+                    "style": {
+                      "backgroundColor": "#0284c7",
+                      "color": "#ffffff",
+                      "fontSize": 12,
+                      "fontWeight": 700,
+                      "padding": 6,
+                      "borderRadius": 6
+                    }
+                  },
+                  {
+                    "id": "node-git-branch",
+                    "type": "badge",
+                    "content": "Branch: main  •  Ahead 1 ⬆",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#38bdf8",
+                      "fontSize": 11,
+                      "padding": 4,
+                      "borderRadius": 6
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "node-git-tabs",
+                "type": "box",
+                "style": {
+                  "display": "flex",
+                  "gap": 6
+                },
+                "children": [
+                  {
+                    "id": "node-tab-chg",
+                    "type": "badge",
+                    "content": "변경 사항 (Changes: 3) ✓",
+                    "style": {
+                      "backgroundColor": "#4f46e5",
+                      "color": "#ffffff",
+                      "fontSize": 11,
+                      "padding": 6,
+                      "borderRadius": 6,
+                      "fontWeight": 700
+                    }
+                  },
+                  {
+                    "id": "node-tab-his",
+                    "type": "badge",
+                    "content": "히스토리 (History: 40)",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "color": "#94a3b8",
+                      "fontSize": 11,
+                      "padding": 6,
+                      "borderRadius": 6
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "node-git-body",
+            "type": "box",
+            "style": {
+              "flex": 1,
+              "display": "flex",
+              "backgroundColor": "#090d16"
+            },
+            "children": [
+              {
+                "id": "node-git-files",
+                "type": "box",
+                "style": {
+                  "width": 320,
+                  "backgroundColor": "#0d1322",
+                  "borderRightWidth": 1,
+                  "borderColor": "#1e293b",
+                  "padding": 14,
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": 8
+                },
+                "children": [
+                  {
+                    "id": "node-gf-title",
+                    "type": "text",
+                    "content": "스테이지 파일 선택 (Smart Check)",
+                    "style": {
+                      "color": "#94a3b8",
+                      "fontSize": 11,
+                      "fontWeight": 700
+                    }
+                  },
+                  {
+                    "id": "node-gf-1",
+                    "type": "box",
+                    "style": {
+                      "backgroundColor": "#1e293b",
+                      "padding": 8,
+                      "borderRadius": 6,
+                      "display": "flex",
+                      "alignItems": "center",
+                      "gap": 8
+                    },
+                    "children": [
+                      {
+                        "id": "node-gf-1c",
+                        "type": "text",
+                        "content": "☑",
+                        "style": {
+                          "color": "#38bdf8",
+                          "fontSize": 12
+                        }
+                      },
+                      {
+                        "id": "node-gf-1n",
+                        "type": "text",
+                        "content": "docs/ui-boards/project.json",
+                        "style": {
+                          "color": "#ffffff",
+                          "fontSize": 11,
+                          "fontWeight": 600
+                        }
+                      },
+                      {
+                        "id": "node-gf-1t",
+                        "type": "badge",
+                        "content": "M",
+                        "style": {
+                          "backgroundColor": "#0284c7",
+                          "color": "#fff",
+                          "fontSize": 9,
+                          "padding": 2,
+                          "borderRadius": 3,
+                          "marginLeft": "auto"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-gf-2",
+                    "type": "box",
+                    "style": {
+                      "backgroundColor": "#312e81",
+                      "borderColor": "#6366f1",
+                      "borderWidth": 1,
+                      "padding": 8,
+                      "borderRadius": 6,
+                      "display": "flex",
+                      "alignItems": "center",
+                      "gap": 8
+                    },
+                    "children": [
+                      {
+                        "id": "node-gf-2c",
+                        "type": "text",
+                        "content": "☑",
+                        "style": {
+                          "color": "#38bdf8",
+                          "fontSize": 12
+                        }
+                      },
+                      {
+                        "id": "node-gf-2n",
+                        "type": "text",
+                        "content": "docs/ui-boards/pages/1.json (Selected)",
+                        "style": {
+                          "color": "#ffffff",
+                          "fontSize": 11,
+                          "fontWeight": 700
+                        }
+                      },
+                      {
+                        "id": "node-gf-2t",
+                        "type": "badge",
+                        "content": "M",
+                        "style": {
+                          "backgroundColor": "#0284c7",
+                          "color": "#fff",
+                          "fontSize": 9,
+                          "padding": 2,
+                          "borderRadius": 3,
+                          "marginLeft": "auto"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-gf-3",
+                    "type": "box",
+                    "style": {
+                      "backgroundColor": "#131b2e",
+                      "padding": 8,
+                      "borderRadius": 6,
+                      "display": "flex",
+                      "alignItems": "center",
+                      "gap": 8
+                    },
+                    "children": [
+                      {
+                        "id": "node-gf-3c",
+                        "type": "text",
+                        "content": "☑",
+                        "style": {
+                          "color": "#38bdf8",
+                          "fontSize": 12
+                        }
+                      },
+                      {
+                        "id": "node-gf-3n",
+                        "type": "text",
+                        "content": ".screen-designer/config.json",
+                        "style": {
+                          "color": "#cbd5e1",
+                          "fontSize": 11
+                        }
+                      },
+                      {
+                        "id": "node-gf-3t",
+                        "type": "badge",
+                        "content": "M",
+                        "style": {
+                          "backgroundColor": "#0284c7",
+                          "color": "#fff",
+                          "fontSize": 9,
+                          "padding": 2,
+                          "borderRadius": 3,
+                          "marginLeft": "auto"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "node-git-diff",
+                "type": "box",
+                "style": {
+                  "flex": 1,
+                  "padding": 14,
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": 10
+                },
+                "children": [
+                  {
+                    "id": "node-diff-hdr",
+                    "type": "box",
+                    "style": {
+                      "display": "flex",
+                      "justifyContent": "space-between",
+                      "alignItems": "center"
+                    },
+                    "children": [
+                      {
+                        "id": "node-dh-title",
+                        "type": "text",
+                        "content": "비주얼 Diff: pages/1.json",
+                        "style": {
+                          "color": "#ffffff",
+                          "fontSize": 12,
+                          "fontWeight": 700
+                        }
+                      },
+                      {
+                        "id": "node-dh-mode",
+                        "type": "badge",
+                        "content": "보기: Split (나란히 비교) ▾",
+                        "style": {
+                          "backgroundColor": "#1e293b",
+                          "color": "#38bdf8",
+                          "fontSize": 10,
+                          "padding": 4,
+                          "borderRadius": 4
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "node-diff-code",
+                    "type": "card",
+                    "style": {
+                      "flex": 1,
+                      "backgroundColor": "#020617",
+                      "padding": 12,
+                      "borderRadius": 8,
+                      "borderWidth": 1,
+                      "borderColor": "#1e293b",
+                      "fontFamily": "monospace",
+                      "fontSize": 11,
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": 4
+                    },
+                    "children": [
+                      {
+                        "id": "node-dc-1",
+                        "type": "text",
+                        "content": "- \"updatedAt\": \"2026-10-25T02:06:42.914Z\",",
+                        "style": {
+                          "backgroundColor": "#450a0a",
+                          "color": "#fca5a5",
+                          "padding": 4,
+                          "borderRadius": 4
+                        }
+                      },
+                      {
+                        "id": "node-dc-2",
+                        "type": "text",
+                        "content": "+ \"updatedAt\": \"2026-10-25T05:05:00.000Z\",",
+                        "style": {
+                          "backgroundColor": "#052e16",
+                          "color": "#86efac",
+                          "padding": 4,
+                          "borderRadius": 4
+                        }
+                      },
+                      {
+                        "id": "node-dc-3",
+                        "type": "text",
+                        "content": "+ \"title\": \"1. 메인 무한 캔버스 & 삼분할 워크스페이스\",",
+                        "style": {
+                          "backgroundColor": "#052e16",
+                          "color": "#86efac",
+                          "padding": 4,
+                          "borderRadius": 4
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "node-git-footer",
+            "type": "box",
+            "name": "Commit Action Bar",
+            "style": {
+              "height": 64,
+              "backgroundColor": "#0d1322",
+              "borderTopWidth": 1,
+              "borderColor": "#1e293b",
+              "display": "flex",
+              "alignItems": "center",
+              "justifyContent": "space-between",
+              "paddingLeft": 20,
+              "paddingRight": 20
+            },
+            "children": [
+              {
+                "id": "node-gft-input",
+                "type": "input",
+                "content": "feat(ui): update storyboard canvas design documents",
+                "style": {
+                  "flex": 1,
+                  "maxWidth": 520,
+                  "backgroundColor": "#1e293b",
+                  "color": "#ffffff",
+                  "padding": 10,
+                  "borderRadius": 8,
+                  "fontSize": 12,
+                  "borderWidth": 1,
+                  "borderColor": "#334155"
+                }
+              },
+              {
+                "id": "node-gft-btns",
+                "type": "box",
+                "style": {
+                  "display": "flex",
+                  "gap": 10
+                },
+                "children": [
+                  {
+                    "id": "node-commit-btn",
+                    "type": "button",
+                    "content": "✔ 커밋 실행 (3개 파일)",
+                    "style": {
+                      "backgroundColor": "#4f46e5",
+                      "color": "#ffffff",
+                      "fontSize": 12,
+                      "fontWeight": 700,
+                      "padding": 10,
+                      "borderRadius": 8
+                    }
+                  },
+                  {
+                    "id": "node-push-btn",
+                    "type": "button",
+                    "content": "⬆ 원격 푸시 (Push)",
+                    "style": {
+                      "backgroundColor": "#0284c7",
+                      "color": "#ffffff",
+                      "fontSize": 12,
+                      "fontWeight": 700,
+                      "padding": 10,
+                      "borderRadius": 8
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

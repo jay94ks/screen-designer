@@ -472,31 +472,46 @@ async function exportCode() {
 
   console.log(`[Screen Designer Export] Format: ${format.toUpperCase()} | Out: ${outDir}`);
 
-  let pageFiles = [];
-  try {
-    const files = await fs.readdir(fullDocsDir);
-    pageFiles = files.filter(f => f.endsWith('.json'));
-  } catch (e) {
-    console.error(`[Error] Could not find page documents in: ${fullDocsDir}`);
-    process.exit(1);
+  let candidateFiles = [];
+  const searchDirs = [fullDocsDir, path.join(fullDocsDir, 'pages')];
+  for (const dir of searchDirs) {
+    try {
+      const files = await fs.readdir(dir);
+      for (const f of files) {
+        if (f.endsWith('.json') && f !== 'project.json') {
+          candidateFiles.push(path.join(dir, f));
+        }
+      }
+    } catch {}
   }
 
-  if (targetPageId) {
-    pageFiles = pageFiles.filter(f => f === `${targetPageId}.json` || f.includes(targetPageId));
+  let matchedDocs = [];
+  for (const filePath of candidateFiles) {
+    try {
+      const raw = await fs.readFile(filePath, 'utf-8');
+      const pageDoc = JSON.parse(raw);
+      if (!pageDoc.artboards) continue;
+
+      if (targetPageId) {
+        const basename = path.basename(filePath, '.json');
+        if (basename === targetPageId || pageDoc.id === targetPageId || (pageDoc.name && pageDoc.name.toLowerCase().includes(targetPageId.toLowerCase()))) {
+          matchedDocs.push({ filePath, pageDoc });
+        }
+      } else {
+        matchedDocs.push({ filePath, pageDoc });
+      }
+    } catch {}
   }
 
-  if (pageFiles.length === 0) {
+  if (matchedDocs.length === 0) {
     console.log(`No matching page documents found in ${pageDocsPath}/`);
     return;
   }
 
   let totalExported = 0;
 
-  for (const pageFile of pageFiles) {
+  for (const { filePath, pageDoc } of matchedDocs) {
     try {
-      const raw = await fs.readFile(path.join(fullDocsDir, pageFile), 'utf-8');
-      const pageDoc = JSON.parse(raw);
-
       console.log(`\n📄 Processing Page: "${pageDoc.name || pageDoc.id}"`);
 
       for (const artboard of pageDoc.artboards || []) {
@@ -1269,20 +1284,52 @@ async function renderImage() {
   const fullDocsDir = path.resolve(cwd, pageDocsPath);
 
   // 2. Find target page JSON file
-  let pageFileName = pageId.endsWith('.json') ? pageId : `${pageId}.json`;
-  let fullPagePath = path.join(fullDocsDir, pageFileName);
+  const pagesSubDir = path.join(fullDocsDir, 'pages');
+  let fullPagePath = '';
 
-  try {
-    await fs.access(fullPagePath);
-  } catch {
-    const files = await fs.readdir(fullDocsDir);
-    const matched = files.find(f => f.includes(pageId) && f.endsWith('.json'));
-    if (!matched) {
-      console.error(`❌ Page document not found for "${pageId}" in ${pageDocsPath}/`);
-      console.error(`Available pages: ${files.join(', ')}`);
-      process.exit(1);
-    }
-    fullPagePath = path.join(fullDocsDir, matched);
+  const candidates = [
+    path.join(pagesSubDir, pageId.endsWith('.json') ? pageId : `${pageId}.json`),
+    path.join(fullDocsDir, pageId.endsWith('.json') ? pageId : `${pageId}.json`)
+  ];
+
+  for (const c of candidates) {
+    try {
+      await fs.access(c);
+      fullPagePath = c;
+      break;
+    } catch {}
+  }
+
+  if (!fullPagePath) {
+    // Scan pages directory for matching id inside JSON files
+    try {
+      const pFiles = await fs.readdir(pagesSubDir);
+      for (const pf of pFiles) {
+        if (!pf.endsWith('.json')) continue;
+        const curPath = path.join(pagesSubDir, pf);
+        try {
+          const raw = await fs.readFile(curPath, 'utf-8');
+          const doc = JSON.parse(raw);
+          if (doc.id === pageId || doc.name?.includes(pageId) || pf.replace('.json', '') === pageId) {
+            fullPagePath = curPath;
+            break;
+          }
+        } catch {}
+      }
+    } catch {}
+  }
+
+  if (!fullPagePath) {
+    try {
+      const files = await fs.readdir(fullDocsDir);
+      const matched = files.find(f => f.includes(pageId) && f.endsWith('.json'));
+      if (matched) fullPagePath = path.join(fullDocsDir, matched);
+    } catch {}
+  }
+
+  if (!fullPagePath) {
+    console.error(`❌ Page document not found for "${pageId}" in ${pageDocsPath}/pages/`);
+    process.exit(1);
   }
 
   const pageRaw = await fs.readFile(fullPagePath, 'utf-8');
