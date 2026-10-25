@@ -25,10 +25,13 @@ import {
 // Suppress Electron DevTools security warning noise in local desktop environment
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 
-// Windows Whiteout / DWM GPU Crash Prevention
+// Windows Whiteout / DWM GPU Crash Prevention & High Performance GPU Rasterization
 app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
-if (process.platform === 'win32' || process.env.DISABLE_HARDWARE_ACCELERATION === 'true') {
-  // Prevent GPU process crash / whiteout on Windows Intel/AMD/Nvidia drivers
+app.commandLine.appendSwitch('enable-gpu-rasterization');
+app.commandLine.appendSwitch('enable-zero-copy');
+
+// Allow opt-out only if explicitly requested
+if (process.env.DISABLE_HARDWARE_ACCELERATION === 'true' || process.argv.includes('--disable-gpu')) {
   app.disableHardwareAcceleration();
 }
 

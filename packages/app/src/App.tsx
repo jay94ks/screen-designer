@@ -235,7 +235,6 @@ export default function App() {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const [canvasRect, setCanvasRect] = useState<DOMRect | null>(null);
   const [canvasDimensions, setCanvasDimensions] = useState({ width: 1400, height: 900 });
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     try {
@@ -269,11 +268,11 @@ export default function App() {
     }
   };
 
-  // Continuous Git Change Detection (every 3.5s and on window focus)
+  // Periodic & Event-Driven Git Status Detection (on focus and relaxed 30s interval)
   useEffect(() => {
     const timer = setInterval(() => {
       refreshGitStatus();
-    }, 3500);
+    }, 30000);
 
     const onFocus = () => refreshGitStatus();
     window.addEventListener('focus', onFocus);
@@ -641,7 +640,9 @@ export default function App() {
     }
   };
 
-  // Canvas Pan Handlers
+  // Canvas Pan Handlers with requestAnimationFrame throttling for 60~120 FPS buttery smooth panning
+  const panRafRef = useRef<number | null>(null);
+
   const handleMouseDown = (e: React.MouseEvent) => {
     if (activeTool === 'hand' || isSpacePressed || e.button === 1) {
       setIsPanning(true);
@@ -651,11 +652,23 @@ export default function App() {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (isPanning) {
-      setPan({ x: e.clientX - panStart.x, y: e.clientY - panStart.y });
+      if (panRafRef.current) return;
+      const nextX = e.clientX - panStart.x;
+      const nextY = e.clientY - panStart.y;
+      panRafRef.current = requestAnimationFrame(() => {
+        setPan({ x: nextX, y: nextY });
+        panRafRef.current = null;
+      });
     }
   };
 
-  const handleMouseUp = () => setIsPanning(false);
+  const handleMouseUp = () => {
+    if (panRafRef.current) {
+      cancelAnimationFrame(panRafRef.current);
+      panRafRef.current = null;
+    }
+    setIsPanning(false);
+  };
 
   const handleResizeMouseDown = (e: React.MouseEvent, artboard: VDomArtboard) => {
     e.stopPropagation();
@@ -1503,9 +1516,6 @@ export default function App() {
         <div
           ref={canvasContainerRef}
           className="flex-1 relative flex overflow-hidden"
-          onMouseMove={(e) => {
-            setMousePos({ x: e.clientX, y: e.clientY });
-          }}
         >
           {showRulers && (
             <CanvasRulers
@@ -1520,7 +1530,6 @@ export default function App() {
               }
               onRemoveGuide={(id) => setGuides((prev) => prev.filter((g) => g.id !== id))}
               showRulers={showRulers}
-              mousePos={mousePos}
               canvasRect={canvasRect}
             />
           )}

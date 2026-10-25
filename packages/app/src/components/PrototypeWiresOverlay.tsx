@@ -37,7 +37,7 @@ interface WireCoords {
   targetTitle: string;
 }
 
-export const PrototypeWiresOverlay: React.FC<PrototypeWiresOverlayProps> = ({
+const PrototypeWiresOverlayComponent: React.FC<PrototypeWiresOverlayProps> = ({
   artboards,
   selectedArtboardId,
   selectedNodeId,
@@ -295,3 +295,5 @@ export const PrototypeWiresOverlay: React.FC<PrototypeWiresOverlayProps> = ({
     </svg>
   );
 };
+
+export const PrototypeWiresOverlay = React.memo(PrototypeWiresOverlayComponent);

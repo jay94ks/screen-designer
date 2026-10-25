@@ -31,7 +31,7 @@ interface RightSidebarProps {
   width?: number;
 }
 
-export const RightSidebar: React.FC<RightSidebarProps> = ({
+const RightSidebarComponent: React.FC<RightSidebarProps> = ({
   artboard,
   selectedNode,
   allArtboards = [],
@@ -201,3 +201,5 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
     </aside>
   );
 };
+
+export const RightSidebar = React.memo(RightSidebarComponent);

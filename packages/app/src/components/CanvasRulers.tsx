@@ -17,7 +17,6 @@ interface CanvasRulersProps {
   onUpdateGuide: (id: string, newPos: number) => void;
   onRemoveGuide: (id: string) => void;
   showRulers: boolean;
-  mousePos: { x: number; y: number }; // client coords
   canvasRect: DOMRect | null;
 }
 
@@ -33,9 +32,52 @@ export const CanvasRulers: React.FC<CanvasRulersProps> = ({
   onUpdateGuide,
   onRemoveGuide,
   showRulers,
-  mousePos,
   canvasRect
 }) => {
+  const topHairlineRef = useRef<SVGLineElement | null>(null);
+  const leftHairlineRef = useRef<SVGLineElement | null>(null);
+
+  // Directly track and position hairline indicators without triggering React re-renders
+  useEffect(() => {
+    if (!showRulers) return;
+
+    let rafId: number | null = null;
+    const onMouseMove = (e: MouseEvent) => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        if (!canvasRect) return;
+        const relX = e.clientX - canvasRect.left;
+        const relY = e.clientY - canvasRect.top;
+
+        if (topHairlineRef.current) {
+          if (relX >= RULER_SIZE && relX <= containerWidth) {
+            topHairlineRef.current.style.display = 'block';
+            topHairlineRef.current.setAttribute('x1', String(relX - RULER_SIZE));
+            topHairlineRef.current.setAttribute('x2', String(relX - RULER_SIZE));
+          } else {
+            topHairlineRef.current.style.display = 'none';
+          }
+        }
+
+        if (leftHairlineRef.current) {
+          if (relY >= RULER_SIZE && relY <= containerHeight) {
+            leftHairlineRef.current.style.display = 'block';
+            leftHairlineRef.current.setAttribute('y1', String(relY - RULER_SIZE));
+            leftHairlineRef.current.setAttribute('y2', String(relY - RULER_SIZE));
+          } else {
+            leftHairlineRef.current.style.display = 'none';
+          }
+        }
+      });
+    };
+
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener('mousemove', onMouseMove);
+    };
+  }, [showRulers, canvasRect, containerWidth, containerHeight]);
   const [draggingGuide, setDraggingGuide] = useState<{
     id: string;
     type: 'horizontal' | 'vertical';
@@ -142,14 +184,6 @@ export const CanvasRulers: React.FC<CanvasRulersProps> = ({
     });
   }
 
-  // Current mouse canvas coords
-  const mouseCanvasX = clientToCanvasX(mousePos.x);
-  const mouseCanvasY = clientToCanvasY(mousePos.y);
-
-  // Mouse screen pos relative to canvas container
-  const mouseRelX = canvasRect ? mousePos.x - canvasRect.left : 0;
-  const mouseRelY = canvasRect ? mousePos.y - canvasRect.top : 0;
-
   const handleStartDragTopRuler = (e: React.MouseEvent) => {
     e.preventDefault();
     const newId = `guide-h-${Date.now()}`;
@@ -215,16 +249,14 @@ export const CanvasRulers: React.FC<CanvasRulersProps> = ({
             );
           })}
           {/* Mouse Coordinate Hairline Indicator */}
-          {mouseRelX >= RULER_SIZE && (
-            <line
-              x1={mouseRelX - RULER_SIZE}
-              y1={0}
-              x2={mouseRelX - RULER_SIZE}
-              y2={RULER_SIZE}
-              stroke="#6366f1"
-              strokeWidth="1.5"
-            />
-          )}
+          <line
+            ref={topHairlineRef}
+            y1={0}
+            y2={RULER_SIZE}
+            stroke="#6366f1"
+            strokeWidth="1.5"
+            style={{ display: 'none' }}
+          />
         </svg>
       </div>
 
@@ -265,16 +297,14 @@ export const CanvasRulers: React.FC<CanvasRulersProps> = ({
             );
           })}
           {/* Mouse Coordinate Hairline Indicator */}
-          {mouseRelY >= RULER_SIZE && (
-            <line
-              x1={0}
-              y1={mouseRelY - RULER_SIZE}
-              x2={RULER_SIZE}
-              y2={mouseRelY - RULER_SIZE}
-              stroke="#6366f1"
-              strokeWidth="1.5"
-            />
-          )}
+          <line
+            ref={leftHairlineRef}
+            x1={0}
+            x2={RULER_SIZE}
+            stroke="#6366f1"
+            strokeWidth="1.5"
+            style={{ display: 'none' }}
+          />
         </svg>
       </div>
 

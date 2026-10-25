@@ -33,7 +33,7 @@ interface VNodeRendererProps {
   showHotspots?: boolean;
 }
 
-export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
+const VNodeRendererComponent: React.FC<VNodeRendererProps> = ({
   node,
   selectedNodeId,
   onSelectNode,
@@ -648,3 +648,5 @@ export const VNodeRenderer: React.FC<VNodeRendererProps> = ({
     </div>
   );
 };
+
+export const VNodeRenderer = React.memo(VNodeRendererComponent);
