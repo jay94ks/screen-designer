@@ -1,4 +1,4 @@
-import { vnode } from './common.mjs';
+import { vnode, navEvent, tweakEvent } from './common.mjs';
 
 // Helper: Full-screen Dimmed Backdrop Overlay (z-100)
 export function wrapInBackdrop(prefix, modalNode, zIndex = 100) {
@@ -13,8 +13,11 @@ export function wrapInBackdrop(prefix, modalNode, zIndex = 100) {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex
-  }, {}, [modalNode]);
+    zIndex,
+    cursor: 'pointer'
+  }, {}, [modalNode], undefined, [
+    navEvent('ab-sd-01-workspace-main', '바깥 영역 클릭 시 모달 닫기')
+  ]);
 }
 
 // 1. Play Mode Simulator Root (Artboard 5 - Upgraded with Resolution Combobox, Direct W×H Input & Responsive Drag Handles)
@@ -57,8 +60,11 @@ export function createPlayModalRootVNode(prefix = 'play') {
       color: '#ffffff',
       fontSize: 11,
       fontWeight: 700,
-      whiteSpace: 'nowrap'
-    }, {}, [], '↔ 반응형 (외곽 드래그 자유 조절) ⌄'),
+      whiteSpace: 'nowrap',
+      cursor: 'pointer'
+    }, {}, [], '↔ 반응형 (외곽 드래그 자유 조절) ⌄', [
+      tweakEvent('playResolution', 'cycle', undefined, '해상도 프리셋 순환')
+    ]),
 
     // Direct W x H Resolution Inputs + Swap
     vnode(`${prefix}-wh-box`, 'container', 'Direct WxH Input Group', {
@@ -85,7 +91,7 @@ export function createPlayModalRootVNode(prefix = 'play') {
     ]),
 
     // Responsive Drag Active Badge
-    vnode(`${prefix}-resp-bdg`, 'badge', 'Responsive Drag Active', {
+    vnode(`${prefix}-resp-bdg`, 'button', 'Responsive Drag Active', {
       paddingLeft: 8,
       paddingRight: 8,
       paddingTop: 4,
@@ -98,8 +104,11 @@ export function createPlayModalRootVNode(prefix = 'play') {
       color: '#a5b4fc',
       fontSize: 10,
       fontWeight: 700,
-      whiteSpace: 'nowrap'
-    }, {}, [], '⤡ 외곽 드래그 조절 활성'),
+      whiteSpace: 'nowrap',
+      cursor: 'pointer'
+    }, {}, [], '⤡ 외곽 드래그 조절 활성', [
+      tweakEvent('responsiveDragEnabled', 'toggle', undefined, '반응형 외곽 드래그 조절 토글')
+    ]),
 
     vnode(`${prefix}-btn-hot`, 'button', 'Hotspot Hint Button', {
       height: 28,
@@ -117,9 +126,15 @@ export function createPlayModalRootVNode(prefix = 'play') {
 
     // Prev / Next / Close
     vnode(`${prefix}-nav`, 'container', 'Nav Controls', { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10 }, {}, [
-      vnode(`${prefix}-prev`, 'icon', 'ChevronLeft', { color: '#64748b' }, { icon: 'chevron-left', size: 14 }),
-      vnode(`${prefix}-next`, 'icon', 'ChevronRight', { color: '#e2e8f0' }, { icon: 'chevron-right', size: 14 }),
-      vnode(`${prefix}-close`, 'icon', 'X', { color: '#94a3b8' }, { icon: 'x', size: 14 })
+      vnode(`${prefix}-prev-btn`, 'button', 'Prev Frame', { cursor: 'pointer', background: 'transparent' }, {}, [
+        vnode(`${prefix}-prev`, 'icon', 'ChevronLeft', { color: '#64748b' }, { icon: 'chevron-left', size: 14 })
+      ], undefined, [navEvent('ab-sd-01-workspace-main', '이전 화면으로 이동')]),
+      vnode(`${prefix}-next-btn`, 'button', 'Next Frame', { cursor: 'pointer', background: 'transparent' }, {}, [
+        vnode(`${prefix}-next`, 'icon', 'ChevronRight', { color: '#e2e8f0' }, { icon: 'chevron-right', size: 14 })
+      ], undefined, [navEvent('ab-sd-06-inspector-events', '다음 화면으로 이동')]),
+      vnode(`${prefix}-close-btn`, 'button', 'Close Play Modal', { cursor: 'pointer', background: 'transparent' }, {}, [
+        vnode(`${prefix}-close`, 'icon', 'X', { color: '#94a3b8' }, { icon: 'x', size: 14 })
+      ], undefined, [navEvent('ab-sd-01-workspace-main', '플레이 모드 종료')])
     ])
   ]);
 
@@ -359,9 +374,21 @@ export function createDesignSystemModalOverlay(prefix = 'dsm') {
           backgroundColor: '#4f46e5',
           color: '#ffffff',
           fontSize: 12,
-          fontWeight: 700
-        }, {}, [], '✓ 적용 및 완료'),
-        vnode(`${prefix}-btn-x`, 'icon', 'X', { color: '#94a3b8' }, { icon: 'x', size: 18 })
+          fontWeight: 700,
+          cursor: 'pointer'
+        }, {}, [], '✓ 적용 및 완료', [navEvent('ab-sd-01-workspace-main', '디자인 시스템 적용 후 메인 복귀')]),
+        vnode(`${prefix}-btn-x-wrap`, 'button', 'Close Button', {
+          width: 32,
+          height: 32,
+          borderRadius: 8,
+          backgroundColor: 'transparent',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer'
+        }, {}, [
+          vnode(`${prefix}-btn-x`, 'icon', 'X', { color: '#94a3b8' }, { icon: 'x', size: 18 })
+        ], undefined, [navEvent('ab-sd-01-workspace-main', '메인 화면으로 복귀')])
       ])
     ]),
 
@@ -954,8 +981,9 @@ export function createGitDesktopModalOverlay(prefix = 'gitm') {
           backgroundColor: '#2563eb',
           color: '#ffffff',
           fontSize: 12,
-          fontWeight: 700
-        }, {}, [], '⊸ Commit 21 files to main')
+          fontWeight: 700,
+          cursor: 'pointer'
+        }, {}, [], '⊸ Commit 21 files to main', [navEvent('ab-sd-01-workspace-main', '커밋 완료 후 메인 복귀')])
       ])
     ]),
 
@@ -1178,8 +1206,9 @@ export function createCommandPaletteModalOverlay(prefix = 'cmdm') {
         borderStyle: 'solid',
         color: '#64748b',
         fontSize: 10,
-        fontWeight: 700
-      }, {}, [], 'ESC')
+        fontWeight: 700,
+        cursor: 'pointer'
+      }, {}, [], 'ESC', [navEvent('ab-sd-01-workspace-main', '커맨드 팔레트 닫기')])
     ]),
 
     // Command Items List
@@ -1190,8 +1219,14 @@ export function createCommandPaletteModalOverlay(prefix = 'cmdm') {
       flexDirection: 'column',
       gap: 4,
       overflow: 'hidden'
-    }, {}, cmdItems.map((c, idx) =>
-      vnode(`${prefix}-ci-${idx}`, 'container', c.title, {
+    }, {}, cmdItems.map((c, idx) => {
+      let events;
+      if (idx === 0) events = [navEvent('ab-sd-05-modal-play', '인터랙티브 프로토타입 실행')];
+      else if (idx === 1) events = [navEvent('ab-sd-09-modal-design-system', '디자인 시스템 스튜디오 열기')];
+      else if (idx === 2) events = [navEvent('ab-sd-10-modal-git-desktop', 'Git 변경사항 다이얼로그 열기')];
+      else if (idx === 4) events = [navEvent('ab-sd-07-canvas-rulers', '캔버스 눈금자 & 가이드라인 보기')];
+
+      return vnode(`${prefix}-ci-${idx}`, 'container', c.title, {
         paddingLeft: 12,
         paddingRight: 12,
         paddingTop: 10,
@@ -1201,7 +1236,8 @@ export function createCommandPaletteModalOverlay(prefix = 'cmdm') {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        cursor: 'pointer'
       }, {}, [
         vnode(`${prefix}-cil-${idx}`, 'container', 'Left', { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 12 }, {}, [
           vnode(`${prefix}-ciib-${idx}`, 'box', 'Icon Box', {
@@ -1251,8 +1287,8 @@ export function createCommandPaletteModalOverlay(prefix = 'cmdm') {
           fontMono: true,
           fontWeight: 700
         }, {}, [], c.kbd)
-      ])
-    )),
+      ], undefined, events);
+    })),
 
     // Footer Legend
     vnode(`${prefix}-foot`, 'footer', 'Command Palette Footer', {
@@ -1353,7 +1389,18 @@ export function createSettingsModalOverlay(prefix = 'setm') {
             fontWeight: 600
           }, {}, [], '⊞ 캔버스 설정')
         ]),
-        vnode(`${prefix}-hx`, 'icon', 'X', { color: '#94a3b8' }, { icon: 'x', size: 18 })
+        vnode(`${prefix}-hx-wrap`, 'button', 'Close Button', {
+          width: 32,
+          height: 32,
+          borderRadius: 8,
+          backgroundColor: 'transparent',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer'
+        }, {}, [
+          vnode(`${prefix}-hx`, 'icon', 'X', { color: '#94a3b8' }, { icon: 'x', size: 18 })
+        ], undefined, [navEvent('ab-sd-01-workspace-main', '환경설정 닫기')])
       ])
     ]),
 
@@ -1581,8 +1628,9 @@ export function createSettingsModalOverlay(prefix = 'setm') {
         backgroundColor: '#4f46e5',
         color: '#ffffff',
         fontSize: 12,
-        fontWeight: 700
-      }, {}, [], '적용 및 닫기')
+        fontWeight: 700,
+        cursor: 'pointer'
+      }, {}, [], '적용 및 닫기', [navEvent('ab-sd-01-workspace-main', '환경설정 적용 후 닫기')])
     ])
   ]);
 
@@ -1636,7 +1684,18 @@ export function createShortcutsModalOverlay(prefix = 'scm') {
         vnode(`${prefix}-hic`, 'icon', 'Keyboard', { color: '#4f46e5' }, { icon: 'keyboard', size: 18 }),
         vnode(`${prefix}-ht`, 'text', '키보드 단축키 안내 (Keyboard Shortcuts)', { fontSize: 14, fontWeight: 800, color: '#0f172a' }, {}, [], '키보드 단축키 안내 (Keyboard Shortcuts)')
       ]),
-      vnode(`${prefix}-hx`, 'icon', 'X', { color: '#94a3b8' }, { icon: 'x', size: 16 })
+      vnode(`${prefix}-hx-wrap`, 'button', 'Close Button', {
+        width: 28,
+        height: 28,
+        borderRadius: 6,
+        backgroundColor: 'transparent',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer'
+      }, {}, [
+        vnode(`${prefix}-hx`, 'icon', 'X', { color: '#94a3b8' }, { icon: 'x', size: 16 })
+      ], undefined, [navEvent('ab-sd-01-workspace-main', '단축키 안내 닫기')])
     ]),
 
     // Body
@@ -1746,8 +1805,9 @@ export function createShortcutsModalOverlay(prefix = 'scm') {
         backgroundColor: '#4f46e5',
         color: '#ffffff',
         fontSize: 12,
-        fontWeight: 700
-      }, {}, [], '확인')
+        fontWeight: 700,
+        cursor: 'pointer'
+      }, {}, [], '확인', [navEvent('ab-sd-01-workspace-main', '단축키 모달 닫기')])
     ])
   ]);
 
@@ -1756,7 +1816,7 @@ export function createShortcutsModalOverlay(prefix = 'scm') {
 
 // 7. File Dropdown Menu Overlay (Artboard 14 - Mirrors 13-header-menu-file.png)
 export function createFileDropdownOverlay(prefix = 'fdd') {
-  return vnode(`${prefix}-menu`, 'dialog', 'Header File Dropdown Menu', {
+  const menu = vnode(`${prefix}-menu`, 'dialog', 'Header File Dropdown Menu', {
     position: 'absolute',
     top: 72,
     left: 10,
@@ -1771,7 +1831,7 @@ export function createFileDropdownOverlay(prefix = 'fdd') {
     paddingBottom: 6,
     display: 'flex',
     flexDirection: 'column',
-    zIndex: 50
+    zIndex: 51
   }, {}, [
     vnode(`${prefix}-i1`, 'container', '새 아트보드 생성 (F)', {
       height: 34,
@@ -1780,11 +1840,12 @@ export function createFileDropdownOverlay(prefix = 'fdd') {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      cursor: 'pointer'
     }, {}, [
       vnode(`${prefix}-i1t`, 'text', '새 아트보드 생성 (F)', { fontSize: 12, fontWeight: 600, color: '#1e293b' }, {}, [], '새 아트보드 생성 (F)'),
       vnode(`${prefix}-i1k`, 'text', 'F', { fontSize: 11, color: '#94a3b8' }, {}, [], 'F')
-    ]),
+    ], undefined, [navEvent('ab-sd-01-workspace-main', '새 아트보드 생성')]),
     vnode(`${prefix}-i2`, 'container', '내보내기', {
       height: 34,
       paddingLeft: 14,
@@ -1792,11 +1853,12 @@ export function createFileDropdownOverlay(prefix = 'fdd') {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      cursor: 'pointer'
     }, {}, [
       vnode(`${prefix}-i2t`, 'text', '내보내기', { fontSize: 12, fontWeight: 600, color: '#1e293b' }, {}, [], '내보내기'),
       vnode(`${prefix}-i2k`, 'text', 'Ctrl+E', { fontSize: 11, color: '#94a3b8' }, {}, [], 'Ctrl+E')
-    ]),
+    ], undefined, [navEvent('ab-sd-01-workspace-main', '내보내기')]),
     vnode(`${prefix}-div`, 'divider', 'Menu Divider', {
       width: '100%',
       height: 1,
@@ -1811,11 +1873,12 @@ export function createFileDropdownOverlay(prefix = 'fdd') {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 8
+      gap: 8,
+      cursor: 'pointer'
     }, {}, [
       vnode(`${prefix}-i3ic`, 'icon', 'Palette', { color: '#4f46e5' }, { icon: 'palette', size: 14 }),
       vnode(`${prefix}-i3t`, 'text', '디자인 시스템', { fontSize: 12, fontWeight: 600, color: '#1e293b' }, {}, [], '디자인 시스템')
-    ]),
+    ], undefined, [navEvent('ab-sd-09-modal-design-system', '디자인 시스템 스튜디오 열기')]),
     vnode(`${prefix}-i4`, 'container', '환경 설정', {
       height: 34,
       paddingLeft: 14,
@@ -1823,9 +1886,23 @@ export function createFileDropdownOverlay(prefix = 'fdd') {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 8
+      gap: 8,
+      cursor: 'pointer'
     }, {}, [
       vnode(`${prefix}-i4t`, 'text', '환경 설정', { fontSize: 12, fontWeight: 600, color: '#1e293b' }, {}, [], '환경 설정')
-    ])
+    ], undefined, [navEvent('ab-sd-12-modal-settings', '환경설정 다이얼로그 열기')])
+  ]);
+
+  return vnode(`${prefix}-backdrop`, 'container', 'Dropdown Dismiss Backdrop', {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'transparent',
+    zIndex: 50,
+    cursor: 'pointer'
+  }, {}, [menu], undefined, [
+    navEvent('ab-sd-01-workspace-main', '바깥 영역 클릭 시 메뉴 닫기')
   ]);
 }

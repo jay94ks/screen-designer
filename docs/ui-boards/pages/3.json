@@ -1,9 +1,7 @@
 {
   "id": "page-3",
-  "name": "3. 디자인 시스템 & Git 데스크톱",
   "number": 3,
-  "version": "1.0.0",
-  "updatedAt": "2026-10-25T13:07:38.207Z",
+  "name": "3. 디자인 시스템 & Git 데스크톱",
   "artboards": [
     {
       "id": "ab-sd-09-modal-design-system",
@@ -236,7 +234,8 @@
                           "borderWidth": 1,
                           "borderColor": "#c7d2fe",
                           "borderStyle": "solid",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -261,6 +260,17 @@
                               "color": "#4f46e5"
                             },
                             "content": "디자인 시스템"
+                          }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-09-modal-design-system-rnlv",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-09-modal-design-system"
+                            },
+                            "description": "디자인 시스템 스튜디오 열기"
                           }
                         ]
                       },
@@ -320,7 +330,8 @@
                         "style": {
                           "width": 24,
                           "height": 24,
-                          "borderRadius": 6
+                          "borderRadius": 6,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -334,6 +345,17 @@
                               "icon": "settings",
                               "size": 13
                             }
+                          }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-12-modal-settings-aoot",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-12-modal-settings"
+                            },
+                            "description": "환경설정 다이얼로그 열기"
                           }
                         ]
                       },
@@ -459,9 +481,21 @@
                           "backgroundColor": "transparent",
                           "color": "#334155",
                           "fontSize": 12,
-                          "fontWeight": 600
+                          "fontWeight": 600,
+                          "cursor": "pointer"
                         },
-                        "content": "파일"
+                        "content": "파일",
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-14-header-menu-file-e3vn",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-14-header-menu-file"
+                            },
+                            "description": "파일 드롭다운 메뉴 열기"
+                          }
+                        ]
                       },
                       {
                         "id": "ab9-hdr-m-edit",
@@ -475,7 +509,8 @@
                           "backgroundColor": "transparent",
                           "color": "#334155",
                           "fontSize": 12,
-                          "fontWeight": 600
+                          "fontWeight": 600,
+                          "cursor": "pointer"
                         },
                         "content": "편집"
                       },
@@ -491,7 +526,8 @@
                           "backgroundColor": "transparent",
                           "color": "#334155",
                           "fontSize": 12,
-                          "fontWeight": 600
+                          "fontWeight": 600,
+                          "cursor": "pointer"
                         },
                         "content": "보기"
                       },
@@ -507,7 +543,8 @@
                           "backgroundColor": "transparent",
                           "color": "#334155",
                           "fontSize": 12,
-                          "fontWeight": 600
+                          "fontWeight": 600,
+                          "cursor": "pointer"
                         },
                         "content": "도움말"
                       },
@@ -525,7 +562,8 @@
                           "borderWidth": 1,
                           "borderColor": "#e2e8f0",
                           "borderStyle": "solid",
-                          "justifyContent": "space-between"
+                          "justifyContent": "space-between",
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -582,6 +620,17 @@
                               "color": "#64748b"
                             },
                             "content": "Ctrl+K"
+                          }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-11-modal-command-palette-jl7o",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-11-modal-command-palette"
+                            },
+                            "description": "커맨드 팔레트 (Ctrl+K) 열기"
                           }
                         ]
                       }
@@ -999,7 +1048,8 @@
                           "borderWidth": 1,
                           "borderColor": "#d8b4fe",
                           "borderStyle": "solid",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -1036,6 +1086,18 @@
                               "backgroundColor": "#a855f7"
                             }
                           }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-twk-showWires-toggle-fwol",
+                            "trigger": "click",
+                            "action": {
+                              "type": "change_tweak",
+                              "tweakId": "showWires",
+                              "operation": "toggle"
+                            },
+                            "description": "프로토타입 플로우 와이어 토글"
+                          }
                         ]
                       },
                       {
@@ -1048,7 +1110,8 @@
                           "paddingRight": 12,
                           "borderRadius": 8,
                           "backgroundColor": "#4f46e5",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -1073,6 +1136,17 @@
                               "color": "#ffffff"
                             },
                             "content": "PLAY"
+                          }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-05-modal-play-7mjs",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-05-modal-play"
+                            },
+                            "description": "디바이스 프레임 플레이 모드 열기"
                           }
                         ]
                       },
@@ -1223,7 +1297,8 @@
                           "borderWidth": 1,
                           "borderColor": "#fde68a",
                           "borderStyle": "solid",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -1266,6 +1341,17 @@
                             },
                             "content": "35"
                           }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-10-modal-git-desktop-95rd",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-10-modal-git-desktop"
+                            },
+                            "description": "Git 데스크톱 및 브랜치 관리 열기"
+                          }
                         ]
                       },
                       {
@@ -1278,7 +1364,8 @@
                           "paddingRight": 10,
                           "borderRadius": 8,
                           "backgroundColor": "#2563eb",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -1303,6 +1390,17 @@
                               "color": "#ffffff"
                             },
                             "content": "커밋 (35)"
+                          }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-10-modal-git-desktop-cagw",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-10-modal-git-desktop"
+                            },
+                            "description": "Git 커밋 & 변경사항 검토 열기"
                           }
                         ]
                       }
@@ -1374,7 +1472,8 @@
                           "borderColor": "#e2e8f0",
                           "borderStyle": "solid",
                           "boxShadow": "0 1px 2px rgba(0,0,0,0.04)",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -1400,6 +1499,17 @@
                             },
                             "content": "레이어"
                           }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-01-workspace-main-fbuo",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-01-workspace-main"
+                            },
+                            "description": "레이어 탭으로 전환"
+                          }
                         ]
                       },
                       {
@@ -1415,7 +1525,8 @@
                           "borderColor": "#e2e8f0",
                           "borderStyle": "solid",
                           "boxShadow": "none",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -1441,6 +1552,17 @@
                             },
                             "content": "컴포넌트"
                           }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-02-components-palette-681v",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-02-components-palette"
+                            },
+                            "description": "컴포넌트 탭으로 전환"
+                          }
                         ]
                       },
                       {
@@ -1456,7 +1578,8 @@
                           "borderColor": "#e2e8f0",
                           "borderStyle": "solid",
                           "boxShadow": "none",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -1481,6 +1604,17 @@
                               "color": "#64748b"
                             },
                             "content": "템플릿"
+                          }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-03-templates-palette-m8kc",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-03-templates-palette"
+                            },
+                            "description": "템플릿 탭으로 전환"
                           }
                         ]
                       }
@@ -3082,9 +3216,21 @@
                               "textAlign": "center",
                               "whiteSpace": "nowrap",
                               "textOverflow": "ellipsis",
-                              "overflow": "hidden"
+                              "overflow": "hidden",
+                              "cursor": "pointer"
                             },
-                            "content": "속성"
+                            "content": "속성",
+                            "events": [
+                              {
+                                "id": "ev-nav-ab-sd-01-workspace-main-dytb",
+                                "trigger": "click",
+                                "action": {
+                                  "type": "navigate",
+                                  "targetArtboardId": "ab-sd-01-workspace-main"
+                                },
+                                "description": "속성 탭으로 전환"
+                              }
+                            ]
                           },
                           {
                             "id": "ab9-rs-tab-events",
@@ -3104,9 +3250,21 @@
                               "textAlign": "center",
                               "whiteSpace": "nowrap",
                               "textOverflow": "ellipsis",
-                              "overflow": "hidden"
+                              "overflow": "hidden",
+                              "cursor": "pointer"
                             },
-                            "content": "⚡ 이벤트"
+                            "content": "⚡ 이벤트",
+                            "events": [
+                              {
+                                "id": "ev-nav-ab-sd-06-inspector-events-20gm",
+                                "trigger": "click",
+                                "action": {
+                                  "type": "navigate",
+                                  "targetArtboardId": "ab-sd-06-inspector-events"
+                                },
+                                "description": "⚡ 이벤트 탭으로 전환"
+                              }
+                            ]
                           },
                           {
                             "id": "ab9-rs-tab-code",
@@ -3126,9 +3284,21 @@
                               "textAlign": "center",
                               "whiteSpace": "nowrap",
                               "textOverflow": "ellipsis",
-                              "overflow": "hidden"
+                              "overflow": "hidden",
+                              "cursor": "pointer"
                             },
-                            "content": "코드"
+                            "content": "코드",
+                            "events": [
+                              {
+                                "id": "ev-nav-ab-sd-04-inspector-code-8i2t",
+                                "trigger": "click",
+                                "action": {
+                                  "type": "navigate",
+                                  "targetArtboardId": "ab-sd-04-inspector-code"
+                                },
+                                "description": "코드 탭으로 전환"
+                              }
+                            ]
                           },
                           {
                             "id": "ab9-rs-tab-tweaks",
@@ -3148,9 +3318,21 @@
                               "textAlign": "center",
                               "whiteSpace": "nowrap",
                               "textOverflow": "ellipsis",
-                              "overflow": "hidden"
+                              "overflow": "hidden",
+                              "cursor": "pointer"
                             },
-                            "content": "트윅"
+                            "content": "트윅",
+                            "events": [
+                              {
+                                "id": "ev-nav-ab-sd-08-inspector-tweaks-9mc8",
+                                "trigger": "click",
+                                "action": {
+                                  "type": "navigate",
+                                  "targetArtboardId": "ab-sd-08-inspector-tweaks"
+                                },
+                                "description": "트윅 탭으로 전환"
+                              }
+                            ]
                           }
                         ]
                       },
@@ -3251,7 +3433,8 @@
               "display": "flex",
               "alignItems": "center",
               "justifyContent": "center",
-              "zIndex": 100
+              "zIndex": 100,
+              "cursor": "pointer"
             },
             "children": [
               {
@@ -3437,21 +3620,61 @@
                               "backgroundColor": "#4f46e5",
                               "color": "#ffffff",
                               "fontSize": 12,
-                              "fontWeight": 700
+                              "fontWeight": 700,
+                              "cursor": "pointer"
                             },
-                            "content": "✓ 적용 및 완료"
+                            "content": "✓ 적용 및 완료",
+                            "events": [
+                              {
+                                "id": "ev-nav-ab-sd-01-workspace-main-pe5r",
+                                "trigger": "click",
+                                "action": {
+                                  "type": "navigate",
+                                  "targetArtboardId": "ab-sd-01-workspace-main"
+                                },
+                                "description": "디자인 시스템 적용 후 메인 복귀"
+                              }
+                            ]
                           },
                           {
-                            "id": "ab9-ds-btn-x",
-                            "type": "icon",
-                            "name": "X",
+                            "id": "ab9-ds-btn-x-wrap",
+                            "type": "button",
+                            "name": "Close Button",
                             "style": {
-                              "color": "#94a3b8"
+                              "width": 32,
+                              "height": 32,
+                              "borderRadius": 8,
+                              "backgroundColor": "transparent",
+                              "display": "flex",
+                              "alignItems": "center",
+                              "justifyContent": "center",
+                              "cursor": "pointer"
                             },
-                            "props": {
-                              "icon": "x",
-                              "size": 18
-                            }
+                            "children": [
+                              {
+                                "id": "ab9-ds-btn-x",
+                                "type": "icon",
+                                "name": "X",
+                                "style": {
+                                  "color": "#94a3b8"
+                                },
+                                "props": {
+                                  "icon": "x",
+                                  "size": 18
+                                }
+                              }
+                            ],
+                            "events": [
+                              {
+                                "id": "ev-nav-ab-sd-01-workspace-main-bu0h",
+                                "trigger": "click",
+                                "action": {
+                                  "type": "navigate",
+                                  "targetArtboardId": "ab-sd-01-workspace-main"
+                                },
+                                "description": "메인 화면으로 복귀"
+                              }
+                            ]
                           }
                         ]
                       }
@@ -6409,43 +6632,77 @@
                   }
                 ]
               }
+            ],
+            "events": [
+              {
+                "id": "ev-nav-ab-sd-01-workspace-main-6bhu",
+                "trigger": "click",
+                "action": {
+                  "type": "navigate",
+                  "targetArtboardId": "ab-sd-01-workspace-main"
+                },
+                "description": "바깥 영역 클릭 시 모달 닫기"
+              }
             ]
           }
         ]
       },
       "tweaksSchema": [
         {
-          "id": "theme",
-          "name": "Theme Mode",
-          "type": "segment",
+          "id": "tokenCategory",
+          "label": "토큰 분류",
+          "control": "buttons",
           "options": [
-            "dark",
-            "light",
-            "cyber"
+            "색상(Colors)",
+            "타이포그래피",
+            "곡률(Radius)",
+            "그림자"
           ],
-          "defaultValue": "dark"
+          "defaultValue": "색상(Colors)"
         },
         {
-          "id": "currency",
-          "name": "Display Currency",
-          "type": "select",
-          "options": [
-            "KRW (₩)",
-            "USD ($)"
-          ],
-          "defaultValue": "KRW (₩)"
+          "id": "primaryColor",
+          "label": "Primary 브랜드 컬러",
+          "control": "color",
+          "defaultValue": "#4f46e5",
+          "description": "전역 주요 액션 색상"
         },
         {
-          "id": "showAiBadge",
-          "name": "Show AI Badge",
-          "type": "boolean",
-          "defaultValue": true
+          "id": "baseRadius",
+          "label": "기본 모서리 곡률 (Radius)",
+          "control": "slider",
+          "min": 0,
+          "max": 24,
+          "step": 2,
+          "defaultValue": 8,
+          "description": "컴포넌트 기본 border-radius (px)"
+        },
+        {
+          "id": "fontFamily",
+          "label": "기본 서체 패밀리",
+          "control": "select",
+          "options": [
+            "Pretendard",
+            "Inter",
+            "Noto Sans KR",
+            "SF Pro"
+          ],
+          "defaultValue": "Pretendard"
+        },
+        {
+          "id": "applyToAllComponents",
+          "label": "전체 컴포넌트 자동 동기화",
+          "control": "boolean",
+          "defaultValue": true,
+          "description": "45종 컴포넌트 전체에 즉시 토큰 전파"
         }
       ],
       "tweakValues": {
-        "theme": "dark",
-        "currency": "KRW (₩)",
-        "showAiBadge": true
+        "tokenCategory": "색상(Colors)",
+        "primaryColor": "#4f46e5",
+        "baseRadius": 8,
+        "fontFamily": "Pretendard",
+        "applyToAllComponents": true
       }
     },
     {
@@ -6679,7 +6936,8 @@
                           "borderWidth": 1,
                           "borderColor": "#c7d2fe",
                           "borderStyle": "solid",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -6704,6 +6962,17 @@
                               "color": "#4f46e5"
                             },
                             "content": "디자인 시스템"
+                          }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-09-modal-design-system-3dt2",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-09-modal-design-system"
+                            },
+                            "description": "디자인 시스템 스튜디오 열기"
                           }
                         ]
                       },
@@ -6763,7 +7032,8 @@
                         "style": {
                           "width": 24,
                           "height": 24,
-                          "borderRadius": 6
+                          "borderRadius": 6,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -6777,6 +7047,17 @@
                               "icon": "settings",
                               "size": 13
                             }
+                          }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-12-modal-settings-1lnf",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-12-modal-settings"
+                            },
+                            "description": "환경설정 다이얼로그 열기"
                           }
                         ]
                       },
@@ -6902,9 +7183,21 @@
                           "backgroundColor": "transparent",
                           "color": "#334155",
                           "fontSize": 12,
-                          "fontWeight": 600
+                          "fontWeight": 600,
+                          "cursor": "pointer"
                         },
-                        "content": "파일"
+                        "content": "파일",
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-14-header-menu-file-pp4y",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-14-header-menu-file"
+                            },
+                            "description": "파일 드롭다운 메뉴 열기"
+                          }
+                        ]
                       },
                       {
                         "id": "ab10-hdr-m-edit",
@@ -6918,7 +7211,8 @@
                           "backgroundColor": "transparent",
                           "color": "#334155",
                           "fontSize": 12,
-                          "fontWeight": 600
+                          "fontWeight": 600,
+                          "cursor": "pointer"
                         },
                         "content": "편집"
                       },
@@ -6934,7 +7228,8 @@
                           "backgroundColor": "transparent",
                           "color": "#334155",
                           "fontSize": 12,
-                          "fontWeight": 600
+                          "fontWeight": 600,
+                          "cursor": "pointer"
                         },
                         "content": "보기"
                       },
@@ -6950,7 +7245,8 @@
                           "backgroundColor": "transparent",
                           "color": "#334155",
                           "fontSize": 12,
-                          "fontWeight": 600
+                          "fontWeight": 600,
+                          "cursor": "pointer"
                         },
                         "content": "도움말"
                       },
@@ -6968,7 +7264,8 @@
                           "borderWidth": 1,
                           "borderColor": "#e2e8f0",
                           "borderStyle": "solid",
-                          "justifyContent": "space-between"
+                          "justifyContent": "space-between",
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -7025,6 +7322,17 @@
                               "color": "#64748b"
                             },
                             "content": "Ctrl+K"
+                          }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-11-modal-command-palette-7zhu",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-11-modal-command-palette"
+                            },
+                            "description": "커맨드 팔레트 (Ctrl+K) 열기"
                           }
                         ]
                       }
@@ -7442,7 +7750,8 @@
                           "borderWidth": 1,
                           "borderColor": "#d8b4fe",
                           "borderStyle": "solid",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -7479,6 +7788,18 @@
                               "backgroundColor": "#a855f7"
                             }
                           }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-twk-showWires-toggle-2tpd",
+                            "trigger": "click",
+                            "action": {
+                              "type": "change_tweak",
+                              "tweakId": "showWires",
+                              "operation": "toggle"
+                            },
+                            "description": "프로토타입 플로우 와이어 토글"
+                          }
                         ]
                       },
                       {
@@ -7491,7 +7812,8 @@
                           "paddingRight": 12,
                           "borderRadius": 8,
                           "backgroundColor": "#4f46e5",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -7516,6 +7838,17 @@
                               "color": "#ffffff"
                             },
                             "content": "PLAY"
+                          }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-05-modal-play-v3ck",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-05-modal-play"
+                            },
+                            "description": "디바이스 프레임 플레이 모드 열기"
                           }
                         ]
                       },
@@ -7666,7 +7999,8 @@
                           "borderWidth": 1,
                           "borderColor": "#fde68a",
                           "borderStyle": "solid",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -7709,6 +8043,17 @@
                             },
                             "content": "35"
                           }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-10-modal-git-desktop-z6sw",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-10-modal-git-desktop"
+                            },
+                            "description": "Git 데스크톱 및 브랜치 관리 열기"
+                          }
                         ]
                       },
                       {
@@ -7721,7 +8066,8 @@
                           "paddingRight": 10,
                           "borderRadius": 8,
                           "backgroundColor": "#2563eb",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -7746,6 +8092,17 @@
                               "color": "#ffffff"
                             },
                             "content": "커밋 (35)"
+                          }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-10-modal-git-desktop-ae87",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-10-modal-git-desktop"
+                            },
+                            "description": "Git 커밋 & 변경사항 검토 열기"
                           }
                         ]
                       }
@@ -7817,7 +8174,8 @@
                           "borderColor": "#e2e8f0",
                           "borderStyle": "solid",
                           "boxShadow": "0 1px 2px rgba(0,0,0,0.04)",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -7843,6 +8201,17 @@
                             },
                             "content": "레이어"
                           }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-01-workspace-main-ymin",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-01-workspace-main"
+                            },
+                            "description": "레이어 탭으로 전환"
+                          }
                         ]
                       },
                       {
@@ -7858,7 +8227,8 @@
                           "borderColor": "#e2e8f0",
                           "borderStyle": "solid",
                           "boxShadow": "none",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -7884,6 +8254,17 @@
                             },
                             "content": "컴포넌트"
                           }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-02-components-palette-goic",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-02-components-palette"
+                            },
+                            "description": "컴포넌트 탭으로 전환"
+                          }
                         ]
                       },
                       {
@@ -7899,7 +8280,8 @@
                           "borderColor": "#e2e8f0",
                           "borderStyle": "solid",
                           "boxShadow": "none",
-                          "gap": 5
+                          "gap": 5,
+                          "cursor": "pointer"
                         },
                         "children": [
                           {
@@ -7924,6 +8306,17 @@
                               "color": "#64748b"
                             },
                             "content": "템플릿"
+                          }
+                        ],
+                        "events": [
+                          {
+                            "id": "ev-nav-ab-sd-03-templates-palette-g1ad",
+                            "trigger": "click",
+                            "action": {
+                              "type": "navigate",
+                              "targetArtboardId": "ab-sd-03-templates-palette"
+                            },
+                            "description": "템플릿 탭으로 전환"
                           }
                         ]
                       }
@@ -9525,9 +9918,21 @@
                               "textAlign": "center",
                               "whiteSpace": "nowrap",
                               "textOverflow": "ellipsis",
-                              "overflow": "hidden"
+                              "overflow": "hidden",
+                              "cursor": "pointer"
                             },
-                            "content": "속성"
+                            "content": "속성",
+                            "events": [
+                              {
+                                "id": "ev-nav-ab-sd-01-workspace-main-hvaj",
+                                "trigger": "click",
+                                "action": {
+                                  "type": "navigate",
+                                  "targetArtboardId": "ab-sd-01-workspace-main"
+                                },
+                                "description": "속성 탭으로 전환"
+                              }
+                            ]
                           },
                           {
                             "id": "ab10-rs-tab-events",
@@ -9547,9 +9952,21 @@
                               "textAlign": "center",
                               "whiteSpace": "nowrap",
                               "textOverflow": "ellipsis",
-                              "overflow": "hidden"
+                              "overflow": "hidden",
+                              "cursor": "pointer"
                             },
-                            "content": "⚡ 이벤트"
+                            "content": "⚡ 이벤트",
+                            "events": [
+                              {
+                                "id": "ev-nav-ab-sd-06-inspector-events-z3wm",
+                                "trigger": "click",
+                                "action": {
+                                  "type": "navigate",
+                                  "targetArtboardId": "ab-sd-06-inspector-events"
+                                },
+                                "description": "⚡ 이벤트 탭으로 전환"
+                              }
+                            ]
                           },
                           {
                             "id": "ab10-rs-tab-code",
@@ -9569,9 +9986,21 @@
                               "textAlign": "center",
                               "whiteSpace": "nowrap",
                               "textOverflow": "ellipsis",
-                              "overflow": "hidden"
+                              "overflow": "hidden",
+                              "cursor": "pointer"
                             },
-                            "content": "코드"
+                            "content": "코드",
+                            "events": [
+                              {
+                                "id": "ev-nav-ab-sd-04-inspector-code-78c7",
+                                "trigger": "click",
+                                "action": {
+                                  "type": "navigate",
+                                  "targetArtboardId": "ab-sd-04-inspector-code"
+                                },
+                                "description": "코드 탭으로 전환"
+                              }
+                            ]
                           },
                           {
                             "id": "ab10-rs-tab-tweaks",
@@ -9591,9 +10020,21 @@
                               "textAlign": "center",
                               "whiteSpace": "nowrap",
                               "textOverflow": "ellipsis",
-                              "overflow": "hidden"
+                              "overflow": "hidden",
+                              "cursor": "pointer"
                             },
-                            "content": "트윅"
+                            "content": "트윅",
+                            "events": [
+                              {
+                                "id": "ev-nav-ab-sd-08-inspector-tweaks-sr6z",
+                                "trigger": "click",
+                                "action": {
+                                  "type": "navigate",
+                                  "targetArtboardId": "ab-sd-08-inspector-tweaks"
+                                },
+                                "description": "트윅 탭으로 전환"
+                              }
+                            ]
                           }
                         ]
                       },
@@ -9694,7 +10135,8 @@
               "display": "flex",
               "alignItems": "center",
               "justifyContent": "center",
-              "zIndex": 100
+              "zIndex": 100,
+              "cursor": "pointer"
             },
             "children": [
               {
@@ -10961,9 +11403,21 @@
                               "backgroundColor": "#2563eb",
                               "color": "#ffffff",
                               "fontSize": 12,
-                              "fontWeight": 700
+                              "fontWeight": 700,
+                              "cursor": "pointer"
                             },
-                            "content": "⊸ Commit 21 files to main"
+                            "content": "⊸ Commit 21 files to main",
+                            "events": [
+                              {
+                                "id": "ev-nav-ab-sd-01-workspace-main-ptux",
+                                "trigger": "click",
+                                "action": {
+                                  "type": "navigate",
+                                  "targetArtboardId": "ab-sd-01-workspace-main"
+                                },
+                                "description": "커밋 완료 후 메인 복귀"
+                              }
+                            ]
                           }
                         ]
                       }
@@ -11715,43 +12169,68 @@
                   }
                 ]
               }
+            ],
+            "events": [
+              {
+                "id": "ev-nav-ab-sd-01-workspace-main-7sfx",
+                "trigger": "click",
+                "action": {
+                  "type": "navigate",
+                  "targetArtboardId": "ab-sd-01-workspace-main"
+                },
+                "description": "바깥 영역 클릭 시 모달 닫기"
+              }
             ]
           }
         ]
       },
       "tweaksSchema": [
         {
-          "id": "theme",
-          "name": "Theme Mode",
-          "type": "segment",
+          "id": "currentBranch",
+          "label": "작업 브랜치 (Branch)",
+          "control": "buttons",
           "options": [
-            "dark",
-            "light",
-            "cyber"
+            "main",
+            "feat/vdom-pure",
+            "design/tokens"
           ],
-          "defaultValue": "dark"
+          "defaultValue": "feat/vdom-pure"
         },
         {
-          "id": "currency",
-          "name": "Display Currency",
-          "type": "select",
+          "id": "diffViewMode",
+          "label": "Diff 표시 모드",
+          "control": "buttons",
           "options": [
-            "KRW (₩)",
-            "USD ($)"
+            "Split (좌우)",
+            "Unified (통합)"
           ],
-          "defaultValue": "KRW (₩)"
+          "defaultValue": "Split (좌우)"
         },
         {
-          "id": "showAiBadge",
-          "name": "Show AI Badge",
-          "type": "boolean",
-          "defaultValue": true
+          "id": "autoFetchInterval",
+          "label": "원격 자동 동기화",
+          "control": "select",
+          "options": [
+            "수동 (Manual)",
+            "1분마다",
+            "5분마다",
+            "15분마다"
+          ],
+          "defaultValue": "5분마다"
+        },
+        {
+          "id": "showUntrackedFiles",
+          "label": "신규 파일 목록 포함",
+          "control": "boolean",
+          "defaultValue": true,
+          "description": "Untracked 새 파일 목록 포함 표시"
         }
       ],
       "tweakValues": {
-        "theme": "dark",
-        "currency": "KRW (₩)",
-        "showAiBadge": true
+        "currentBranch": "feat/vdom-pure",
+        "diffViewMode": "Split (좌우)",
+        "autoFetchInterval": "5분마다",
+        "showUntrackedFiles": true
       }
     }
   ]

@@ -1,9 +1,37 @@
 // Common Pure VDOM Builders for Screen Designer 1:1 Self-Storyboard
-export function vnode(id, type, name, style = {}, props = {}, children = [], content = undefined) {
+export function navEvent(targetArtboardId, description, trigger = 'click', id) {
+  return {
+    id: id || `ev-nav-${targetArtboardId}-${Math.random().toString(36).substring(2, 6)}`,
+    trigger,
+    action: {
+      type: 'navigate',
+      targetArtboardId
+    },
+    description
+  };
+}
+
+export function tweakEvent(tweakId, operation = 'toggle', value = undefined, description, trigger = 'click', id) {
+  return {
+    id: id || `ev-twk-${tweakId}-${operation}-${Math.random().toString(36).substring(2, 6)}`,
+    trigger,
+    action: {
+      type: 'change_tweak',
+      tweakId,
+      operation,
+      value
+    },
+    description
+  };
+}
+
+export function vnode(id, type, name, style = {}, props = {}, children = [], content = undefined, events = undefined, condition = undefined) {
   const node = { id, type, name, style };
   if (props && Object.keys(props).length > 0) node.props = props;
   if (content !== undefined) node.content = content;
   if (children && children.length > 0) node.children = children;
+  if (events && events.length > 0) node.events = events;
+  if (condition) node.condition = condition;
   return node;
 }
 
@@ -121,11 +149,12 @@ export function createHeaderVNode(prefix = 'hdr', options = {}) {
         borderWidth: 1,
         borderColor: '#c7d2fe',
         borderStyle: 'solid',
-        gap: 5
+        gap: 5,
+        cursor: 'pointer'
       }, {}, [
         vnode(`${prefix}-ic-ds`, 'icon', 'Palette', { color: '#4f46e5' }, { icon: 'palette', size: 12 }),
         vnode(`${prefix}-txt-ds`, 'text', 'DS Label', { fontSize: 11, fontWeight: 700, color: '#4f46e5' }, {}, [], '디자인 시스템')
-      ]),
+      ], undefined, [navEvent('ab-sd-09-modal-design-system', '디자인 시스템 스튜디오 열기')]),
       vnode(`${prefix}-btn-lang`, 'button', 'Language Selector', {
         height: 24,
         paddingLeft: 6,
@@ -140,10 +169,11 @@ export function createHeaderVNode(prefix = 'hdr', options = {}) {
       vnode(`${prefix}-btn-set`, 'button', 'Settings Button', {
         width: 24,
         height: 24,
-        borderRadius: 6
+        borderRadius: 6,
+        cursor: 'pointer'
       }, {}, [
         vnode(`${prefix}-ic-set`, 'icon', 'Settings', { color: '#64748b' }, { icon: 'settings', size: 13 })
-      ]),
+      ], undefined, [navEvent('ab-sd-12-modal-settings', '환경설정 다이얼로그 열기')]),
       vnode(`${prefix}-btn-pnl`, 'button', 'Right Panel Toggle', {
         width: 24,
         height: 24,
@@ -212,8 +242,9 @@ export function createHeaderVNode(prefix = 'hdr', options = {}) {
           backgroundColor: activeMenu === m.id ? '#eef2ff' : 'transparent',
           color: activeMenu === m.id ? '#4f46e5' : '#334155',
           fontSize: 12,
-          fontWeight: activeMenu === m.id ? 700 : 600
-        }, {}, [], m.label)
+          fontWeight: activeMenu === m.id ? 700 : 600,
+          cursor: 'pointer'
+        }, {}, [], m.label, m.id === 'file' ? [navEvent('ab-sd-14-header-menu-file', '파일 드롭다운 메뉴 열기')] : undefined)
       ),
       vnode(`${prefix}-cmd-box`, 'button', 'Command Search Trigger', {
         width: 156,
@@ -225,7 +256,8 @@ export function createHeaderVNode(prefix = 'hdr', options = {}) {
         borderWidth: 1,
         borderColor: '#e2e8f0',
         borderStyle: 'solid',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        cursor: 'pointer'
       }, {}, [
         vnode(`${prefix}-cmd-l`, 'container', 'Search Left', {
           display: 'flex',
@@ -250,7 +282,7 @@ export function createHeaderVNode(prefix = 'hdr', options = {}) {
           fontWeight: 700,
           color: '#64748b'
         }, {}, [], 'Ctrl+K')
-      ])
+      ], undefined, [navEvent('ab-sd-11-modal-command-palette', '커맨드 팔레트 (Ctrl+K) 열기')])
     ]),
 
     // Center: Undo/Redo + Tools + Alignment
@@ -362,23 +394,25 @@ export function createHeaderVNode(prefix = 'hdr', options = {}) {
         borderWidth: 1,
         borderColor: '#d8b4fe',
         borderStyle: 'solid',
-        gap: 5
+        gap: 5,
+        cursor: 'pointer'
       }, {}, [
         vnode(`${prefix}-ic-zap`, 'icon', 'Zap', { color: '#7e22ce' }, { icon: 'zap', size: 12 }),
         vnode(`${prefix}-txt-flow`, 'text', '플로우', { fontSize: 11, fontWeight: 700, color: '#7e22ce' }, {}, [], '플로우'),
         vnode(`${prefix}-dot-flow`, 'box', 'Dot', { width: 6, height: 6, borderRadius: 9999, backgroundColor: '#a855f7' })
-      ]),
+      ], undefined, [tweakEvent('showWires', 'toggle', undefined, '프로토타입 플로우 와이어 토글')]),
       vnode(`${prefix}-btn-play`, 'button', 'PLAY Button', {
         height: 28,
         paddingLeft: 12,
         paddingRight: 12,
         borderRadius: 8,
         backgroundColor: '#4f46e5',
-        gap: 5
+        gap: 5,
+        cursor: 'pointer'
       }, {}, [
         vnode(`${prefix}-ic-play`, 'icon', 'Play', { color: '#ffffff' }, { icon: 'play', size: 11 }),
         vnode(`${prefix}-txt-play`, 'text', 'PLAY', { fontSize: 11, fontWeight: 700, color: '#ffffff' }, {}, [], 'PLAY')
-      ]),
+      ], undefined, [navEvent('ab-sd-05-modal-play', '디바이스 프레임 플레이 모드 열기')]),
       vnode(`${prefix}-div3`, 'divider', 'Divider', { width: 1, height: 16, backgroundColor: '#e2e8f0' }),
       vnode(`${prefix}-zoom`, 'container', 'Zoom Control', {
         height: 28,
@@ -426,7 +460,8 @@ export function createHeaderVNode(prefix = 'hdr', options = {}) {
         borderWidth: 1,
         borderColor: '#fde68a',
         borderStyle: 'solid',
-        gap: 5
+        gap: 5,
+        cursor: 'pointer'
       }, {}, [
         vnode(`${prefix}-ic-gbr`, 'icon', 'GitBranch', { color: '#d97706' }, { icon: 'git-branch', size: 12 }),
         vnode(`${prefix}-txt-gbr`, 'text', 'main', { fontSize: 11, fontWeight: 700, color: '#92400e' }, {}, [], 'main'),
@@ -441,18 +476,19 @@ export function createHeaderVNode(prefix = 'hdr', options = {}) {
           fontSize: 9,
           fontWeight: 700
         }, {}, [], gitCount)
-      ]),
+      ], undefined, [navEvent('ab-sd-10-modal-git-desktop', 'Git 데스크톱 및 브랜치 관리 열기')]),
       vnode(`${prefix}-git-cm`, 'button', 'Git Commit Button', {
         height: 28,
         paddingLeft: 10,
         paddingRight: 10,
         borderRadius: 8,
         backgroundColor: '#2563eb',
-        gap: 5
+        gap: 5,
+        cursor: 'pointer'
       }, {}, [
         vnode(`${prefix}-ic-gcm`, 'icon', 'GitCommit', { color: '#ffffff' }, { icon: 'git-commit', size: 12 }),
         vnode(`${prefix}-txt-gcm`, 'text', 'Commit Label', { fontSize: 11, fontWeight: 700, color: '#ffffff' }, {}, [], `커밋 (${gitCount})`)
-      ])
+      ], undefined, [navEvent('ab-sd-10-modal-git-desktop', 'Git 커밋 & 변경사항 검토 열기')])
     ])
   ]);
 
@@ -472,6 +508,12 @@ export function createLeftSidebarVNode(prefix = 'ls', activeTab = 'layers', widt
     { id: 'components', label: '컴포넌트', icon: 'component' },
     { id: 'templates', label: '템플릿', icon: 'sparkles' }
   ];
+
+  const leftTabNav = {
+    layers: 'ab-sd-01-workspace-main',
+    components: 'ab-sd-02-components-palette',
+    templates: 'ab-sd-03-templates-palette'
+  };
 
   const tabBar = vnode(`${prefix}-tabs`, 'container', 'Left Sidebar Tabs', {
     width: '100%',
@@ -497,7 +539,8 @@ export function createLeftSidebarVNode(prefix = 'ls', activeTab = 'layers', widt
       borderColor: '#e2e8f0',
       borderStyle: 'solid',
       boxShadow: isAct ? '0 1px 2px rgba(0,0,0,0.04)' : 'none',
-      gap: 5
+      gap: 5,
+      cursor: 'pointer'
     }, {}, [
       vnode(`${prefix}-tic-${t.id}`, 'icon', t.icon, { color: isAct ? '#0f172a' : '#64748b' }, { icon: t.icon, size: 12 }),
       vnode(`${prefix}-ttx-${t.id}`, 'text', t.label, {
@@ -505,7 +548,7 @@ export function createLeftSidebarVNode(prefix = 'ls', activeTab = 'layers', widt
         fontWeight: isAct ? 700 : 600,
         color: isAct ? '#0f172a' : '#64748b'
       }, {}, [], t.label)
-    ]);
+    ], undefined, [navEvent(leftTabNav[t.id], `${t.label} 탭으로 전환`)]);
   }));
 
   let bodyContent = [];
@@ -1169,6 +1212,13 @@ export function createRightSidebarVNode(prefix = 'rs', activeTab = 'properties',
     { id: 'tweaks', label: '트윅', color: '#4f46e5' }
   ];
 
+  const rightTabNav = {
+    properties: 'ab-sd-01-workspace-main',
+    events: 'ab-sd-06-inspector-events',
+    code: 'ab-sd-04-inspector-code',
+    tweaks: 'ab-sd-08-inspector-tweaks'
+  };
+
   const tabBar = vnode(`${prefix}-tabs`, 'container', 'Right Sidebar Tabs (No-Wrap Policy)', {
     width: '100%',
     height: 44,
@@ -1210,8 +1260,9 @@ export function createRightSidebarVNode(prefix = 'rs', activeTab = 'properties',
         textAlign: 'center',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
-        overflow: 'hidden'
-      }, {}, [], t.label);
+        overflow: 'hidden',
+        cursor: 'pointer'
+      }, {}, [], t.label, [navEvent(rightTabNav[t.id], `${t.label} 탭으로 전환`)]);
     })),
     vnode(`${prefix}-tab-close`, 'button', 'Close Inspector', {
       width: 24,
