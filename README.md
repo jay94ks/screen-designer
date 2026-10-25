@@ -10,6 +10,10 @@
 </p>
 
 <p align="center">
+  <a href="README.en.md">English</a> • <a href="README.md">한국어</a> • <a href="README.ja.md">日本語</a>
+</p>
+
+<p align="center">
   <a href="https://www.npmjs.com/"><img src="https://img.shields.io/badge/npm-v1.0.0-blue.svg" alt="npm version" /></a>
   <a href="https://modelcontextprotocol.io/"><img src="https://img.shields.io/badge/MCP-17%20Tools-brightgreen.svg" alt="MCP Standard" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>

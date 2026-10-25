@@ -1,5 +1,9 @@
 # Screen Designer (화면 기획 & UI 스토리보드 디자이너)
 
+<p align="right">
+  <a href="en/README.md">English</a> • <a href="README.md">한국어</a> • <a href="ja/README.md">日本語</a>
+</p>
+
 > **React 19 + TypeScript + Electron + MCP + Headless CLI** 기반의 크로스 플랫폼 화면 설계 및 프로토타이핑 시스템입니다.  
 > 기획자, UI 디자이너, 프론트엔드 개발자 및 AI 에이전트(Claude, Gemini, GPT 등)가 가상 DOM(VDOM) 기반으로 모바일 및 웹 화면을 시각적으로 설계하고, 피그마 스타일 프로토타이핑, 디자인 시스템 관리, React/Tailwind 코드 자동 추출, Headless CLI 자동화까지 원스톱으로 수행할 수 있습니다.
 
