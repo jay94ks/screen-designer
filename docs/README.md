@@ -8,6 +8,7 @@
 ## 📚 문서 목록 (Documentation)
 
 - [기능 명세서 (Features)](./features.md): 현재까지 구현된 모든 기능(캔버스, 프로토타이핑, 디자인 시스템, Git 연동 등)의 상세 안내
+- [MCP 툴 & CLI 제어 레퍼런스 (MCP & CLI Reference)](./mcp-and-cli-reference.md): 재설계된 13종 MCP 도구 규격 및 터미널 CLI를 통한 직접 제어 가이드
 - [프로젝트 파일 구조 스펙 (Project Structure)](./project-structure.md): `docs/ui-boards/` 내 자동 저장 데이터 규격 (`project.json`, `design-system.json`, `pages/`, `assets/`)
 - [전역 설치 및 특정 프로젝트 대상 실행 설계서 (Global Installation & Target Execution)](./global-install-and-target-execution.md): `npm install -g` 전역 설치, `screen-designer [path]` 특정 프로젝트 지정 실행 및 스마트 실행 모드 설계
 - [단축키 & 생산성 가이드 (Shortcuts)](./shortcuts.md): 커맨드 팔레트(`Ctrl+K`), 도구 전환 및 캔버스 조작 단축키
@@ -50,7 +51,8 @@ npm run build
 | **Frontend Core** | React 19, TypeScript, Vite 6 | 고속 번들링 및 최신 React 가상 DOM 조작 |
 | **Desktop App** | Electron 35 | 크로스 플랫폼 데스크톱 네이티브 윈도우 지원 |
 | **Styling** | Tailwind CSS 4, Lucide Icons | 유틸리티 퍼스트 스타일링 및 일관된 아이콘 시스템 |
-| **Version Control** | Simple-Git, Git CLI | 내장 Git 스테이징 및 커밋 연동 |
+| **Version Control** | es-git (Toss libgit2 binding) | 네이티브 고성능 Git 스테이징, Diff, 커밋 연동 |
+| **Cross-Agent MCP** | Model Context Protocol (SDK 1.6) | Claude/Cursor/Codex/Gemini 연동 13종 시각적 제어 도구 |
 | **Canvas & Graphic** | HTML5 Canvas, SVG Bezier Curve | 아트보드 와이어 연결선 및 이미지/코드 추출 |
 
 ---

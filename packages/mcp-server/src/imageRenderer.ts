@@ -388,19 +388,32 @@ export async function renderArtboardToImage(options: RenderArtboardOptions): Pro
   const fullDocsDir = path.resolve(ws, pageDocsPath);
 
   // 2. Find target page JSON file
-  let pageFileName = options.pageId.endsWith('.json') ? options.pageId : `${options.pageId}.json`;
-  let fullPagePath = path.join(fullDocsDir, pageFileName);
+  const pid = String(options.pageId);
+  let pageFileName = pid.endsWith('.json') ? pid : `${pid}.json`;
+  let fullPagePath = path.join(fullDocsDir, 'pages', pageFileName);
 
   try {
     await fs.access(fullPagePath);
   } catch {
-    // Try fuzzy match
-    const files = await fs.readdir(fullDocsDir);
-    const matched = files.find(f => f.includes(options.pageId) && f.endsWith('.json'));
-    if (!matched) {
-      throw new Error(`Page document not found for ID "${options.pageId}" in ${fullDocsDir}. Available pages: ${files.join(', ')}`);
+    fullPagePath = path.join(fullDocsDir, pageFileName);
+    try {
+      await fs.access(fullPagePath);
+    } catch {
+      // Try fuzzy match
+      let files: string[] = [];
+      try { files = await fs.readdir(path.join(fullDocsDir, 'pages')); } catch {}
+      let matched = files.find(f => f.includes(pid) && f.endsWith('.json'));
+      if (matched) {
+        fullPagePath = path.join(fullDocsDir, 'pages', matched);
+      } else {
+        const rootFiles = await fs.readdir(fullDocsDir);
+        matched = rootFiles.find(f => f.includes(pid) && f.endsWith('.json'));
+        if (!matched) {
+          throw new Error(`Page document not found for ID "${pid}" in ${fullDocsDir}. Available pages: ${files.concat(rootFiles).join(', ')}`);
+        }
+        fullPagePath = path.join(fullDocsDir, matched);
+      }
     }
-    fullPagePath = path.join(fullDocsDir, matched);
   }
 
   const pageRaw = await fs.readFile(fullPagePath, 'utf-8');

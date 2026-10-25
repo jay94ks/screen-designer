@@ -15,32 +15,44 @@ export class CanvasBridge {
 
   public start(): Promise<void> {
     return new Promise((resolve) => {
-      this.wss = new WebSocketServer({ port: this.port }, () => {
-        console.error(`[ScreenDesigner Bridge] WebSocket server listening on port ${this.port}`);
+      try {
+        this.wss = new WebSocketServer({ port: this.port });
+
+        this.wss.on('listening', () => {
+          console.error(`[ScreenDesigner Bridge] WebSocket server listening on port ${this.port}`);
+          resolve();
+        });
+
+        this.wss.on('error', (err: any) => {
+          console.error(`[ScreenDesigner Bridge] WebSocket server notice: ${err.message}`);
+          resolve();
+        });
+
+        this.wss.on('connection', (ws) => {
+          this.client = ws;
+          console.error('[ScreenDesigner Bridge] Electron Canvas connected.');
+
+          // Initial state sync
+          this.send({ type: 'SYNC_STATE', payload: this.state });
+
+          ws.on('message', (data) => {
+            try {
+              const message = JSON.parse(data.toString());
+              this.handleIncoming(message);
+            } catch (e) {
+              console.error('[ScreenDesigner Bridge] Failed to parse message', e);
+            }
+          });
+
+          ws.on('close', () => {
+            this.client = null;
+            console.error('[ScreenDesigner Bridge] Electron Canvas disconnected.');
+          });
+        });
+      } catch (e: any) {
+        console.error(`[ScreenDesigner Bridge] Failed to initialize WebSocket server: ${e.message}`);
         resolve();
-      });
-
-      this.wss.on('connection', (ws) => {
-        this.client = ws;
-        console.error('[ScreenDesigner Bridge] Electron Canvas connected.');
-
-        // Initial state sync
-        this.send({ type: 'SYNC_STATE', payload: this.state });
-
-        ws.on('message', (data) => {
-          try {
-            const message = JSON.parse(data.toString());
-            this.handleIncoming(message);
-          } catch (e) {
-            console.error('[ScreenDesigner Bridge] Failed to parse message', e);
-          }
-        });
-
-        ws.on('close', () => {
-          this.client = null;
-          console.error('[ScreenDesigner Bridge] Electron Canvas disconnected.');
-        });
-      });
+      }
     });
   }
 

@@ -596,6 +596,274 @@ async function status() {
   }
 }
 
+function parseCliArgs(rawArgs) {
+  let parsed = {};
+  for (const arg of rawArgs) {
+    if (arg.startsWith('{') && arg.endsWith('}')) {
+      try {
+        parsed = { ...parsed, ...JSON.parse(arg) };
+        continue;
+      } catch {}
+    }
+    if (arg.startsWith('--')) {
+      const eqIdx = arg.indexOf('=');
+      if (eqIdx !== -1) {
+        const key = arg.slice(2, eqIdx);
+        let val = arg.slice(eqIdx + 1);
+        if (val === 'true') val = true;
+        else if (val === 'false') val = false;
+        else if (/^\d+$/.test(val)) val = parseInt(val, 10);
+        parsed[key] = val;
+      } else {
+        parsed[arg.slice(2)] = true;
+      }
+      continue;
+    }
+    if (arg.includes('=')) {
+      const [k, v] = arg.split('=');
+      parsed[k] = v;
+      continue;
+    }
+  }
+  return parsed;
+}
+
+async function getMcpModule() {
+  try {
+    return await import('@screen-designer/mcp-server');
+  } catch {
+    const localPath = path.resolve(__dirname, '../../mcp-server/dist/index.js');
+    return await import(localPath);
+  }
+}
+
+async function handleMcpCommand(subArgs) {
+  const mod = await getMcpModule();
+  const action = subArgs[0] || 'serve';
+
+  if (action === 'serve' || action === 'start' || !subArgs[0]) {
+    process.env.MCP_SERVER_AUTO_START = 'true';
+    await mod.runServer();
+    return;
+  }
+
+  if (action === 'list' || action === 'ls') {
+    console.log(`\n🛠️  Screen Designer MCP Tools (${mod.TOOLS.length} tools registered)\n`);
+
+    const categories = {
+      project: '📁 Project & Workspace',
+      page: '📄 Screen Pages (VDOM)',
+      'design-system': '🎨 Design System & Tokens',
+      visual: '👁️ Visual Inspection & Screenshots',
+      code: '💻 Code Generation & Handoff',
+      git: '🌿 Git Version Control (es-git)',
+      canvas: '⚡ Live Canvas Remote Control'
+    };
+
+    for (const [catKey, catTitle] of Object.entries(categories)) {
+      const catTools = mod.TOOLS.filter(t => t.category === catKey);
+      if (catTools.length === 0) continue;
+
+      console.log(`\x1b[1m\x1b[36m${catTitle}\x1b[0m:`);
+      for (const t of catTools) {
+        const aliasStr = t.aliases && t.aliases.length > 0 ? ` \x1b[90m(alias: ${t.aliases.join(', ')})\x1b[0m` : '';
+        console.log(`  \x1b[32m• ${t.name}\x1b[0m${aliasStr}`);
+        console.log(`    ${t.description}`);
+
+        const shape = t.parameters.shape || {};
+        const paramKeys = Object.keys(shape);
+        if (paramKeys.length > 0) {
+          const paramsList = paramKeys.map(k => {
+            const isOpt = shape[k].isOptional();
+            return isOpt ? `[${k}]` : `<${k}>`;
+          }).join(' ');
+          console.log(`    \x1b[90mParameters: ${paramsList}\x1b[0m`);
+        }
+        console.log('');
+      }
+    }
+
+    console.log('\x1b[90mUsage: screen-designer mcp call <tool-name> [--param=value] or \'{"param":"value"}\'\x1b[0m\n');
+    return;
+  }
+
+  if (action === 'call' || action === 'run') {
+    const toolName = subArgs[1];
+    if (!toolName) {
+      console.error('❌ Error: Tool name required. Example: screen-designer mcp call screen_designer_list_pages');
+      process.exit(1);
+    }
+
+    const rawToolArgs = subArgs.slice(2);
+    const parsedArgs = parseCliArgs(rawToolArgs);
+    if (!parsedArgs.workspacePath) {
+      parsedArgs.workspacePath = process.cwd();
+    }
+
+    try {
+      console.log(`🚀 Executing MCP tool \x1b[36m${toolName}\x1b[0m...`);
+      const result = await mod.executeTool(toolName, parsedArgs);
+
+      if (result.isError) {
+        console.error(`\n❌ Tool returned an error:`);
+        for (const item of result.content) {
+          if (item.type === 'text') console.error(item.text);
+        }
+        process.exit(1);
+      }
+
+      for (const item of result.content) {
+        if (item.type === 'text') {
+          try {
+            const obj = JSON.parse(item.text);
+            console.log('\n✔ Result:');
+            console.log(JSON.stringify(obj, null, 2));
+          } catch {
+            console.log('\n✔ Result:', item.text);
+          }
+        } else if (item.type === 'image') {
+          console.log(`\n🖼️  Image output received (${item.mimeType}, base64 length: ${item.data.length})`);
+        }
+      }
+    } catch (err) {
+      console.error(`\n❌ Failed to execute MCP tool: ${err.message}`);
+      process.exit(1);
+    }
+    return;
+  }
+
+  console.error(`Unknown mcp subcommand "${action}". Available: serve, list, call`);
+  process.exit(1);
+}
+
+async function handlePageCommand(subArgs) {
+  const mod = await getMcpModule();
+  const action = subArgs[0] || 'list';
+  const cwd = process.cwd();
+
+  if (action === 'list' || action === 'ls') {
+    const targetDir = subArgs[1] || cwd;
+    const res = await mod.executeTool('screen_designer_list_pages', { workspacePath: targetDir });
+    const data = JSON.parse(res.content[0].text);
+    console.log(`\n📂 Pages in ${data.pageDocsPath}/ (Total: ${data.count})`);
+    for (const p of data.pages) {
+      console.log(`  • [${p.id}] ${p.name} (${p.artboardCount} artboards, file: ${p.file})`);
+      if (p.artboards && p.artboards.length > 0) {
+        for (const ab of p.artboards) {
+          console.log(`      - [${ab.viewport || 'mobile'} ${ab.width || 375}x${ab.height || 812}] ${ab.title || ab.id}`);
+        }
+      }
+    }
+    console.log('');
+    return;
+  }
+
+  if (action === 'get' || action === 'show') {
+    const pageId = subArgs[1];
+    if (!pageId) {
+      console.error('❌ Error: pageId required. Example: screen-designer page show 1');
+      process.exit(1);
+    }
+    const targetDir = subArgs[2] || cwd;
+    const res = await mod.executeTool('screen_designer_get_page', { pageId, workspacePath: targetDir });
+    if (res.isError) {
+      console.error(res.content[0].text);
+      process.exit(1);
+    }
+    const data = JSON.parse(res.content[0].text);
+    console.log(JSON.stringify(data.page, null, 2));
+    return;
+  }
+
+  if (action === 'save' || action === 'import') {
+    const filePath = subArgs[1];
+    if (!filePath) {
+      console.error('❌ Error: JSON file path required. Example: screen-designer page save my-page.json');
+      process.exit(1);
+    }
+    const targetDir = subArgs[2] || cwd;
+    const raw = await fs.readFile(path.resolve(cwd, filePath), 'utf-8');
+    const pageObj = JSON.parse(raw);
+    const res = await mod.executeTool('screen_designer_save_page', { page: pageObj, workspacePath: targetDir });
+    const data = JSON.parse(res.content[0].text);
+    console.log(`✔ Page "${data.pageId}" saved to ${data.savedFile} (${data.artboardCount} artboards)`);
+    return;
+  }
+
+  if (action === 'delete' || action === 'rm') {
+    const pageId = subArgs[1];
+    if (!pageId) {
+      console.error('❌ Error: pageId required. Example: screen-designer page delete 2');
+      process.exit(1);
+    }
+    const targetDir = subArgs[2] || cwd;
+    const res = await mod.executeTool('screen_designer_delete_page', { pageId, workspacePath: targetDir });
+    if (res.isError) {
+      console.error(res.content[0].text);
+      process.exit(1);
+    }
+    console.log(`✔ Successfully deleted page "${pageId}"`);
+    return;
+  }
+
+  console.error(`Unknown page subcommand "${action}". Available: list, get, save, delete`);
+  process.exit(1);
+}
+
+async function handleTokensCommand(subArgs) {
+  const mod = await getMcpModule();
+  const targetDir = subArgs[0] || process.cwd();
+  const res = await mod.executeTool('screen_designer_get_design_system', { workspacePath: targetDir });
+  if (res.isError) {
+    console.error(res.content[0].text);
+    process.exit(1);
+  }
+  const data = JSON.parse(res.content[0].text);
+  console.log(JSON.stringify(data.designSystem, null, 2));
+}
+
+async function handleCommitCommand(subArgs) {
+  const mod = await getMcpModule();
+  let message = '';
+  let targetDir = process.cwd();
+
+  for (let i = 0; i < subArgs.length; i++) {
+    const arg = subArgs[i];
+    if (arg === '-m' || arg === '--message') {
+      message = subArgs[i + 1] || '';
+      i++;
+    } else if (arg.startsWith('-m=')) {
+      message = arg.slice(3);
+    } else if (arg.startsWith('--message=')) {
+      message = arg.slice(10);
+    } else if (!arg.startsWith('-')) {
+      targetDir = arg;
+    }
+  }
+
+  if (!message) {
+    console.error('❌ Error: Commit message required. Example: screen-designer commit -m "feat: add login artboard"');
+    process.exit(1);
+  }
+
+  const res = await mod.executeTool('screen_designer_git_commit', {
+    message,
+    workspacePath: targetDir
+  });
+
+  const data = JSON.parse(res.content[0].text);
+  if (!data.success) {
+    console.log(`⚠️ ${data.message || 'No changes to commit'}`);
+    return;
+  }
+
+  console.log(`✔ Committed [${data.commitHash.slice(0, 7)}] "${data.message}"`);
+  console.log(`  Files (${data.filesCommitted.length}):`);
+  for (const f of data.filesCommitted) {
+    console.log(`    - ${f}`);
+  }
+}
+
 function winToWslPath(winPath) {
   if (process.platform === 'win32') return winPath;
   const match = winPath.match(/^([A-Za-z]):[\\/](.*)$/);
@@ -1088,9 +1356,22 @@ Screen Designer CLI
 Usage:
   screen-designer [target-path] [options]                       Open Screen Designer on target project (default: .)
   screen-designer init [target-path]                            Initialize .screen-designer & docs/ui-boards
-  screen-designer status                                        Check git status of UI design documents
+  screen-designer status [target-path]                          Check git status of UI design documents
   screen-designer export [pageId] [options]                     Generate code on-demand from VDOM JSON
   screen-designer render-image <pageId> [artboard] [opts]       Render specific artboard (시안) to an image
+  screen-designer tokens [target-path]                          Inspect design system tokens and colors
+  screen-designer commit -m "<message>" [target-path]           Commit modified design documents via es-git
+
+Screen Pages (VDOM) Operations:
+  screen-designer page list [target-path]                       List all screen pages in project
+  screen-designer page show <pageId> [target-path]              Display full JSON of a screen page
+  screen-designer page save <pageFile.json> [target-path]       Save/import a page from JSON file
+  screen-designer page delete <pageId> [target-path]            Delete a screen page from project
+
+MCP Server & Cross-Agent Operations:
+  screen-designer mcp [serve]                                   Start MCP Server on Stdio (for Claude/Cursor/Codex)
+  screen-designer mcp list                                      List all 13 registered MCP tools & parameters
+  screen-designer mcp call <tool-name> [args...]                Execute any MCP tool directly from CLI
 
 Launch Options:
   --web, -w                 Run in Web Browser mode instead of Electron Desktop
@@ -1109,10 +1390,14 @@ Render Image Options:
 
 Examples:
   screen-designer .                                  # Open Screen Designer for current directory
-  screen-designer /path/to/my-project                # Open Screen Designer for specific project
-  screen-designer . --web --port=3000                # Run in web mode on port 3000
+  screen-designer mcp list                           # View all 13 MCP tools with parameters
+  screen-designer mcp call screen_designer_list_pages
+  screen-designer mcp call screen_designer_render_artboard_image --pageId=1 --outPath=test.png
+  screen-designer page list
+  screen-designer page show 1
+  screen-designer commit -m "feat: design completed"
   screen-designer export --format=react              # Generate React code
-  screen-designer render-image page-1                # Render page-1 to PNG image
+  screen-designer render-image 1                     # Render page 1 to PNG image
 `);
 }
 
@@ -1128,6 +1413,7 @@ const port = portArg ? parseInt(portArg.split('=')[1], 10) : 5173;
 
 const SUB_COMMANDS = [
   'init', 'export', 'status', 'render-image', 'render', 'screenshot', 'image',
+  'mcp', 'page', 'tokens', 'commit',
   'help', '--help', '-h', 'version', '--version', '-v'
 ];
 
@@ -1154,6 +1440,18 @@ if (!firstArg || (!firstArg.startsWith('-') && !SUB_COMMANDS.includes(firstArg))
     case 'screenshot':
     case 'image':
       renderImage().catch(console.error);
+      break;
+    case 'mcp':
+      handleMcpCommand(args.slice(1)).catch(console.error);
+      break;
+    case 'page':
+      handlePageCommand(args.slice(1)).catch(console.error);
+      break;
+    case 'tokens':
+      handleTokensCommand(args.slice(1)).catch(console.error);
+      break;
+    case 'commit':
+      handleCommitCommand(args.slice(1)).catch(console.error);
       break;
     case 'version':
     case '--version':

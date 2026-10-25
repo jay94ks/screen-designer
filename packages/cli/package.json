@@ -10,6 +10,7 @@
     "test": "node bin/index.js --help"
   },
   "dependencies": {
+    "@screen-designer/mcp-server": "^0.1.0",
     "es-git": "^0.7.0",
     "winreg": "^1.2.5"
   }

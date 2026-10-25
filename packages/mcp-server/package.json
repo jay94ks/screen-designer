@@ -3,6 +3,13 @@
   "version": "0.1.0",
   "description": "Cross-Agent MCP Server for Screen Designer Storyboard Canvas",
   "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./tools": "./dist/tools.js",
+    "./tools.js": "./dist/tools.js",
+    "./imageRenderer": "./dist/imageRenderer.js",
+    "./codeGenerator": "./dist/codeGenerator.js"
+  },
   "bin": {
     "screen-designer-mcp": "./dist/index.js"
   },
